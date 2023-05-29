@@ -2,8 +2,9 @@
 
 import React from 'react'
 import {getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import app from "../../../firebase"
+import app from "../firebase"
 import { Button } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const login = () => {
   const provider = new GoogleAuthProvider();
@@ -15,7 +16,17 @@ const login = () => {
     const token = credential?.accessToken;
     // The signed-in user info.
     const user = result.user;
-    console.log(user);
+    const userInfo = {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      uid: user.uid,
+      refreshToken: user.refreshToken,
+    }
+    sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+    console.log(userInfo);
+    const router = useRouter();
+    router.push('/home');
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
@@ -23,7 +34,7 @@ const login = () => {
     const errorCode = error.code;
     const errorMessage = error.message;
     // The email of the user's account used.
-    const email = error.customData.email;
+    const email = error.customData?.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
@@ -36,7 +47,6 @@ function LoginPage() {
         <div>Login</div>
         <Button variant="contained" onClick={login}>Log In</Button>
     </>
-    
   )
 }
 
