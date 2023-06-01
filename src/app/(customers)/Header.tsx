@@ -35,6 +35,8 @@ function Header() {
     setLocation(e.target.value);
   }
 
+  
+
   const [search, setSearch] = useState('');
 
   const handleSearchChange = (e : any) => {
