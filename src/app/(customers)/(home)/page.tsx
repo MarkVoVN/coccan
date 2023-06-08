@@ -38,8 +38,13 @@ export default function Home() {
   return (
     <>
       <CallToActionSection></CallToActionSection>
-      <SessionSeletorSection></SessionSeletorSection>
+      <div className="selectors-wrapper w-full flex flex-row">
+        <div className="w-1/6 ml-[9vw]">
+          <SessionSeletorSection></SessionSeletorSection>
+        </div>
+      </div>
       <CategorySeletorSection categoryList={categoryList}></CategorySeletorSection>
+
       {categoryList.map((category) => (
         <ProductByCategorySection key={category.categoryId} category={category}></ProductByCategorySection>
       ))}

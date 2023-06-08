@@ -43,7 +43,9 @@ function Header() {
 
   const searchProduct = () => {
     //pass props and redirect to search page
+    
     console.log("searching for" + location + " " + category + " " + search);
+    redirect('/search');
   } 
 
   //fetch cate list
@@ -78,25 +80,28 @@ function Header() {
           InputProps={{
             endAdornment: <InputAdornment position="end">
               <IconButton size='small' onClick={searchProduct}>
+                <Link href={'/search'}></Link>
               <Search fontSize='inherit'></Search>
               </IconButton>
               
             </InputAdornment>
           }}>
           </TextField>
-
-          <Select
-          value={category}
-          label="Category"
-          onChange={handleCategoryChange}
-          autoWidth
-          >
-            <MenuItem value = {0}>All</MenuItem>
-            {
-            categoryList.map((category) => 
-            (<MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)
-          )}
-          </Select>
+          <div className='category-selector w-[1/8]'>
+            <Select
+            value={category}
+            label="Category"
+            onChange={handleCategoryChange}
+            fullWidth
+            >
+              <MenuItem value = {0}>All</MenuItem>
+              {
+              categoryList.map((category) => 
+              (<MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)
+            )}
+            </Select>
+          </div>
+          
         </div >
         <div className="navbar-icon flex flex-row justify-end items-center">
           <div className="cart-icon-container px-[0.5rem]">

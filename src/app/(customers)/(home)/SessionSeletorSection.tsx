@@ -35,8 +35,8 @@ function SessionSeletorSection() {
 
 
   return (
-    <Box className='selectors-container'>
-      <Box sx={{width: '80vw'}}>
+    <div className='selectors-container flex flex-row justify-center w-[100%]'>
+      <div>
         <Select className='selector'
             value={location}
             label="Location"
@@ -56,8 +56,8 @@ function SessionSeletorSection() {
               <MenuItem key={session.id} value={session.id}>{session.title}</MenuItem>
             ))}
         </Select>
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }
 
