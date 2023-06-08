@@ -6,7 +6,7 @@ import { ArrowForward, HelpOutline } from '@mui/icons-material'
 
 function CallToActionSection() {
   return (
-    <Box className='cta-container' >
+    <Box className='cta-container flex flex-row justify-center' >
         <Box className='cta'>
             <Typography variant='h2' sx={{fontWeight: 600, color: '#EA5857'}}>
                 Hungry?
