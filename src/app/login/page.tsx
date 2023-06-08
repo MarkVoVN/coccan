@@ -7,8 +7,6 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import "./style.scss";
 
-
-
 function LoginPage() {
   const router = useRouter();
   const login = () => {
@@ -46,7 +44,6 @@ function LoginPage() {
         // ...
       });
   };
-
 
   return (
     <>
