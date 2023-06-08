@@ -2,10 +2,9 @@
 
 import React from "react";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import app from "../firebase";
+import app from "../../firebase";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
-import "./globals.css";
 import "./style.scss";
 
 
@@ -31,7 +30,7 @@ function LoginPage() {
         };
         sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
         console.log(userInfo);
-        router.push("/home");
+        router.push("/");
         // redirect("/home");
         // IdP data available using getAdditionalUserInfo(result)
         // ...
