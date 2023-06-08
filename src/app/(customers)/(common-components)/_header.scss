@@ -5,17 +5,11 @@
     box-shadow: none !important;
     padding: 1rem 0rem;
 }
+
 .navbar-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     width: 100%;
 
     .navbar-logo {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
         width: 24%;
         height: 100%;
 
@@ -32,9 +26,6 @@
     }
 
     .navbar-search {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
         width: 35%;
 
         .search {
@@ -43,11 +34,21 @@
     }
 
     .navbar-icon {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
         width: 24%;
+
+        .cart-icon-container {
+            
+        }
+
+        .avatar-login-container {
+
+            .login-btn {
+
+                color: white !important;
+                background-color: #4F200D;
+            }
+        }
+
     }
 
 }

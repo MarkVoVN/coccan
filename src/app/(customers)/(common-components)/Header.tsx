@@ -1,6 +1,6 @@
 
 "use client"
-import { AppBar, MenuItem, Select, SelectChangeEvent, Stack, Toolbar, Typography, TextField, InputAdornment, IconButton, Avatar, Box } from '@mui/material'
+import { AppBar, MenuItem, Select, SelectChangeEvent, Stack, Toolbar, Typography, TextField, InputAdornment, IconButton, Avatar, Box, Button } from '@mui/material'
 import React from 'react'
 import LogoIcon from '../../LogoIcon'
 import { useState, useEffect } from 'react'
@@ -57,16 +57,16 @@ function Header() {
   return (
     <AppBar position='static' className='navbar'>
       <Toolbar>
-      <Box className="navbar-container">
-        <Box className="navbar-logo">
-          <Box className="logo-container">
+      <div className="navbar-container flex flex-row justify-center">
+        <div className="navbar-logo flex flex-row justify-start items-center">
+          <div className="logo-container">
             <img className="logo" src="./navbar/logo.png" alt='logo'></img>
-          </Box>
+          </div>
           <Typography variant = 'h3'>
             COCCAN
           </Typography>
-        </Box>
-        <Box className="navbar-search">
+        </div>
+        <div className="navbar-search flex flex-row justify-center">
         <TextField 
           className='search'
           label = "Search"
@@ -97,17 +97,21 @@ function Header() {
             (<MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)
           )}
           </Select>
-        </Box>
-        <Box className="navbar-icon">
-        <Link href="/cart">
+        </div >
+        <div className="navbar-icon flex flex-row justify-end items-center">
+          <div className="cart-icon-container px-[0.5rem]">
+            <Link href="/cart">
               <IconButton size='large'>
                   <ShoppingCart fontSize='inherit'></ShoppingCart>
               </IconButton>
             </Link>
+          </div>
+          <div className="avatar-login-container px-[0.5rem]">
             {user && <Avatar src = {user.photoURL} alt={user.displayName}/>}
-            {!user && <Link href="/">Log In</Link>  }
-        </Box>
-      </Box>
+            {!user && <Button size='large' className='login-btn' variant='contained'><Link href="/">Log In</Link></Button>  }
+          </div>
+        </div>
+      </div>
       </Toolbar>
     </AppBar>
   )
