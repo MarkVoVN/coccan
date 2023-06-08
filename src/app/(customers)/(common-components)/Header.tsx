@@ -1,12 +1,12 @@
 "use client"
-import { AppBar, MenuItem, Select, SelectChangeEvent, Stack, Toolbar, Typography, TextField, InputAdornment, IconButton, Avatar } from '@mui/material'
+import { AppBar, MenuItem, Select, SelectChangeEvent, Stack, Toolbar, Typography, TextField, InputAdornment, IconButton, Avatar, Box } from '@mui/material'
 import React from 'react'
-import LogoIcon from '../LogoIcon'
+import LogoIcon from '../../LogoIcon'
 import { useState, useEffect } from 'react'
 import {Search, ShoppingCart} from '@mui/icons-material';
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-
+import './_header.scss'
 function Header() {
 
   const [user , setUser] = useState<{
@@ -22,20 +22,11 @@ function Header() {
     useEffect(() => {
         const userInfo = sessionStorage.getItem('userInfo');
         if (!userInfo){
-            redirect('/');
+            //redirect('/');
         } else {
             setUser(JSON.parse(userInfo));
         }
     }, [])
-
-  
-  const [location, setLocation] = useState('FPT Q9');
-
-  const handleLocationChange = (e: SelectChangeEvent) => {
-    setLocation(e.target.value);
-  }
-
-  
 
   const [search, setSearch] = useState('');
 
@@ -63,27 +54,26 @@ function Header() {
   ]
 
   return (
-    <AppBar position='static'>
+    <AppBar position='static' className='navbar'>
       <Toolbar>
-        <LogoIcon fontSize="large"></LogoIcon>
-        <Typography variant = 'h6'>
-          COCCAN
-        </Typography>
-        <Stack direction="row" spacing={2}>
-          <Select
-          value={location}
-          label="Location"
-          onChange={handleLocationChange}
-          autoWidth
-          >
-            <MenuItem value = {'FPT Q9'}>FPT Q9</MenuItem>
-            <MenuItem value = {'NVH'}>NVH</MenuItem>
-          </Select>
-
-          <TextField label = "Search"
+      <Box className="navbar-container">
+        <Box className="navbar-logo">
+          <Box className="logo-container">
+            <img className="logo" src="./navbar/logo.png" alt='logo'></img>
+          </Box>
+          <Typography variant = 'h3'>
+            COCCAN
+          </Typography>
+        </Box>
+        <Box className="navbar-search">
+        <TextField 
+          className='search'
+          label = "Search"
           value={search}
           type='search'
           onChange={handleSearchChange}
+          fullWidth={true}
+          sx={{color : '#4F200D'}}
           InputProps={{
             endAdornment: <InputAdornment position="end">
               <IconButton size='small' onClick={searchProduct}>
@@ -106,15 +96,17 @@ function Header() {
             (<MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)
           )}
           </Select>
-          <Link href="/cart">
-            <IconButton size='large'>
-                <ShoppingCart fontSize='inherit'></ShoppingCart>
-            </IconButton>
-          </Link>
-          {user && <Avatar src = {user.photoURL} alt={user.displayName}/>}
-          {!user && <Link href="/">Log In</Link>  }
-
-        </Stack>
+        </Box>
+        <Box className="navbar-icon">
+        <Link href="/cart">
+              <IconButton size='large'>
+                  <ShoppingCart fontSize='inherit'></ShoppingCart>
+              </IconButton>
+            </Link>
+            {user && <Avatar src = {user.photoURL} alt={user.displayName}/>}
+            {!user && <Link href="/">Log In</Link>  }
+        </Box>
+      </Box>
       </Toolbar>
     </AppBar>
   )

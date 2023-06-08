@@ -3,7 +3,6 @@
 import React from 'react'
 import { Box, Button, Stack, Typography } from '@mui/material'
 import { ArrowForward, HelpOutline } from '@mui/icons-material'
-import { red } from '@mui/material/colors'
 
 function CallToActionSection() {
   return (
@@ -19,10 +18,10 @@ function CallToActionSection() {
                 You are ordering from FPT Q9 Campus
             </Typography>
             <Stack direction='row' className='cta-btn-container'>
-                <Button className='cta-btn' variant='contained' size='large' endIcon={<ArrowForward></ArrowForward>}>
+                <Button className='cta-btn-order' variant='contained' size='large' endIcon={<ArrowForward></ArrowForward>}>
                     Order now
                 </Button>
-                <Button className='cta-btn' variant='outlined' size='large' endIcon={<HelpOutline></HelpOutline>}>
+                <Button className='cta-btn-guide' variant='outlined' size='large' endIcon={<HelpOutline></HelpOutline>}>
                     How to use
                 </Button>
             </Stack>

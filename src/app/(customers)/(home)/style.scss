@@ -1,4 +1,5 @@
 
+
 .cta-container {
     width: 100vw;
     display: flex;
@@ -17,8 +18,14 @@
     
         .cta-btn-container {
     
-            .cta-btn {
+            .cta-btn-order {
+                background-color: #EA5857;
                 margin-right: 4rem;
+            }
+
+            .cta-btn-guide {
+                color: #EA5857;
+                border-color: #EA5857;
             }
         }
     }
@@ -26,11 +33,15 @@
 
 }
 
-.session-selector-container {
+.selectors-container {
     width: 100vw;
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    .selector {
+        margin-right: 1rem;
+    }
 } 
 
 .category-wrapper {
@@ -68,6 +79,10 @@
     
                 .category-icon-container {
                     margin-bottom: 1rem;
+                    
+                    img {
+                        height: 72px;
+                    }
                 }
             }
         }

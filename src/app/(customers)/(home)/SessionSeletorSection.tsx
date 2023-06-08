@@ -25,10 +25,28 @@ function SessionSeletorSection() {
   const handleSessionChange = (e: SelectChangeEvent) => {
     setSelectedSessionId(e.target.value);
   }
+
+    
+  const [location, setLocation] = useState('FPT Q9');
+
+  const handleLocationChange = (e: SelectChangeEvent) => {
+    setLocation(e.target.value);
+  }
+
+
   return (
-    <Box className='session-selector-container'>
+    <Box className='selectors-container'>
       <Box sx={{width: '80vw'}}>
-        <Select
+        <Select className='selector'
+            value={location}
+            label="Location"
+            onChange={handleLocationChange}
+            autoWidth
+            >
+              <MenuItem value = {'FPT Q9'}>FPT Q9</MenuItem>
+              <MenuItem value = {'NVH'}>NVH</MenuItem>
+        </Select>
+        <Select className='selector'
           value={selectedSessionId}
           label="Session"
           onChange={handleSessionChange}
