@@ -1,14 +1,22 @@
 "use client";
 
-import CallToActionSection from "../../../components/CallToActionSection";
-import SessionSeletorSection from "../../../components/SessionSeletorSection";
-import CategorySeletorSection from "../../../components/CategorySeletorSection";
+import React from "react";
+import StoreDetailSection from "@/components/StoreDetailSection";
+import { Button } from "@mui/material";
+import { ArrowBackIos } from "@mui/icons-material";
 import ProductByCategorySection from "../../../components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
-import "./style.scss";
-import React from "react";
 
-export default function Home() {
+function StoreDetailPage() {
+  const store = {
+    id: 1,
+    name: "711 Bakery",
+    logoUrl: "/search/store-logo-placeholder.svg",
+    description: "We sell the best pastry in the area",
+    address: "161A Nguyen Van Tang, P. Long Thanh My, TP. Thu duc",
+    contact: "0909 123 456",
+  };
+
   const categoryList = [
     {
       categoryId: 0,
@@ -63,21 +71,24 @@ export default function Home() {
 
   return (
     <>
-      <CallToActionSection></CallToActionSection>
-      <div className="selectors-wrapper w-full flex flex-row">
-        <div className="w-1/6 ml-[9vw]">
-          <SessionSeletorSection></SessionSeletorSection>
+      <div className="back-btn-section-wrapper flex flex-row justify-center">
+        <div className="back-btn-section-container w-[80%] my-[2ren]">
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => console.log("return to previous page")}
+            startIcon={<ArrowBackIos></ArrowBackIos>}
+          >
+            Back
+          </Button>
         </div>
       </div>
-      <CategorySeletorSection
-        categoryList={categoryList}
-      ></CategorySeletorSection>
-
+      <StoreDetailSection store={store}></StoreDetailSection>
       {categoryList.map((category) => (
         <ProductByCategorySection
           key={category.categoryId}
           category={category}
-          viewMore={true}
+          viewMore={false}
           handleViewProductDetail={handleProductModalOpen}
         ></ProductByCategorySection>
       ))}
@@ -89,3 +100,5 @@ export default function Home() {
     </>
   );
 }
+
+export default StoreDetailPage;
