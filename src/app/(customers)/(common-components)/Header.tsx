@@ -3,19 +3,15 @@ import {
   AppBar,
   MenuItem,
   Select,
-  SelectChangeEvent,
-  Stack,
   Toolbar,
   Typography,
   TextField,
   InputAdornment,
   IconButton,
   Avatar,
-  Box,
   Button,
 } from "@mui/material";
 import React from "react";
-import LogoIcon from "../../LogoIcon";
 import { useState, useEffect } from "react";
 import { Search, ShoppingCart } from "@mui/icons-material";
 import Link from "next/link";
@@ -70,12 +66,15 @@ function Header() {
     <AppBar position="static" className="navbar">
       <Toolbar>
         <div className="navbar-container flex flex-row justify-center">
-          <div className="navbar-logo flex flex-row justify-start items-center">
+          <Link
+            href={"/"}
+            className="navbar-logo flex flex-row justify-start items-center w-fit"
+          >
             <div className="logo-container">
               <img className="logo" src="./navbar/logo.png" alt="logo"></img>
             </div>
             <Typography variant="h3">COCCAN</Typography>
-          </div>
+          </Link>
           <div className="navbar-search flex flex-row justify-center">
             <TextField
               className="search"

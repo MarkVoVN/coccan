@@ -1,7 +1,7 @@
-import CallToActionSection from "./CallToActionSection";
-import SessionSeletorSection from "./SessionSeletorSection";
-import CategorySeletorSection from "./CategorySeletorSection";
-import ProductByCategorySection from "./ProductByCategorySection";
+import CallToActionSection from "../../../components/CallToActionSection";
+import SessionSeletorSection from "../../../components/SessionSeletorSection";
+import CategorySeletorSection from "../../../components/CategorySeletorSection";
+import ProductByCategorySection from "../../../components/ProductByCategorySection";
 import "./style.scss";
 
 export default function Home() {
@@ -49,6 +49,7 @@ export default function Home() {
         <ProductByCategorySection
           key={category.categoryId}
           category={category}
+          viewMore={true}
         ></ProductByCategorySection>
       ))}
     </>
