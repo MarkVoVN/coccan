@@ -1,8 +1,12 @@
+"use client";
+
 import CallToActionSection from "../../../components/CallToActionSection";
 import SessionSeletorSection from "../../../components/SessionSeletorSection";
 import CategorySeletorSection from "../../../components/CategorySeletorSection";
 import ProductByCategorySection from "../../../components/ProductByCategorySection";
+import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
+import React from "react";
 
 export default function Home() {
   const categoryList = [
@@ -33,6 +37,30 @@ export default function Home() {
     },
   ];
 
+  const productInfoPlaceholder = {
+    id: 8,
+    name: "Product Name",
+    price: 12000,
+    imageUrl: "/homepage/product-placeholder-img.png",
+    description: "Product description",
+    storeName: "Store Name",
+  };
+
+  const [productModalOpen, setProducttModalOpen] = React.useState(true);
+
+  const [productDetail, setProductDetail] = React.useState(
+    productInfoPlaceholder
+  );
+
+  const handleProductModalOpen = () => {
+    setProductDetail(productInfoPlaceholder);
+    setProducttModalOpen(true);
+  };
+
+  const handleProductModalClose = () => {
+    setProducttModalOpen(false);
+  };
+
   return (
     <>
       <CallToActionSection></CallToActionSection>
@@ -50,8 +78,14 @@ export default function Home() {
           key={category.categoryId}
           category={category}
           viewMore={true}
+          handleViewProductDetail={handleProductModalOpen}
         ></ProductByCategorySection>
       ))}
+      <ProductDetailModal
+        open={productModalOpen}
+        handleClose={handleProductModalClose}
+        product={productDetail}
+      ></ProductDetailModal>
     </>
   );
 }
