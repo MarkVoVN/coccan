@@ -1,0 +1,32 @@
+
+.modal-wrapper {
+
+
+  .modal-container {
+    background-color: white;
+    border-radius: 1rem;
+    border: none !important;
+
+    .modal-title {
+      background-color: #FFB26B;
+      color: white !important;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .modal-body {
+
+      .product-img-container {
+
+        box-shadow: 0px 109px 337px rgba(0, 0, 0, 0.0815322), 0px 24.3466px 75.2734px rgba(0, 0, 0, 0.145);
+          border-radius: 1rem;
+
+      }
+    }
+  }
+
+  .modal-container:focus-visible {
+
+    outline: none !important;
+  }
+
+}
