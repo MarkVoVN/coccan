@@ -38,7 +38,7 @@ export default function Home() {
   ];
 
   const productInfoPlaceholder = {
-    id: 8,
+    id: "8",
     name: "Product Name",
     price: 12000,
     imageUrl: "/homepage/product-placeholder-img.png",
@@ -46,7 +46,7 @@ export default function Home() {
     storeName: "Store Name",
   };
 
-  const [productModalOpen, setProducttModalOpen] = React.useState(true);
+  const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
   const [productDetail, setProductDetail] = React.useState(
     productInfoPlaceholder
@@ -61,31 +61,52 @@ export default function Home() {
     setProducttModalOpen(false);
   };
 
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const orderInfo = sessionStorage.getItem("orderInfo");
+    if (orderInfo) {
+      //fetch api to get product with location and session id
+
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <>
       <CallToActionSection></CallToActionSection>
-      <div className="selectors-wrapper w-full flex flex-row">
-        <div className="w-1/6 ml-[9vw]">
-          <SessionSeletorSection></SessionSeletorSection>
-        </div>
-      </div>
-      <CategorySeletorSection
-        categoryList={categoryList}
-      ></CategorySeletorSection>
+      {isLoading && (
+        <>
+          <h2>LOADING...</h2>
+        </>
+      )}
 
-      {categoryList.map((category) => (
-        <ProductByCategorySection
-          key={category.categoryId}
-          category={category}
-          viewMore={true}
-          handleViewProductDetail={handleProductModalOpen}
-        ></ProductByCategorySection>
-      ))}
-      <ProductDetailModal
-        open={productModalOpen}
-        handleClose={handleProductModalClose}
-        product={productDetail}
-      ></ProductDetailModal>
+      {!isLoading && (
+        <>
+          <div className="selectors-wrapper w-full flex flex-row">
+            <div className="w-1/6 ml-[9vw]">
+              <SessionSeletorSection></SessionSeletorSection>
+            </div>
+          </div>
+          <CategorySeletorSection
+            categoryList={categoryList}
+          ></CategorySeletorSection>
+
+          {categoryList.map((category) => (
+            <ProductByCategorySection
+              key={category.categoryId}
+              category={category}
+              viewMore={true}
+              handleViewProductDetail={handleProductModalOpen}
+            ></ProductByCategorySection>
+          ))}
+          <ProductDetailModal
+            open={productModalOpen}
+            handleClose={handleProductModalClose}
+            product={productDetail}
+          ></ProductDetailModal>
+        </>
+      )}
     </>
   );
 }

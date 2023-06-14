@@ -4,10 +4,10 @@ import React from "react";
 import StoreDetailSection from "@/components/StoreDetailSection";
 import { Button } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
-import ProductByCategorySection from "../../../components/ProductByCategorySection";
+import ProductByCategorySection from "@/components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
-function StoreDetailPage() {
+function StoreDetailPage({ params }: { params: { storeId: string } }) {
   const store = {
     id: 1,
     name: "711 Bakery",
@@ -46,7 +46,7 @@ function StoreDetailPage() {
   ];
 
   const productInfoPlaceholder = {
-    id: 8,
+    id: "8",
     name: "Product Name",
     price: 12000,
     imageUrl: "/homepage/product-placeholder-img.png",
