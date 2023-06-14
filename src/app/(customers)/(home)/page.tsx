@@ -81,7 +81,7 @@ export default function Home() {
         </>
       )}
 
-      {!isLoading && (
+      {isLoading && (
         <>
           <div className="selectors-wrapper w-full flex flex-row">
             <div className="w-1/6 ml-[9vw]">
