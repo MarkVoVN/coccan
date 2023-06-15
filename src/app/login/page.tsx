@@ -1,23 +1,28 @@
 "use client";
 
-import React from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import app from "../../firebase";
+import {
+  loginUser,
+  useAppSelector,
+} from "@/app/GlobalRedux/Features/userSlice";
 import { Button } from "@mui/material";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import app from "../../firebase";
 import "./style.scss";
+import React from "react";
+import useStorage from "@/hooks/useStorage";
 
 function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const login = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        // The signed-in user info.
         const user = result.user;
         const userInfo = {
           displayName: user.displayName,
@@ -26,24 +31,28 @@ function LoginPage() {
           uid: user.uid,
           refreshToken: user.refreshToken,
         };
+
+        dispatch(loginUser({ value: userInfo }));
         sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log(userInfo);
         router.push("/");
-        // redirect("/home");
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData?.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log(error);
       });
   };
+  const { getItem, setItem, removeItem } = useStorage();
+
+  //if user is saved in session, proceed to login user
+  React.useEffect(() => {
+    const userInfoString = getItem("userInfo");
+    if (!userInfoString) return;
+
+    const userInfo = JSON.parse(userInfoString);
+    dispatch(loginUser({ value: userInfo }));
+    router.push("/");
+  }, []);
+
+  const displayName = useAppSelector((state) => state.user.value.displayName);
 
   return (
     <>
@@ -76,6 +85,9 @@ function LoginPage() {
                 </g>
               </svg>
               <div className="title">COCCAN</div>
+              <div>
+                <span>{displayName}</span>
+              </div>
             </div>
             <Button className="button" variant="contained" onClick={login}>
               Sign in by Google

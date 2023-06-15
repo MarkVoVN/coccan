@@ -1,19 +1,12 @@
 "use client";
 
-import useStorage from "@/hooks/useStorage";
 import {
-  Box,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  Menu,
-  Button,
-} from "@mui/material";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import type { RootState } from "@/app/GlobalRedux/store";
-import { useSelector, useDispatch } from "react-redux";
-import { setSelectedSessionId } from "@/app/GlobalRedux/Features/counterSlice";
+  updateLocationId,
+  updateSessionId,
+} from "@/app/GlobalRedux/Features/orderSlice";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 function SessionSeletorSection() {
   const sessionList = [
@@ -24,26 +17,12 @@ function SessionSeletorSection() {
     { id: "3", title: "5:15PM" },
   ];
 
-  const { getItem, setItem, removeItem } = useStorage();
-  const defaultOrderInfo = getItem("orderInfo");
-  const defaultSessionId: string = defaultOrderInfo
-    ? JSON.parse(defaultOrderInfo).sessionId
-    : "-1";
-  const defaultLocationId: string = defaultOrderInfo
-    ? JSON.parse(defaultOrderInfo).locationId
-    : "None";
-  // const [selectedSessionId, setSelectedSessionId] =
-  //   useState<string>(defaultSessionId);
+  // const { getItem, setItem, removeItem } = useStorage();
+  // const defaultOrderInfo = getItem("orderInfo");
 
-  const handleSessionChange = (e: SelectChangeEvent) => {
-    setSelectedSessionId(e.target.value);
-  };
+  const sessionId = useAppSelector((state) => state.order.value.sessionId);
 
-  const [location, setLocation] = useState<string>(defaultLocationId);
-
-  const handleLocationChange = (e: SelectChangeEvent) => {
-    setLocation(e.target.value);
-  };
+  const locationId = useAppSelector((state) => state.order.value.locationId);
 
   // useEffect(() => {
   //   if (location != "None" && selectedSessionId != "-1") {
@@ -57,22 +36,25 @@ function SessionSeletorSection() {
   //     setItem("orderInfo", JSON.stringify(orderInfo));
   //   }
   // }, [selectedSessionId, location, setItem]);
-
-  const handleChange = (e: SelectChangeEvent) => {
-    dispatch(setSelectedSessionId(e.target.value));
-  };
-  const sessionId = useSelector((state: RootState) => state.sessionId.value);
   const dispatch = useDispatch();
+  const handleLocationIdChange = (e: SelectChangeEvent) => {
+    dispatch(updateLocationId(e.target.value));
+  };
+
+  const handleSessionIdChange = (e: SelectChangeEvent) => {
+    dispatch(updateSessionId(e.target.value));
+  };
+
   return (
     <div className="selectors-container flex flex-row justify-center w-[100%]">
       <div>
         <Select
           className="selector"
-          value={location}
+          value={locationId}
           label="Location"
-          onChange={handleLocationChange}
+          onChange={handleLocationIdChange}
         >
-          <MenuItem value={"None"} disabled>
+          <MenuItem value={"-1"} disabled>
             Set location
           </MenuItem>
           <MenuItem value={"FPT-Q9"}>FPT Q9</MenuItem>
@@ -82,7 +64,7 @@ function SessionSeletorSection() {
           className="selector"
           value={sessionId}
           label="Session"
-          onChange={handleChange}
+          onChange={handleSessionIdChange}
         >
           {sessionList.map((session) => (
             <MenuItem

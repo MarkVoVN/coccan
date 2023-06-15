@@ -7,6 +7,7 @@ import ProductByCategorySection from "../../../components/ProductByCategorySecti
 import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 
 export default function Home() {
   const categoryList = [
@@ -61,27 +62,30 @@ export default function Home() {
     setProducttModalOpen(false);
   };
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isFetchLoading, setIsFetchLoading] = React.useState(true);
+  const isOrderInfoSetByUser = useAppSelector(
+    (state) => state.order.value.isSetByUser
+  );
 
   React.useEffect(() => {
-    const orderInfo = sessionStorage.getItem("orderInfo");
-    if (orderInfo) {
-      //fetch api to get product with location and session id
+    //fetch api to get product with location and session id
 
-      setIsLoading(false);
-    }
+    setIsFetchLoading(false);
   }, []);
+  const name = useAppSelector((state) => state.user.value.displayName);
 
   return (
     <>
       <CallToActionSection></CallToActionSection>
-      {isLoading && (
+      {isFetchLoading && <h2>Fetching</h2>}
+      {!isOrderInfoSetByUser && <h2>Order info has not been set</h2>}
+      {(isFetchLoading || !isOrderInfoSetByUser) && (
         <>
-          <h2>LOADING...</h2>
+          <h2>Loading...</h2>
         </>
       )}
 
-      {isLoading && (
+      {!(isFetchLoading || !isOrderInfoSetByUser) && (
         <>
           <div className="selectors-wrapper w-full flex flex-row">
             <div className="w-1/6 ml-[9vw]">

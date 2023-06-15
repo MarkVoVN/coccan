@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContentText,
   DialogTitle,
+  Badge,
 } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -24,6 +25,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 import "./_header.scss";
 import SessionSeletorSection from "@/components/SessionSeletorSection";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 
 function Header() {
   const categoryList = [
@@ -60,23 +62,25 @@ function Header() {
     redirect("/search");
   };
 
-  const [orderInfoDialogOpen, setOrderInfoDialogOpen] = useState(false);
-
   const handleOrderInfoDialogClose = () => {
-    redirect("/");
+    setOrderInfoDialogOpen(false);
   };
+
+  const isOrderInfoSetByUser = useAppSelector(
+    (state) => state.order.value.isSetByUser
+  );
+
+  const [orderInfoDialogOpen, setOrderInfoDialogOpen] = useState(
+    !isOrderInfoSetByUser
+  );
+
+  const cartItemCount = useAppSelector((state) => state.cart.countOfItem);
   //fetch cate list
-  useEffect(() => {
-    const userInfo = sessionStorage.getItem("userInfo");
-    const orderInfo = sessionStorage.getItem("orderInfo");
-    if (!userInfo) return;
-    setUser(JSON.parse(userInfo));
-    if (!orderInfo) {
-      setOrderInfoDialogOpen(true);
-    }
-  }, []);
+  useEffect(() => {}, []);
+
   return (
     <>
+      {!isOrderInfoSetByUser && <h2>Order info has not been set</h2>}
       <Dialog
         open={orderInfoDialogOpen}
         onClose={handleOrderInfoDialogClose}
@@ -152,7 +156,9 @@ function Header() {
               <div className="cart-icon-container px-[0.5rem]">
                 <Link href="/cart">
                   <IconButton size="large">
-                    <ShoppingCart fontSize="inherit"></ShoppingCart>
+                    <Badge badgeContent={cartItemCount}>
+                      <ShoppingCart fontSize="inherit"></ShoppingCart>
+                    </Badge>
                   </IconButton>
                 </Link>
               </div>
