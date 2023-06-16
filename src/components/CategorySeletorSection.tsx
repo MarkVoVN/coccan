@@ -8,7 +8,7 @@ function CategorySeletorSection({
   categoryList,
 }: {
   categoryList: {
-    categoryId: number;
+    categoryId: string;
     categoryIconUrl: string;
     name: string;
   }[];

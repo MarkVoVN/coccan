@@ -10,7 +10,7 @@ function ProductByCategorySection({
   handleViewProductDetail,
 }: {
   category: {
-    categoryId: number;
+    categoryId: string;
     categoryIconUrl: string;
     name: string;
   };
