@@ -7,6 +7,7 @@ import ProductByCategorySection from "../../../components/ProductByCategorySecti
 import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
+
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 
 export default function Home() {
@@ -39,7 +40,9 @@ export default function Home() {
   ];
 
   const productInfoPlaceholder = {
+
     id: "8",
+
     name: "Product Name",
     price: 12000,
     imageUrl: "/homepage/product-placeholder-img.png",
@@ -47,7 +50,9 @@ export default function Home() {
     storeName: "Store Name",
   };
 
+
   const [productModalOpen, setProducttModalOpen] = React.useState(false);
+
 
   const [productDetail, setProductDetail] = React.useState(
     productInfoPlaceholder
@@ -61,6 +66,7 @@ export default function Home() {
   const handleProductModalClose = () => {
     setProducttModalOpen(false);
   };
+
 
   const [isFetchLoading, setIsFetchLoading] = React.useState(true);
   const isOrderInfoSetByUser = useAppSelector(
@@ -109,6 +115,7 @@ export default function Home() {
           ></ProductDetailModal>
         </>
       )}
+
     </>
   );
 }

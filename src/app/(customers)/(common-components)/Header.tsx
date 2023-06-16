@@ -118,6 +118,7 @@ function Header() {
   }, [orderInfo]);
 
   return (
+
     <>
       <Dialog
         open={orderInfoDialogOpen}
@@ -189,6 +190,7 @@ function Header() {
                   ))}
                 </Select>
               </div>
+
             </div>
             <div className="navbar-icon flex flex-row justify-end items-center">
               <div className="cart-icon-container px-[0.5rem]">

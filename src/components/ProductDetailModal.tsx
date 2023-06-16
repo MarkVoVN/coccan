@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Modal, Typography, Button, IconButton } from "@mui/material";
 import "@/style/ProductDetailModal.scss";
 import { ArrowBackIos } from "@mui/icons-material";
@@ -12,7 +13,9 @@ function ProductDetailModal({
   open: boolean;
   handleClose: () => void;
   product: {
+
     id: string;
+
     name: string;
     price: number;
     imageUrl: string;
@@ -60,7 +63,9 @@ function ProductDetailModal({
                 currency: "VND",
               })}
             </Typography>
+
             <AddToCartBtn type="text" productId={product.id}></AddToCartBtn>
+
           </div>
         </div>
       </div>
