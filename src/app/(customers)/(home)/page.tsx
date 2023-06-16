@@ -8,6 +8,8 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
 
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+
 export default function Home() {
   const categoryList = [
     {
@@ -38,7 +40,9 @@ export default function Home() {
   ];
 
   const productInfoPlaceholder = {
-    id: 8,
+
+    id: "8",
+
     name: "Product Name",
     price: 12000,
     imageUrl: "/homepage/product-placeholder-img.png",
@@ -46,7 +50,9 @@ export default function Home() {
     storeName: "Store Name",
   };
 
-  const [productModalOpen, setProducttModalOpen] = React.useState(true);
+
+  const [productModalOpen, setProducttModalOpen] = React.useState(false);
+
 
   const [productDetail, setProductDetail] = React.useState(
     productInfoPlaceholder
@@ -61,31 +67,55 @@ export default function Home() {
     setProducttModalOpen(false);
   };
 
+
+  const [isFetchLoading, setIsFetchLoading] = React.useState(true);
+  const isOrderInfoSetByUser = useAppSelector(
+    (state) => state.order.value.isSetByUser
+  );
+
+  React.useEffect(() => {
+    //fetch api to get product with location and session id
+
+    setIsFetchLoading(false);
+  }, []);
+  const name = useAppSelector((state) => state.user.value.displayName);
+
   return (
     <>
       <CallToActionSection></CallToActionSection>
-      <div className="selectors-wrapper w-full flex flex-row">
-        <div className="w-1/6 ml-[9vw]">
-          <SessionSeletorSection></SessionSeletorSection>
-        </div>
-      </div>
-      <CategorySeletorSection
-        categoryList={categoryList}
-      ></CategorySeletorSection>
+      {(isFetchLoading || !isOrderInfoSetByUser) && (
+        <>
+          <h2>Loading...</h2>
+        </>
+      )}
 
-      {categoryList.map((category) => (
-        <ProductByCategorySection
-          key={category.categoryId}
-          category={category}
-          viewMore={true}
-          handleViewProductDetail={handleProductModalOpen}
-        ></ProductByCategorySection>
-      ))}
-      <ProductDetailModal
-        open={productModalOpen}
-        handleClose={handleProductModalClose}
-        product={productDetail}
-      ></ProductDetailModal>
+      {!(isFetchLoading || !isOrderInfoSetByUser) && (
+        <>
+          <div className="selectors-wrapper w-full flex flex-row">
+            <div className="ml-[9vw]">
+              <SessionSeletorSection></SessionSeletorSection>
+            </div>
+          </div>
+          <CategorySeletorSection
+            categoryList={categoryList}
+          ></CategorySeletorSection>
+
+          {categoryList.map((category) => (
+            <ProductByCategorySection
+              key={category.categoryId}
+              category={category}
+              viewMore={true}
+              handleViewProductDetail={handleProductModalOpen}
+            ></ProductByCategorySection>
+          ))}
+          <ProductDetailModal
+            open={productModalOpen}
+            handleClose={handleProductModalClose}
+            product={productDetail}
+          ></ProductDetailModal>
+        </>
+      )}
+
     </>
   );
 }

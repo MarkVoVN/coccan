@@ -1,7 +1,9 @@
 import React from "react";
-import { Modal, Typography, Box, Button, IconButton } from "@mui/material";
+
+import { Modal, Typography, Button, IconButton } from "@mui/material";
 import "@/style/ProductDetailModal.scss";
 import { ArrowBackIos } from "@mui/icons-material";
+import AddToCartBtn from "@/components/AddToCartBtn";
 
 function ProductDetailModal({
   open,
@@ -11,7 +13,9 @@ function ProductDetailModal({
   open: boolean;
   handleClose: () => void;
   product: {
-    id: number;
+
+    id: string;
+
     name: string;
     price: number;
     imageUrl: string;
@@ -59,13 +63,9 @@ function ProductDetailModal({
                 currency: "VND",
               })}
             </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              className="w-full self-center px-[1rem] bg-[#EA5857] mt-[2rem]"
-            >
-              Add to cart
-            </Button>
+
+            <AddToCartBtn type="text" productId={product.id}></AddToCartBtn>
+
           </div>
         </div>
       </div>

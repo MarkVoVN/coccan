@@ -1,27 +1,37 @@
 "use client";
 
-import { Box, Select, MenuItem, SelectChangeEvent, Menu } from "@mui/material";
-import React from "react";
-import { useState } from "react";
+
+import {
+  updateLocationId,
+  updateSessionId,
+} from "@/app/GlobalRedux/Features/orderSlice";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 function SessionSeletorSection() {
   const sessionList = [
+    { id: "-1", title: "Set session" },
+
     { id: "0", title: "9:15AM" },
     { id: "1", title: "11:45AM" },
     { id: "2", title: "2:45PM" },
     { id: "3", title: "5:15PM" },
   ];
 
-  const [selectedSessionId, setSelectedSessionId] = useState("0");
 
-  const handleSessionChange = (e: SelectChangeEvent) => {
-    setSelectedSessionId(e.target.value);
+  const sessionId = useAppSelector((state) => state.order.value.sessionId);
+
+  const locationId = useAppSelector((state) => state.order.value.locationId);
+
+  const dispatch = useDispatch();
+  const handleLocationIdChange = (e: SelectChangeEvent) => {
+    dispatch(updateLocationId(e.target.value));
   };
 
-  const [location, setLocation] = useState("FPT Q9");
+  const handleSessionIdChange = (e: SelectChangeEvent) => {
+    dispatch(updateSessionId(e.target.value));
 
-  const handleLocationChange = (e: SelectChangeEvent) => {
-    setLocation(e.target.value);
   };
 
   return (
@@ -29,23 +39,32 @@ function SessionSeletorSection() {
       <div>
         <Select
           className="selector"
-          value={location}
+
+          value={locationId}
           label="Location"
-          onChange={handleLocationChange}
-          autoWidth
+          onChange={handleLocationIdChange}
         >
-          <MenuItem value={"FPT Q9"}>FPT Q9</MenuItem>
+          <MenuItem value={"-1"} disabled>
+            Set location
+          </MenuItem>
+          <MenuItem value={"FPT-Q9"}>FPT Q9</MenuItem>
+
           <MenuItem value={"NVH"}>NVH</MenuItem>
         </Select>
         <Select
           className="selector"
-          value={selectedSessionId}
+
+          value={sessionId}
           label="Session"
-          onChange={handleSessionChange}
-          autoWidth
+          onChange={handleSessionIdChange}
         >
           {sessionList.map((session) => (
-            <MenuItem key={session.id} value={session.id}>
+            <MenuItem
+              key={session.id}
+              value={session.id}
+              disabled={session.id == "-1"}
+            >
+
               {session.title}
             </MenuItem>
           ))}
