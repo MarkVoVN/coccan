@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Typography } from "@mui/material";
+import AddToCartBtn from "./AddToCartBtn";
 
 function SearchResultSection({
   searchResults,
@@ -7,11 +8,11 @@ function SearchResultSection({
   searchResults: {
     type: string;
     list: {
-      id: number;
+      id: string;
       name: string;
       logoUrl: string;
       list: {
-        id: number;
+        id: string;
         name: string;
         imgUrl: string;
         price: number;
@@ -66,9 +67,10 @@ function SearchResultSection({
                       </Typography>
                     </div>
                     <div className="product-add-to-cart-btn-container w-[1/6] mr-[1rem]">
-                      <Button size="large" variant="outlined" className="">
-                        Add
-                      </Button>
+                      <AddToCartBtn
+                        type="text"
+                        productId={product.id}
+                      ></AddToCartBtn>
                     </div>
                   </div>
                 ))}

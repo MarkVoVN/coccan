@@ -1,25 +1,21 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { Add } from "@mui/icons-material";
-
+import ProductCard from "@/components/ProductCard";
+import "@/style/ProductByCategory.scss";
 function ProductByCategorySection({
   category,
+  viewMore,
+  handleViewProductDetail,
 }: {
   category: {
     categoryId: number;
     categoryIconUrl: string;
     name: string;
   };
+  viewMore: boolean;
+  handleViewProductDetail: (id: number) => void;
 }) {
   const productList = [
     {
@@ -79,33 +75,21 @@ function ProductByCategorySection({
           <Typography variant="h3" className="category-title">
             {category.name}
           </Typography>
-          <Button variant="contained" className="view-more-btn">
-            View more
-          </Button>
+          {viewMore ? (
+            <Button variant="contained" className="view-more-btn">
+              View more
+            </Button>
+          ) : (
+            <></>
+          )}
         </Box>
         <Box className="product-list-container">
           {productList.map((product) => (
-            <Card key={product.id} className="product-container">
-              <CardMedia
-                component={"img"}
-                image={product.imageUrl}
-                height=""
-              ></CardMedia>
-              <CardContent>
-                <Typography variant="h5">{product.name}</Typography>
-                <Box className="product-info">
-                  <Typography variant="h6">
-                    {product.price.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Typography>
-                  <IconButton className="add-to-cart-btn">
-                    <Add color="inherit"></Add>
-                  </IconButton>
-                </Box>
-              </CardContent>
-            </Card>
+            <ProductCard
+              key={product.id}
+              product={product}
+              handleViewProductDetail={handleViewProductDetail}
+            ></ProductCard>
           ))}
         </Box>
       </Box>
