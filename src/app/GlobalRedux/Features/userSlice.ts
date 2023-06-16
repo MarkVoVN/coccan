@@ -7,9 +7,9 @@ import { RootState } from "../store";
 export interface UserState {
   value : {
     isAuth: boolean;
-    displayName: string | null,
-    email: string | null,
-    photoURL: string | null,
+    displayName: string | undefined,
+    email: string | undefined,
+    photoURL: string | undefined,
     uid: string,
     refreshToken: string,
   }
@@ -34,9 +34,9 @@ export const userSlice = createSlice(
     initialState,
     reducers: {
       loginUser: (state, action : PayloadAction<{value: {
-        displayName: string | null,
-        email: string | null,
-        photoURL: string | null,
+        displayName: string | undefined,
+        email: string | undefined,
+        photoURL: string | undefined,
         uid: string,
         refreshToken: string,
       }}>) => {

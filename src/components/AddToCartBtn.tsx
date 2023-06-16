@@ -3,6 +3,8 @@ import { Button, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { addToCartSingle } from "@/app/GlobalRedux/Features/cartSlice";
 import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import useStorage from "@/hooks/useStorage";
 
 function AddToCartBtn({
   type,
@@ -11,45 +13,8 @@ function AddToCartBtn({
   type: string;
   productId: string;
 }) {
-  // const handleAddToCart = (productId: string) => {
-  //   let cartInfo = sessionStorage.getItem("cart");
-  //   if (cartInfo != null) {
-  //     let cart: {
-  //       userId: string;
-  //       locationId: string;
-  //       timeslotId: string;
-  //       list: { productId: string; amount: number }[];
-  //     } = JSON.parse(cartInfo);
-  //     let item = cart.list.find((item) => item.productId === productId);
-  //     if (item) {
-  //       item.amount++;
-  //     } else {
-  //       cart.list.concat({ productId: productId, amount: 1 });
-  //     }
-
-  //     sessionStorage.setItem("cart", JSON.stringify(cart));
-  //   } else {
-  //     let cart: {
-  //       userId: string;
-  //       locationId: string;
-  //       timeslotId: string;
-  //       list: { productId: string; amount: number }[];
-  //     } = {
-  //       userId: "",
-  //       locationId: "",
-  //       timeslotId: "",
-  //       list: [
-  //         {
-  //           productId: productId,
-  //           amount: 1,
-  //         },
-  //       ],
-  //     };
-
-  //     sessionStorage.setItem("cart", JSON.stringify(cart));
-  //   }
-  // };
   const dispatch = useDispatch();
+
   const handleAddToCart = (productId: string) => {
     dispatch(addToCartSingle(productId));
   };

@@ -77,8 +77,6 @@ export default function Home() {
   return (
     <>
       <CallToActionSection></CallToActionSection>
-      {isFetchLoading && <h2>Fetching</h2>}
-      {!isOrderInfoSetByUser && <h2>Order info has not been set</h2>}
       {(isFetchLoading || !isOrderInfoSetByUser) && (
         <>
           <h2>Loading...</h2>
@@ -88,7 +86,7 @@ export default function Home() {
       {!(isFetchLoading || !isOrderInfoSetByUser) && (
         <>
           <div className="selectors-wrapper w-full flex flex-row">
-            <div className="w-1/6 ml-[9vw]">
+            <div className="ml-[9vw]">
               <SessionSeletorSection></SessionSeletorSection>
             </div>
           </div>

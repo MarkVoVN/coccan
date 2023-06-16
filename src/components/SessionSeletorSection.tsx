@@ -17,25 +17,10 @@ function SessionSeletorSection() {
     { id: "3", title: "5:15PM" },
   ];
 
-  // const { getItem, setItem, removeItem } = useStorage();
-  // const defaultOrderInfo = getItem("orderInfo");
-
   const sessionId = useAppSelector((state) => state.order.value.sessionId);
 
   const locationId = useAppSelector((state) => state.order.value.locationId);
 
-  // useEffect(() => {
-  //   if (location != "None" && selectedSessionId != "-1") {
-  //     let orderInfo: {
-  //       locationId: string;
-  //       sessionId: string;
-  //     } = {
-  //       locationId: location,
-  //       sessionId: selectedSessionId,
-  //     };
-  //     setItem("orderInfo", JSON.stringify(orderInfo));
-  //   }
-  // }, [selectedSessionId, location, setItem]);
   const dispatch = useDispatch();
   const handleLocationIdChange = (e: SelectChangeEvent) => {
     dispatch(updateLocationId(e.target.value));

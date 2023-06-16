@@ -23,6 +23,10 @@ export const cartSlice = createSlice(
     name: 'cart',
     initialState,
     reducers: {
+      setCart: (_, action : PayloadAction<CartState>) => {
+        return action.payload
+      },
+
       addToCartSingle: (state, action : PayloadAction<string>) => {
         let item = state.value.find(item => item.menuItemId === action.payload);
         if (item) {
@@ -65,6 +69,6 @@ export const cartSlice = createSlice(
   }
 );
 
-export const {addToCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
+export const {setCart, addToCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -21,11 +21,15 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Search, ShoppingCart } from "@mui/icons-material";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import "./_header.scss";
 import SessionSeletorSection from "@/components/SessionSeletorSection";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { useDispatch } from "react-redux";
+import useStorage from "@/hooks/useStorage";
+import { loginUser } from "@/app/GlobalRedux/Features/userSlice";
+import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
+import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
 
 function Header() {
   const categoryList = [
@@ -34,14 +38,14 @@ function Header() {
     { id: 3, name: "Rice" },
     { id: 4, name: "Bread" },
   ];
-
-  const [user, setUser] = useState<{
-    displayName: string;
-    email: string;
-    photoURL: string;
-    uid: string;
-    refreshToken: string;
-  }>();
+  const router = useRouter();
+  // const [user, setUser] = useState<{
+  //   displayName: string;
+  //   email: string;
+  //   photoURL: string;
+  //   uid: string;
+  //   refreshToken: string;
+  // }>();
 
   const [search, setSearch] = useState("");
 
@@ -59,12 +63,14 @@ function Header() {
     //pass props and redirect to search page
 
     console.log("searching for" + location + " " + category + " " + search);
-    redirect("/search");
+    router.push("/search");
   };
 
   const handleOrderInfoDialogClose = () => {
     setOrderInfoDialogOpen(false);
   };
+
+  const orderInfo = useAppSelector((state) => state.order.value);
 
   const isOrderInfoSetByUser = useAppSelector(
     (state) => state.order.value.isSetByUser
@@ -74,13 +80,45 @@ function Header() {
     !isOrderInfoSetByUser
   );
 
-  const cartItemCount = useAppSelector((state) => state.cart.countOfItem);
+  const cartItemCount = useAppSelector(
+    (state) => state.cart.countOfItemQuantity
+  );
+  const user = useAppSelector((state) => state.user.value);
+  const cart = useAppSelector((state) => state.cart);
+
   //fetch cate list
-  useEffect(() => {}, []);
+  //const categoryList = useAppSelector((state) => state.category);
+  const { getItem, setItem, removeItem } = useStorage();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const userInfoString = getItem("userInfo");
+    if (!userInfoString) return;
+
+    const userInfo = JSON.parse(userInfoString);
+    dispatch(loginUser({ value: userInfo }));
+
+    const orderInfoString = getItem("orderInfo");
+    if (!orderInfoString) return;
+
+    const orderInfo = JSON.parse(orderInfoString);
+    dispatch(setOrderInfo({ value: orderInfo }));
+    setOrderInfoDialogOpen(false);
+
+    const cartInfoString = getItem("cartInfo");
+    if (!cartInfoString) return;
+    dispatch(setCart(JSON.parse(cartInfoString)));
+  }, []);
+
+  useEffect(() => {
+    setItem("cartInfo", JSON.stringify(cart));
+  }, [cartItemCount]);
+
+  useEffect(() => {
+    setItem("orderInfo", JSON.stringify(orderInfo));
+  }, [orderInfo]);
 
   return (
     <>
-      {!isOrderInfoSetByUser && <h2>Order info has not been set</h2>}
       <Dialog
         open={orderInfoDialogOpen}
         onClose={handleOrderInfoDialogClose}
@@ -163,14 +201,16 @@ function Header() {
                 </Link>
               </div>
               <div className="avatar-login-container px-[0.5rem]">
-                {user && <Avatar src={user.photoURL} alt={user.displayName} />}
-                {!user && (
+                {user.isAuth && (
+                  <Avatar src={user.photoURL} alt={user.displayName} />
+                )}
+                {!user.isAuth && (
                   <Button
                     size="large"
                     className="login-btn"
                     variant="contained"
                   >
-                    <Link href="/">Log In</Link>
+                    <Link href="/login">Log In</Link>
                   </Button>
                 )}
               </div>

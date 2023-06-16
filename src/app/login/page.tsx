@@ -25,9 +25,9 @@ function LoginPage() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const user = result.user;
         const userInfo = {
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
+          displayName: user.displayName as string | undefined,
+          email: user.email as string | undefined,
+          photoURL: user.photoURL as string | undefined,
           uid: user.uid,
           refreshToken: user.refreshToken,
         };
