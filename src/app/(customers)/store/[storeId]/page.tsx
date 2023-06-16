@@ -9,7 +9,7 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 
 function StoreDetailPage({ params }: { params: { storeId: string } }) {
   const store = {
-    id: 1,
+    id: "1",
     name: "711 Bakery",
     logoUrl: "/search/store-logo-placeholder.svg",
     description: "We sell the best pastry in the area",
@@ -19,27 +19,27 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
 
   const categoryList = [
     {
-      categoryId: 0,
+      categoryId: "0",
       categoryIconUrl: "rice.svg",
       name: "Rice",
     },
     {
-      categoryId: 1,
+      categoryId: "1",
       categoryIconUrl: "bread.svg",
       name: "Bread",
     },
     {
-      categoryId: 2,
+      categoryId: "2",
       categoryIconUrl: "drink.svg",
       name: "Drink",
     },
     {
-      categoryId: 3,
+      categoryId: "3",
       categoryIconUrl: "snack.svg",
       name: "Snack",
     },
     {
-      categoryId: 4,
+      categoryId: "4",
       categoryIconUrl: "others.svg",
       name: "Others",
     },
