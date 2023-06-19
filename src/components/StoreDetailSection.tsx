@@ -5,7 +5,7 @@ function StoreDetailSection({
   store,
 }: {
   store: {
-    id: number;
+    id: string;
     name: string;
     logoUrl: string;
     description: string;

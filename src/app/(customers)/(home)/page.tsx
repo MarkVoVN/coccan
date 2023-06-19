@@ -93,38 +93,7 @@ export default function Home() {
           <CategorySeletorSection
             categoryList={categoryList}
           ></CategorySeletorSection>
-          {(isFetchLoading || !isOrderInfoSetByUser) && (
-            <>
-              <h2>Loading...</h2>
-            </>
-          )}
 
-          {!(isFetchLoading || !isOrderInfoSetByUser) && (
-            <>
-              <div className="selectors-wrapper w-full flex flex-row">
-                <div className="ml-[9vw]">
-                  <SessionSeletorSection></SessionSeletorSection>
-                </div>
-              </div>
-              <CategorySeletorSection
-                categoryList={categoryList}
-              ></CategorySeletorSection>
-
-              {categoryList.map((category) => (
-                <ProductByCategorySection
-                  key={category.categoryId}
-                  category={category}
-                  viewMore={true}
-                  handleViewProductDetail={handleProductModalOpen}
-                ></ProductByCategorySection>
-              ))}
-              <ProductDetailModal
-                open={productModalOpen}
-                handleClose={handleProductModalClose}
-                product={productDetail}
-              ></ProductDetailModal>
-            </>
-          )}
           {categoryList.map((category) => (
             <ProductByCategorySection
               key={category.categoryId}

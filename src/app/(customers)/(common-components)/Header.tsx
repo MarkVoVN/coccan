@@ -32,7 +32,6 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRouter } from "next/navigation";
 import "./_header.scss";
 import SessionSeletorSection from "@/components/SessionSeletorSection";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
@@ -44,20 +43,6 @@ import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
 import PreferedLocationSelector from "@/components/PreferedLocationSelector";
 
 function Header() {
-  const categoryList = [
-    { id: 1, name: "Drink" },
-    { id: 2, name: "Snack" },
-    { id: 3, name: "Rice" },
-    { id: 4, name: "Bread" },
-  ];
-  const router = useRouter();
-  // const [user, setUser] = useState<{
-  //   displayName: string;
-  //   email: string;
-  //   photoURL: string;
-  //   uid: string;
-  //   refreshToken: string;
-  // }>();
   const categoryList = [
     { id: 1, name: "Drink" },
     { id: 2, name: "Snack" },
@@ -164,34 +149,6 @@ function Header() {
     setItem("orderInfo", JSON.stringify(orderInfo));
   }, [orderInfo]);
   //const categoryList = useAppSelector((state) => state.category);
-  const { getItem, setItem, removeItem } = useStorage();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const userInfoString = getItem("userInfo");
-    if (!userInfoString) return;
-
-    const userInfo = JSON.parse(userInfoString);
-    dispatch(loginUser({ value: userInfo }));
-
-    const orderInfoString = getItem("orderInfo");
-    if (!orderInfoString) return;
-
-    const orderInfo = JSON.parse(orderInfoString);
-    dispatch(setOrderInfo({ value: orderInfo }));
-    setOrderInfoDialogOpen(false);
-
-    const cartInfoString = getItem("cartInfo");
-    if (!cartInfoString) return;
-    dispatch(setCart(JSON.parse(cartInfoString)));
-  }, []);
-
-  useEffect(() => {
-    setItem("cartInfo", JSON.stringify(cart));
-  }, [cartItemCount]);
-
-  useEffect(() => {
-    setItem("orderInfo", JSON.stringify(orderInfo));
-  }, [orderInfo]);
 
   return (
     <>
