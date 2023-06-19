@@ -28,16 +28,15 @@ function ProductCard({
     <Card
       className="product-container"
       onClick={() => handleViewProductDetail(product.id)}
+      sx={{ maxWidth: 240 }}
     >
-      <CardMedia
-        component={"img"}
-        image={product.imageUrl}
-        height=""
-      ></CardMedia>
+      <CardMedia component="img" image={product.imageUrl} height=""></CardMedia>
       <CardContent>
-        <Typography variant="h5">{product.name}</Typography>
+        <Typography variant="h6" fontWeight="500">
+          {product.name}
+        </Typography>
         <Box className="product-info">
-          <Typography variant="h6">
+          <Typography variant="subtitle1">
             {product.price.toLocaleString("vi-VN", {
               style: "currency",
               currency: "VND",

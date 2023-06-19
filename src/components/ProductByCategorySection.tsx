@@ -72,7 +72,7 @@ function ProductByCategorySection({
     <Box className="product-by-category-wrapper">
       <Box className="product-by-category-container">
         <Box className="info">
-          <Typography variant="h3" className="category-title">
+          <Typography variant="h4" fontWeight="500" className="category-title">
             {category.name}
           </Typography>
           {viewMore ? (
