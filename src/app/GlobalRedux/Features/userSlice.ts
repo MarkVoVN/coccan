@@ -12,6 +12,8 @@ export interface UserState {
     photoURL: string | undefined,
     uid: string,
     refreshToken: string,
+    preferedLocationId: string
+    balance: number,
   }
 
 }
@@ -24,6 +26,8 @@ const initialState : UserState = {
     photoURL: "",
     uid: "",
     refreshToken: "",
+    preferedLocationId: "-1",
+    balance: -1
   }
 
 };
@@ -33,12 +37,14 @@ export const userSlice = createSlice(
     name: 'user',
     initialState,
     reducers: {
-      loginUser: (state, action : PayloadAction<{value: {
+      loginUser: (_, action : PayloadAction<{value: {
         displayName: string | undefined,
         email: string | undefined,
         photoURL: string | undefined,
         uid: string,
         refreshToken: string,
+        preferedLocationId: string
+        balance: number,
       }}>) => {
         return {
           value: {
@@ -48,15 +54,21 @@ export const userSlice = createSlice(
             photoURL: action.payload.value.photoURL,
             uid: action.payload.value.uid,
             refreshToken: action.payload.value.refreshToken,
+            preferedLocationId: action.payload.value.preferedLocationId,
+            balance: action.payload.value.balance,
           }
         }
       },
-      logoutUser: (state) => {initialState},
+      logoutUser: (_) => initialState,
+      updatePreferedLocation: (state, action: PayloadAction<string>) => {
+        state.value.preferedLocationId = action.payload;
+        //TODO: call api to update prefered location on BE
+      },
     }
   }
 );
 
-export const {loginUser, logoutUser} = userSlice.actions;
+export const {loginUser, logoutUser, updatePreferedLocation} = userSlice.actions;
 
 export default userSlice.reducer;
 

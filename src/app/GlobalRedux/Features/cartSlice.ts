@@ -41,6 +41,18 @@ export const cartSlice = createSlice(
         }
       },
 
+      subtractFromCartSingle: (state, action : PayloadAction<string>) => {
+        let item = state.value.find(item => item.menuItemId === action.payload);
+        if (item) {
+          //if item is already in cart, increment the quantity
+          item.quantity--;
+          state.countOfItemQuantity--;
+        }
+        if (item?.quantity === 0) {
+          state.value.splice(state.value.indexOf(item), 1);
+        }
+      },
+
       addToCartByAmount: (state, action : PayloadAction<{menuItemId : string, amount: number}>) => {
         let item = state.value.find(item => item.menuItemId === action.payload.menuItemId);
         if (item) {
@@ -69,6 +81,6 @@ export const cartSlice = createSlice(
   }
 );
 
-export const {setCart, addToCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
+export const {setCart, addToCartSingle, subtractFromCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
 
 export default cartSlice.reducer;

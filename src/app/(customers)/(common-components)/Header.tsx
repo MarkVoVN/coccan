@@ -16,10 +16,20 @@ import {
   DialogContentText,
   DialogTitle,
   Badge,
+  Popper,
+  MenuList,
+  ListItemIcon,
 } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
-import { Search, ShoppingCart } from "@mui/icons-material";
+import {
+  AccountBalanceWallet,
+  History,
+  Logout,
+  Person,
+  Search,
+  ShoppingCart,
+} from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import "./_header.scss";
@@ -27,9 +37,10 @@ import SessionSeletorSection from "@/components/SessionSeletorSection";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { useDispatch } from "react-redux";
 import useStorage from "@/hooks/useStorage";
-import { loginUser } from "@/app/GlobalRedux/Features/userSlice";
+import { loginUser, logoutUser } from "@/app/GlobalRedux/Features/userSlice";
 import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
 import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
+import PreferedLocationSelector from "@/components/PreferedLocationSelector";
 
 function Header() {
   const categoryList = [
@@ -53,16 +64,10 @@ function Header() {
     setSearch(e.target.value);
   };
 
-  const [category, setCategory] = useState(0);
-
-  const handleCategoryChange = (e: any) => {
-    setCategory(e.target.value);
-  };
-
   const searchProduct = () => {
     //pass props and redirect to search page
 
-    console.log("searching for" + location + " " + category + " " + search);
+    console.log("searching for" + location + " " + search);
     router.push("/search");
   };
 
@@ -79,6 +84,33 @@ function Header() {
   const [orderInfoDialogOpen, setOrderInfoDialogOpen] = useState(
     !isOrderInfoSetByUser
   );
+
+  const [isUserProfileOpen, setIdUserProfileOpen] = useState(false);
+
+  const handleUserProfileOpen = () => {
+    setIdUserProfileOpen(true);
+  };
+
+  const handleUserProfileClose = () => {
+    setIdUserProfileOpen(false);
+    setIsUserMenuOpen(false);
+  };
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+
+  const handleUserMenuClick = (e: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchorEl(e.currentTarget);
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
+  const handleLogout = () => {
+    removeItem("userInfo");
+    dispatch(logoutUser());
+    setIsUserMenuOpen(false);
+  };
 
   const cartItemCount = useAppSelector(
     (state) => state.cart.countOfItemQuantity
@@ -141,6 +173,41 @@ function Header() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={isUserProfileOpen}
+        onClose={handleUserProfileClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth
+      >
+        <DialogTitle className="text-center" id="alert-dialog-title">
+          <Typography variant="h4">Profile</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            className="flex flex-row pl-[1rem]"
+            id="alert-dialog-description"
+          >
+            <div className="w-1/3">
+              <Typography variant="h6">{"Name: "}</Typography>
+              <Typography variant="h6">{"Email: "}</Typography>
+              <Typography variant="h6">{"Balance: "}</Typography>
+              <Typography variant="h6">Prefered Location:</Typography>
+            </div>
+            <div className="w-1/2">
+              <Typography variant="h6">{user.displayName}</Typography>
+              <Typography variant="h6">{user.email}</Typography>
+              <Typography variant="h6">{user.balance}</Typography>
+              <PreferedLocationSelector></PreferedLocationSelector>
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUserProfileClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <AppBar position="static" className="navbar">
         <Toolbar>
@@ -174,21 +241,6 @@ function Header() {
                   ),
                 }}
               ></TextField>
-              <div className="category-selector w-[1/8]">
-                <Select
-                  value={category}
-                  label="Category"
-                  onChange={handleCategoryChange}
-                  fullWidth
-                >
-                  <MenuItem value={0}>All</MenuItem>
-                  {categoryList.map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </div>
             </div>
             <div className="navbar-icon flex flex-row justify-end items-center">
               <div className="cart-icon-container px-[0.5rem]">
@@ -202,7 +254,13 @@ function Header() {
               </div>
               <div className="avatar-login-container px-[0.5rem]">
                 {user.isAuth && (
-                  <Avatar src={user.photoURL} alt={user.displayName} />
+                  <IconButton>
+                    <Avatar
+                      src={user.photoURL}
+                      alt={user.displayName}
+                      onClick={handleUserMenuClick}
+                    />
+                  </IconButton>
                 )}
                 {!user.isAuth && (
                   <Button
@@ -216,6 +274,38 @@ function Header() {
               </div>
             </div>
           </div>
+          <Popper
+            open={isUserMenuOpen}
+            anchorEl={userMenuAnchorEl}
+            placement="bottom-end"
+          >
+            <MenuList className="user-menu-container">
+              <MenuItem onClick={handleUserProfileOpen}>
+                <ListItemIcon>
+                  <Person></Person>
+                </ListItemIcon>
+                <Typography variant="body1">Profile</Typography>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <History></History>
+                </ListItemIcon>
+                <Link href={"/history"}>Order History</Link>
+              </MenuItem>
+              <MenuItem onClick={handleUserProfileOpen}>
+                <ListItemIcon>
+                  <AccountBalanceWallet></AccountBalanceWallet>
+                </ListItemIcon>
+                <Typography variant="body1">Balance</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <Logout></Logout>
+                </ListItemIcon>
+                <Typography variant="body1">Logout</Typography>
+              </MenuItem>
+            </MenuList>
+          </Popper>
         </Toolbar>
       </AppBar>
     </>
