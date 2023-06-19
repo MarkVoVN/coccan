@@ -12,27 +12,27 @@ import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 export default function Home() {
   const categoryList = [
     {
-      categoryId: 0,
+      categoryId: "0",
       categoryIconUrl: "rice.svg",
       name: "Rice",
     },
     {
-      categoryId: 1,
+      categoryId: "1",
       categoryIconUrl: "bread.svg",
       name: "Bread",
     },
     {
-      categoryId: 2,
+      categoryId: "2",
       categoryIconUrl: "drink.svg",
       name: "Drink",
     },
     {
-      categoryId: 3,
+      categoryId: "3",
       categoryIconUrl: "snack.svg",
       name: "Snack",
     },
     {
-      categoryId: 4,
+      categoryId: "4",
       categoryIconUrl: "others.svg",
       name: "Others",
     },
@@ -93,7 +93,38 @@ export default function Home() {
           <CategorySeletorSection
             categoryList={categoryList}
           ></CategorySeletorSection>
+          {(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <h2>Loading...</h2>
+            </>
+          )}
 
+          {!(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <div className="selectors-wrapper w-full flex flex-row">
+                <div className="ml-[9vw]">
+                  <SessionSeletorSection></SessionSeletorSection>
+                </div>
+              </div>
+              <CategorySeletorSection
+                categoryList={categoryList}
+              ></CategorySeletorSection>
+
+              {categoryList.map((category) => (
+                <ProductByCategorySection
+                  key={category.categoryId}
+                  category={category}
+                  viewMore={true}
+                  handleViewProductDetail={handleProductModalOpen}
+                ></ProductByCategorySection>
+              ))}
+              <ProductDetailModal
+                open={productModalOpen}
+                handleClose={handleProductModalClose}
+                product={productDetail}
+              ></ProductDetailModal>
+            </>
+          )}
           {categoryList.map((category) => (
             <ProductByCategorySection
               key={category.categoryId}
