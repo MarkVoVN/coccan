@@ -1,4 +1,3 @@
-
 .modal-wrapper {
 
 
@@ -25,7 +24,8 @@
   }
 
   .modal-container:focus-visible {
-    
+
+    outline: none !important;
   }
 
 }

@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   updateLocationId,
   updateSessionId,
@@ -12,13 +11,11 @@ import { useDispatch } from "react-redux";
 function SessionSeletorSection() {
   const sessionList = [
     { id: "-1", title: "Set session" },
-
     { id: "0", title: "9:15AM" },
     { id: "1", title: "11:45AM" },
     { id: "2", title: "2:45PM" },
     { id: "3", title: "5:15PM" },
   ];
-
 
   const sessionId = useAppSelector((state) => state.order.value.sessionId);
 
@@ -31,7 +28,6 @@ function SessionSeletorSection() {
 
   const handleSessionIdChange = (e: SelectChangeEvent) => {
     dispatch(updateSessionId(e.target.value));
-
   };
 
   return (
@@ -39,7 +35,6 @@ function SessionSeletorSection() {
       <div>
         <Select
           className="selector"
-
           value={locationId}
           label="Location"
           onChange={handleLocationIdChange}
@@ -48,12 +43,10 @@ function SessionSeletorSection() {
             Set location
           </MenuItem>
           <MenuItem value={"FPT-Q9"}>FPT Q9</MenuItem>
-
           <MenuItem value={"NVH"}>NVH</MenuItem>
         </Select>
         <Select
           className="selector"
-
           value={sessionId}
           label="Session"
           onChange={handleSessionIdChange}
@@ -64,7 +57,6 @@ function SessionSeletorSection() {
               value={session.id}
               disabled={session.id == "-1"}
             >
-
               {session.title}
             </MenuItem>
           ))}
