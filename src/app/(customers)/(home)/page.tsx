@@ -7,8 +7,10 @@ import ProductByCategorySection from "../../../components/ProductByCategorySecti
 import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
+import theme from "../theme";
 
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { ThemeProvider } from "@emotion/react";
 
 export default function Home() {
   const categoryList = [
@@ -78,40 +80,42 @@ export default function Home() {
 
   return (
     <>
-      <div className="container">
-        {(isFetchLoading || !isOrderInfoSetByUser) && (
-          <>
-            <h2>Loading...</h2>
-          </>
-        )}
+      <ThemeProvider theme={theme}>
+        <div className="container">
+          {(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <h2>Loading...</h2>
+            </>
+          )}
 
-        {!(isFetchLoading || !isOrderInfoSetByUser) && (
-          <>
-            <div className="selectors-wrapper w-full flex flex-row">
-              <div className="ml-[9vw]">
-                <SessionSeletorSection></SessionSeletorSection>
+          {!(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <div className="selectors-wrapper w-full flex flex-row">
+                <div className="ml-[9vw]">
+                  <SessionSeletorSection></SessionSeletorSection>
+                </div>
               </div>
-            </div>
-            <CategorySeletorSection
-              categoryList={categoryList}
-            ></CategorySeletorSection>
+              <CategorySeletorSection
+                categoryList={categoryList}
+              ></CategorySeletorSection>
 
-            {categoryList.map((category) => (
-              <ProductByCategorySection
-                key={category.categoryId}
-                category={category}
-                viewMore={true}
-                handleViewProductDetail={handleProductModalOpen}
-              ></ProductByCategorySection>
-            ))}
-            <ProductDetailModal
-              open={productModalOpen}
-              handleClose={handleProductModalClose}
-              product={productDetail}
-            ></ProductDetailModal>
-          </>
-        )}
-      </div>
+              {categoryList.map((category) => (
+                <ProductByCategorySection
+                  key={category.categoryId}
+                  category={category}
+                  viewMore={true}
+                  handleViewProductDetail={handleProductModalOpen}
+                ></ProductByCategorySection>
+              ))}
+              <ProductDetailModal
+                open={productModalOpen}
+                handleClose={handleProductModalClose}
+                product={productDetail}
+              ></ProductDetailModal>
+            </>
+          )}
+        </div>
+      </ThemeProvider>
     </>
   );
 }

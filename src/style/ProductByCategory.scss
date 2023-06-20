@@ -16,16 +16,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
-
-            .category-title {
-                font-weight: 500;
-            }
-
-            .view-more-btn {
-                padding: 0rem 1rem;
-                height: 80%;
-                background-color: #EA5857;
-            }
         }
 
         .product-list-container {
@@ -33,7 +23,7 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: flex-start;
-            gap: 58px;
+            gap: 39px;
 
 
             .product-container {
@@ -50,6 +40,10 @@
                     .add-to-cart-btn {
                         background-color: #EA5857;
                         color: white;
+
+                        &:hover {
+                            background-color: #a33d3c;
+                        }
                     }
                 }
             }
