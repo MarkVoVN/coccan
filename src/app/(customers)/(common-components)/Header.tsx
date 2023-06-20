@@ -1,8 +1,6 @@
 "use client";
 import {
   AppBar,
-  MenuItem,
-  Select,
   Toolbar,
   Typography,
   TextField,
@@ -16,6 +14,8 @@ import {
   DialogContentText,
   DialogTitle,
   Badge,
+  ThemeProvider,
+  MenuItem,
   Popper,
   MenuList,
   ListItemIcon,
@@ -40,8 +40,8 @@ import useStorage from "@/hooks/useStorage";
 import { loginUser, logoutUser } from "@/app/GlobalRedux/Features/userSlice";
 import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
 import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
+import theme from "../theme";
 import PreferedLocationSelector from "@/components/PreferedLocationSelector";
-
 function Header() {
   const categoryList = [
     { id: 1, name: "Drink" },
@@ -152,163 +152,178 @@ function Header() {
 
   return (
     <>
-      <Dialog
-        open={orderInfoDialogOpen}
-        onClose={handleOrderInfoDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Please Select your session and location
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Choose your session and location now to help us show you the
-            appropriate dishes
-          </DialogContentText>
-          <SessionSeletorSection></SessionSeletorSection>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleOrderInfoDialogClose} autoFocus>
-            Done
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={isUserProfileOpen}
-        onClose={handleUserProfileClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        fullWidth
-      >
-        <DialogTitle className="text-center" id="alert-dialog-title">
-          <Typography variant="h4">Profile</Typography>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText
-            className="flex flex-row pl-[1rem]"
-            id="alert-dialog-description"
+      <ThemeProvider theme={theme}>
+        <Dialog open={orderInfoDialogOpen} onClose={handleOrderInfoDialogClose}>
+          <DialogContent
+            sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <div className="w-1/3">
-              <Typography variant="h6">{"Name: "}</Typography>
-              <Typography variant="h6">{"Email: "}</Typography>
-              <Typography variant="h6">{"Balance: "}</Typography>
-              <Typography variant="h6">Prefered Location:</Typography>
-            </div>
-            <div className="w-1/2">
-              <Typography variant="h6">{user.displayName}</Typography>
-              <Typography variant="h6">{user.email}</Typography>
-              <Typography variant="h6">{user.balance}</Typography>
-              <PreferedLocationSelector></PreferedLocationSelector>
-            </div>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUserProfileClose} autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <AppBar position="static" className="navbar">
-        <Toolbar>
-          <div className="navbar-container flex flex-row justify-center">
-            <Link
-              href={"/"}
-              className="navbar-logo flex flex-row justify-start items-center w-fit"
+            <Typography variant="h3" fontWeight="500">
+              Please select your session and location
+            </Typography>
+            <Typography variant="subtitle1">
+              Choose your session and location now to help us show you the
+              appropriate dishes
+            </Typography>
+            <SessionSeletorSection></SessionSeletorSection>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOrderInfoDialogClose}
             >
-              <div className="logo-container">
-                <img className="logo" src="/navbar/Logo.png" alt="logo"></img>
+              Done
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <AppBar position="static" sx={{ bgcolor: "white" }} className="navbar">
+          <Toolbar>
+            <div className="navbar-container">
+              <Link
+                href={"/"}
+                className="navbar-logo"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="logo-container">
+                  <img className="logo" src="/navbar/Logo.png" alt="logo"></img>
+                </div>
+                <Typography variant="h4" fontWeight="500" className="title">
+                  COCCAN
+                </Typography>
+              </Link>
+              <div className="navbar-icon">
+                <div className="navbar-search">
+                  <TextField
+                    className="search"
+                    label="Search"
+                    value={search}
+                    type="search"
+                    onChange={handleSearchChange}
+                    fullWidth={true}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={searchProduct}>
+                            <Link href={"/search"}></Link>
+                            <Search fontSize="inherit"></Search>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </div>
+                <div className="cart-icon-container">
+                  <Link href="/cart">
+                    <IconButton size="large">
+                      <Badge badgeContent={cartItemCount} color="primary">
+                        <ShoppingCart fontSize="inherit"></ShoppingCart>
+                      </Badge>
+                    </IconButton>
+                  </Link>
+                </div>
+                <div className="avatar-login-container">
+                  {user.isAuth && (
+                    <IconButton>
+                      <Avatar
+                        src={user.photoURL}
+                        alt={user.displayName}
+                        onClick={handleUserMenuClick}
+                      />
+                    </IconButton>
+                  )}
+                  {!user.isAuth && (
+                    <Button
+                      size="large"
+                      variant="contained"
+                      color="primary"
+                      className="button"
+                    >
+                      <Link
+                        href="/login"
+                        style={{ textDecoration: "none", color: "#fff" }}
+                      >
+                        Log In
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </div>
-              <Typography variant="h3">COCCAN</Typography>
-            </Link>
-            <div className="navbar-search flex flex-row justify-center">
-              <TextField
-                className="search"
-                label="Search"
-                value={search}
-                type="search"
-                onChange={handleSearchChange}
-                fullWidth={true}
-                sx={{ color: "#4F200D" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton size="small" onClick={searchProduct}>
-                        <Link href={"/search"}></Link>
-                        <Search fontSize="inherit"></Search>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
             </div>
-            <div className="navbar-icon flex flex-row justify-end items-center">
-              <div className="cart-icon-container px-[0.5rem]">
-                <Link href="/cart">
-                  <IconButton size="large">
-                    <Badge badgeContent={cartItemCount}>
-                      <ShoppingCart fontSize="inherit"></ShoppingCart>
-                    </Badge>
-                  </IconButton>
-                </Link>
-              </div>
-              <div className="avatar-login-container px-[0.5rem]">
-                {user.isAuth && (
-                  <IconButton>
-                    <Avatar
-                      src={user.photoURL}
-                      alt={user.displayName}
-                      onClick={handleUserMenuClick}
-                    />
-                  </IconButton>
-                )}
-                {!user.isAuth && (
-                  <Button
-                    size="large"
-                    className="login-btn"
-                    variant="contained"
+            <Dialog
+              open={isUserProfileOpen}
+              onClose={handleUserProfileClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              fullWidth
+            >
+              <DialogTitle className="text-center" id="alert-dialog-title">
+                <Typography variant="h4">Profile</Typography>
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText
+                  className="flex flex-row pl-[1rem]"
+                  id="alert-dialog-description"
+                >
+                  <div className="w-1/3">
+                    <Typography variant="h6">{"Name: "}</Typography>
+                    <Typography variant="h6">{"Email: "}</Typography>
+                    <Typography variant="h6">{"Balance: "}</Typography>
+                    <Typography variant="h6">Prefered Location:</Typography>
+                  </div>
+                  <div className="w-1/2">
+                    <Typography variant="h6">{user.displayName}</Typography>
+                    <Typography variant="h6">{user.email}</Typography>
+                    <Typography variant="h6">{user.balance}</Typography>
+                    <PreferedLocationSelector></PreferedLocationSelector>
+                  </div>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleUserProfileClose} autoFocus>
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <Popper
+              open={isUserMenuOpen}
+              anchorEl={userMenuAnchorEl}
+              placement="bottom-end"
+            >
+              <MenuList className="user-menu-container">
+                <MenuItem onClick={handleUserProfileOpen}>
+                  <ListItemIcon>
+                    <Person></Person>
+                  </ListItemIcon>
+                  <Typography variant="body1">Profile</Typography>
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <History></History>
+                  </ListItemIcon>
+                  <Link
+                    href={"/history"}
+                    style={{ textDecoration: "none", color: "#000000" }}
                   >
-                    <Link href="/login">Log In</Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-          <Popper
-            open={isUserMenuOpen}
-            anchorEl={userMenuAnchorEl}
-            placement="bottom-end"
-          >
-            <MenuList className="user-menu-container">
-              <MenuItem onClick={handleUserProfileOpen}>
-                <ListItemIcon>
-                  <Person></Person>
-                </ListItemIcon>
-                <Typography variant="body1">Profile</Typography>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <History></History>
-                </ListItemIcon>
-                <Link href={"/history"}>Order History</Link>
-              </MenuItem>
-              <MenuItem onClick={handleUserProfileOpen}>
-                <ListItemIcon>
-                  <AccountBalanceWallet></AccountBalanceWallet>
-                </ListItemIcon>
-                <Typography variant="body1">Balance</Typography>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                  <Logout></Logout>
-                </ListItemIcon>
-                <Typography variant="body1">Logout</Typography>
-              </MenuItem>
-            </MenuList>
-          </Popper>
-        </Toolbar>
-      </AppBar>
+                    Order History
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleUserProfileOpen}>
+                  <ListItemIcon>
+                    <AccountBalanceWallet></AccountBalanceWallet>
+                  </ListItemIcon>
+                  <Typography variant="body1">Balance</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <Logout></Logout>
+                  </ListItemIcon>
+                  <Typography variant="body1">Logout</Typography>
+                </MenuItem>
+              </MenuList>
+            </Popper>
+          </Toolbar>
+        </AppBar>
+      </ThemeProvider>
     </>
   );
 }

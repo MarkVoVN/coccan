@@ -1,13 +1,15 @@
 "use client";
 
-import CallToActionSection from "../../../components/CallToActionSection";
+// import CallToActionSection from "../../../components/CallToActionSection";
 import SessionSeletorSection from "../../../components/SessionSeletorSection";
 import CategorySeletorSection from "../../../components/CategorySeletorSection";
 import ProductByCategorySection from "../../../components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
+import theme from "../theme";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { ThemeProvider } from "@emotion/react";
 
 export default function Home() {
   const categoryList = [
@@ -76,39 +78,42 @@ export default function Home() {
 
   return (
     <>
-      <CallToActionSection></CallToActionSection>
-      {(isFetchLoading || !isOrderInfoSetByUser) && (
-        <>
-          <h2>Loading...</h2>
-        </>
-      )}
+      <ThemeProvider theme={theme}>
+        <div className="container">
+          {(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <h2>Loading...</h2>
+            </>
+          )}
 
-      {!(isFetchLoading || !isOrderInfoSetByUser) && (
-        <>
-          <div className="selectors-wrapper w-full flex flex-row">
-            <div className="ml-[9vw]">
-              <SessionSeletorSection></SessionSeletorSection>
-            </div>
-          </div>
-          <CategorySeletorSection
-            categoryList={categoryList}
-          ></CategorySeletorSection>
+          {!(isFetchLoading || !isOrderInfoSetByUser) && (
+            <>
+              <div className="selectors-wrapper w-full flex flex-row">
+                <div className="ml-[9vw]">
+                  <SessionSeletorSection></SessionSeletorSection>
+                </div>
+              </div>
+              <CategorySeletorSection
+                categoryList={categoryList}
+              ></CategorySeletorSection>
 
-          {categoryList.map((category) => (
-            <ProductByCategorySection
-              key={category.categoryId}
-              category={category}
-              viewMore={true}
-              handleViewProductDetail={handleProductModalOpen}
-            ></ProductByCategorySection>
-          ))}
-          <ProductDetailModal
-            open={productModalOpen}
-            handleClose={handleProductModalClose}
-            product={productDetail}
-          ></ProductDetailModal>
-        </>
-      )}
+              {categoryList.map((category) => (
+                <ProductByCategorySection
+                  key={category.categoryId}
+                  category={category}
+                  viewMore={true}
+                  handleViewProductDetail={handleProductModalOpen}
+                ></ProductByCategorySection>
+              ))}
+              <ProductDetailModal
+                open={productModalOpen}
+                handleClose={handleProductModalClose}
+                product={productDetail}
+              ></ProductDetailModal>
+            </>
+          )}
+        </div>
+      </ThemeProvider>
     </>
   );
 }
