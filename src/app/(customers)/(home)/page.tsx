@@ -8,7 +8,6 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
 import theme from "../theme";
-
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { ThemeProvider } from "@emotion/react";
 
@@ -43,7 +42,6 @@ export default function Home() {
 
   const productInfoPlaceholder = {
     id: "8",
-
     name: "Product Name",
     price: 12000,
     imageUrl: "/homepage/product-placeholder-img.png",

@@ -15,11 +15,24 @@ import {
   DialogTitle,
   Badge,
   ThemeProvider,
+<<<<<<< HEAD
   MenuItem,
+=======
+  Popper,
+  MenuList,
+  ListItemIcon,
+>>>>>>> bb4add3f4f28ffd7321a2f8a5c6e3a7a8d28d71a
 } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
-import { Search, ShoppingCart } from "@mui/icons-material";
+import {
+  AccountBalanceWallet,
+  History,
+  Logout,
+  Person,
+  Search,
+  ShoppingCart,
+} from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import "./_header.scss";
@@ -27,10 +40,11 @@ import SessionSeletorSection from "@/components/SessionSeletorSection";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { useDispatch } from "react-redux";
 import useStorage from "@/hooks/useStorage";
-import { loginUser } from "@/app/GlobalRedux/Features/userSlice";
+import { loginUser, logoutUser } from "@/app/GlobalRedux/Features/userSlice";
 import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
 import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
 import theme from "../theme";
+import PreferedLocationSelector from "@/components/PreferedLocationSelector";
 function Header() {
   const categoryList = [
     { id: 1, name: "Drink" },
@@ -53,16 +67,10 @@ function Header() {
     setSearch(e.target.value);
   };
 
-  const [category, setCategory] = useState(0);
-
-  const handleCategoryChange = (e: any) => {
-    setCategory(e.target.value);
-  };
-
   const searchProduct = () => {
     //pass props and redirect to search page
 
-    console.log("searching for" + location + " " + category + " " + search);
+    console.log("searching for" + location + " " + search);
     router.push("/search");
   };
 
@@ -79,6 +87,33 @@ function Header() {
   const [orderInfoDialogOpen, setOrderInfoDialogOpen] = useState(
     !isOrderInfoSetByUser
   );
+
+  const [isUserProfileOpen, setIdUserProfileOpen] = useState(false);
+
+  const handleUserProfileOpen = () => {
+    setIdUserProfileOpen(true);
+  };
+
+  const handleUserProfileClose = () => {
+    setIdUserProfileOpen(false);
+    setIsUserMenuOpen(false);
+  };
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+
+  const handleUserMenuClick = (e: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchorEl(e.currentTarget);
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
+  const handleLogout = () => {
+    removeItem("userInfo");
+    dispatch(logoutUser());
+    setIsUserMenuOpen(false);
+  };
 
   const cartItemCount = useAppSelector(
     (state) => state.cart.countOfItemQuantity
@@ -116,6 +151,7 @@ function Header() {
   useEffect(() => {
     setItem("orderInfo", JSON.stringify(orderInfo));
   }, [orderInfo]);
+  //const categoryList = useAppSelector((state) => state.category);
 
   return (
     <>
@@ -210,7 +246,74 @@ function Header() {
                 </div>
               </div>
             </div>
-          </Toolbar>
+      <Dialog
+        open={isUserProfileOpen}
+        onClose={handleUserProfileClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth
+      >
+        <DialogTitle className="text-center" id="alert-dialog-title">
+          <Typography variant="h4">Profile</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            className="flex flex-row pl-[1rem]"
+            id="alert-dialog-description"
+          >
+            <div className="w-1/3">
+              <Typography variant="h6">{"Name: "}</Typography>
+              <Typography variant="h6">{"Email: "}</Typography>
+              <Typography variant="h6">{"Balance: "}</Typography>
+              <Typography variant="h6">Prefered Location:</Typography>
+            </div>
+            <div className="w-1/2">
+              <Typography variant="h6">{user.displayName}</Typography>
+              <Typography variant="h6">{user.email}</Typography>
+              <Typography variant="h6">{user.balance}</Typography>
+              <PreferedLocationSelector></PreferedLocationSelector>
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUserProfileClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+          <Popper
+            open={isUserMenuOpen}
+            anchorEl={userMenuAnchorEl}
+            placement="bottom-end"
+          >
+            <MenuList className="user-menu-container">
+              <MenuItem onClick={handleUserProfileOpen}>
+                <ListItemIcon>
+                  <Person></Person>
+                </ListItemIcon>
+                <Typography variant="body1">Profile</Typography>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <History></History>
+                </ListItemIcon>
+                <Link href={"/history"}>Order History</Link>
+              </MenuItem>
+              <MenuItem onClick={handleUserProfileOpen}>
+                <ListItemIcon>
+                  <AccountBalanceWallet></AccountBalanceWallet>
+                </ListItemIcon>
+                <Typography variant="body1">Balance</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <Logout></Logout>
+                </ListItemIcon>
+                <Typography variant="body1">Logout</Typography>
+              </MenuItem>
+            </MenuList>
+          </Popper>
+         </Toolbar>
         </AppBar>
       </ThemeProvider>
     </>

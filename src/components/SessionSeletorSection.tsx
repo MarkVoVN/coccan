@@ -18,7 +18,6 @@ import "../style/SessionSelectorSection.scss";
 function SessionSeletorSection() {
   const sessionList = [
     { id: "-1", title: " " },
-
     { id: "0", title: "9:15AM" },
     { id: "1", title: "11:45AM" },
     { id: "2", title: "2:45PM" },
