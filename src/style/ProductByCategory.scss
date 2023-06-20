@@ -1,63 +1,57 @@
 .product-by-category-wrapper {
-  width: 100vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: 2rem 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 
-  .product-by-category-container {
-      width: 80vw;
-      display: flex;
-      flex-direction: column;
-      align-content: center;
+    .product-by-category-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-bottom: 32px;
 
-      .info {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
+        .info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-          .category-title {
-              font-weight: 500;
-          }
+        .product-list-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 39px;
 
-          .view-more-btn {
-              padding: 0rem 1rem;
-              height: 80%;
-              background-color: #EA5857;
-          }
-      }
 
-      .product-list-container {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          
+            .product-container {
+                border-radius: 1rem;
 
-          .product-container {
-              width: 23%;
-              margin: 2rem 0;
-              border-radius: 1rem;
-              .product-info {
-                  display: flex;
-                  flex-direction: row;
-                  justify-content: space-between;
-                  align-items: center;
+                .product-info {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
 
 
 
-                  .add-to-cart-btn {
-                      background-color: #EA5857;
-                      color: white;
-                  }
-              }
-          }
-          
-          .product-container:hover {
-              transform: scale(1.05);
-          }
-      }
-  }
+                    .add-to-cart-btn {
+                        background-color: #EA5857;
+                        color: white;
+
+                        &:hover {
+                            background-color: #a33d3c;
+                        }
+                    }
+                }
+            }
+
+            .product-container:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
 
 }
