@@ -31,6 +31,8 @@ function LoginPage() {
           photoURL: user.photoURL as string | undefined,
           uid: user.uid,
           refreshToken: user.refreshToken,
+          preferedLocationId: "-1", //TODO: fetch BE api to get this field
+          balance: -1,
         };
 
         dispatch(loginUser({ value: userInfo }));
