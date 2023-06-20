@@ -223,7 +223,13 @@ function Header() {
                 </div>
                 <div className="avatar-login-container">
                   {user.isAuth && (
-                    <Avatar src={user.photoURL} alt={user.displayName} />
+                    <IconButton>
+                      <Avatar
+                        src={user.photoURL}
+                        alt={user.displayName}
+                        onClick={handleUserMenuClick}
+                      />
+                    </IconButton>
                   )}
                   {!user.isAuth && (
                     <Button
@@ -294,7 +300,12 @@ function Header() {
                   <ListItemIcon>
                     <History></History>
                   </ListItemIcon>
-                  <Link href={"/history"}>Order History</Link>
+                  <Link
+                    href={"/history"}
+                    style={{ textDecoration: "none", color: "#000000" }}
+                  >
+                    Order History
+                  </Link>
                 </MenuItem>
                 <MenuItem onClick={handleUserProfileOpen}>
                   <ListItemIcon>
