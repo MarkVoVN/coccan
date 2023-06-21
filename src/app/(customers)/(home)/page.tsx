@@ -10,6 +10,8 @@ import React from "react";
 import theme from "../theme";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { ThemeProvider } from "@emotion/react";
+import Carousel from "react-material-ui-carousel";
+import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 
 export default function Home() {
   const categoryList = [
@@ -80,6 +82,22 @@ export default function Home() {
     <>
       <ThemeProvider theme={theme}>
         <div className="container">
+          <Carousel indicators={false}>
+            <Card>
+              <CardMedia
+                component="img"
+                image="/homepage/Food-Facebook-Cover-Banner-13.png"
+                height=""
+              ></CardMedia>
+            </Card>
+            <Card>
+              <CardMedia
+                component="img"
+                image="/homepage/Food-Facebook-Cover-Banner-19.png"
+                height=""
+              ></CardMedia>
+            </Card>
+          </Carousel>
           {(isFetchLoading || !isOrderInfoSetByUser) && (
             <>
               <h2>Loading...</h2>
@@ -88,10 +106,10 @@ export default function Home() {
 
           {!(isFetchLoading || !isOrderInfoSetByUser) && (
             <>
-              <div className="selectors-wrapper w-full flex flex-row">
-                <div className="ml-[9vw]">
+              <div className="selectors-wrapper">
+                <Box sx={{ marginTop: "36px" }}>
                   <SessionSeletorSection></SessionSeletorSection>
-                </div>
+                </Box>
               </div>
               <CategorySeletorSection
                 categoryList={categoryList}

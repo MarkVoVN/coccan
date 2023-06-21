@@ -23,11 +23,12 @@
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: flex-start;
-            gap: 39px;
+            gap: 16px;
 
 
             .product-container {
                 border-radius: 1rem;
+                flex: 1 0 calc(20% - 16px);
 
                 .product-info {
                     display: flex;
