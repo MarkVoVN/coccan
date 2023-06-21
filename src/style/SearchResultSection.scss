@@ -1,0 +1,25 @@
+.container {
+    max-width: 1140px;
+}
+
+.search-result-name {
+    margin-bottom: 16px;
+}
+
+.search-result-container {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.search-result-info {
+    width: 100%;
+}
+
+.product-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
