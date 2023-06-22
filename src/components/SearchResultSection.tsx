@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Typography } from "@mui/material";
 import AddToCartBtn from "./AddToCartBtn";
+import "../style/SearchResultSection.scss";
 
 function SearchResultSection({
   searchResults,
@@ -21,14 +22,11 @@ function SearchResultSection({
   };
 }) {
   return (
-    <div className="search-result-wrapper flex flex-row justify-center">
-      <div className="w-[80vw] ">
+    <div className="search-result-wrapper">
+      <div className="container">
         {searchResults.list.map((result) => (
-          <div
-            key={result.id}
-            className="search-result-container flex flex-row items-center my-[2rem]"
-          >
-            <div className="search-result-logo-container h-full px-[2rem]">
+          <div key={result.id} className="search-result-container">
+            <div className="search-result-logo-container">
               <img
                 src={result.logoUrl}
                 className="search-result-logo"
@@ -36,42 +34,46 @@ function SearchResultSection({
               />
             </div>
             <div className="search-result-info">
-              <div className="search-result-name p-[1rem]">
-                <Typography variant="h4">{result.name}</Typography>
+              <div className="search-result-name">
+                <Typography variant="h4" fontWeight="500">
+                  {result.name}
+                </Typography>
               </div>
               <div className="search-result-list-container">
                 {result.list.map((product) => (
-                  <div
-                    key={product.id}
-                    className="product-container flex flex-row items-center"
-                  >
-                    <div className="product-img-container w-[25%] px-[1rem]">
-                      <img
-                        src={product.imgUrl}
-                        className="product-img"
-                        alt={product.name + " img"}
-                      />
+                  <div key={product.id} className="product-container">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: "32px",
+                      }}
+                    >
+                      <div className="product-img-container">
+                        <img
+                          src={product.imgUrl}
+                          className="product-img"
+                          alt={product.name + " img"}
+                          height="96px"
+                        />
+                      </div>
+                      <div className="product-info">
+                        <Typography variant="h5" className="product-name">
+                          {product.name}
+                        </Typography>
+                        <Typography variant="h6" className="product-price">
+                          {product.price.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Typography>
+                      </div>
                     </div>
-                    <div className="product-info flex flex-col w-full justify-evenly px-[2rem]">
-                      <Typography
-                        variant="h5"
-                        className="product-name mb-[0.5rem]"
-                      >
-                        {product.name}
-                      </Typography>
-                      <Typography variant="h6" className="product-price">
-                        {product.price.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </Typography>
-                    </div>
-                    <div className="product-add-to-cart-btn-container w-[1/6] mr-[1rem]">
-                      <AddToCartBtn
-                        type="text"
-                        productId={product.id}
-                      ></AddToCartBtn>
-                    </div>
+                    <AddToCartBtn
+                      type="text"
+                      productId={product.id}
+                    ></AddToCartBtn>
                   </div>
                 ))}
               </div>

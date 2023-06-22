@@ -1,6 +1,8 @@
 "use client";
 import SearchResultSection from "@/components/SearchResultSection";
 import "./search.scss";
+import { ThemeProvider } from "@mui/material";
+import theme from "../theme";
 
 function SearchPage() {
   const searchResult = {
@@ -85,9 +87,11 @@ function SearchPage() {
   };
 
   return (
-    <div>
-      <SearchResultSection searchResults={searchResult}></SearchResultSection>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        <SearchResultSection searchResults={searchResult}></SearchResultSection>
+      </div>
+    </ThemeProvider>
   );
 }
 
