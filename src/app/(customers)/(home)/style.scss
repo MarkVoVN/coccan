@@ -1,5 +1,8 @@
 .container {
-    margin: 40px;
+    margin-top: 64px;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cta-container {
@@ -45,7 +48,6 @@
     margin: 2rem 0;
 
     .category-section-container {
-        width: 80vw;
         display: flex;
         flex-direction: column;
         align-content: center;

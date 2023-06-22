@@ -157,10 +157,10 @@ function Header() {
           <DialogContent
             sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
-            <Typography variant="h3" fontWeight="500">
+            <Typography variant="h5" fontWeight="500">
               Please select your session and location
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle2" color="gray">
               Choose your session and location now to help us show you the
               appropriate dishes
             </Typography>
@@ -176,7 +176,7 @@ function Header() {
             </Button>
           </DialogActions>
         </Dialog>
-        <AppBar position="static" sx={{ bgcolor: "white" }} className="navbar">
+        <AppBar position="sticky" sx={{ bgcolor: "white" }} className="navbar">
           <Toolbar>
             <div className="navbar-container">
               <Link
