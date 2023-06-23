@@ -38,7 +38,9 @@ function AddToCartBtn({
           className="w-full self-center px-[1rem] bg-[#EA5857] mt-[2rem]"
           onClick={(e) => {
             e.stopPropagation();
+
             handleAddToCart(product);
+
           }}
         >
           Add to cart
@@ -48,7 +50,9 @@ function AddToCartBtn({
           className="add-to-cart-btn"
           onClick={(e) => {
             e.stopPropagation();
+
             handleAddToCart(product);
+
           }}
         >
           <Add color="inherit"></Add>

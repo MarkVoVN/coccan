@@ -43,7 +43,9 @@ function ProductCard({
               currency: "VND",
             })}
           </Typography>
+
           <AddToCartBtn type="icon" product={product}></AddToCartBtn>
+
         </Box>
       </CardContent>
     </Card>
