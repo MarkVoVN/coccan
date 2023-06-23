@@ -6,6 +6,9 @@ export interface CartState {
   value: 
     {
       menuItemId: string,
+      name: string;
+      image: string;
+      price: number;
       quantity : number,
     }[]
   countOfItem : number,
@@ -27,15 +30,20 @@ export const cartSlice = createSlice(
         return action.payload
       },
 
-      addToCartSingle: (state, action : PayloadAction<string>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload);
+      addToCartSingle: (state, action : PayloadAction<{product: {
+        id: string;
+        name: string;
+        image: string;
+        price: number;
+      }}>) => {
+        let item = state.value.find(item => item.menuItemId === action.payload.product.id);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity++;
           state.countOfItemQuantity++;
         } else {
           //if item is not in cart, add item to cart
-          state.value.push({ menuItemId: action.payload, quantity: 1});
+          state.value.push({ menuItemId: action.payload.product.id, name : action.payload.product.name, image : action.payload.product.image, price : action.payload.product.price, quantity: 1});
           state.countOfItem++;
           state.countOfItemQuantity++;
         }
@@ -53,15 +61,20 @@ export const cartSlice = createSlice(
         }
       },
 
-      addToCartByAmount: (state, action : PayloadAction<{menuItemId : string, amount: number}>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload.menuItemId);
+      addToCartByAmount: (state, action : PayloadAction<{product: {
+        id: string;
+        name: string;
+        image: string;
+        price: number;
+      }, amount: number}>) => {
+        let item = state.value.find(item => item.menuItemId === action.payload.product.id);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity+= action.payload.amount;
           state.countOfItemQuantity+= action.payload.amount;
         } else {
           //if item is not in cart, add item to cart
-          state.value.push({ menuItemId: action.payload.menuItemId, quantity: action.payload.amount});
+          state.value.push({ menuItemId: action.payload.product.id, name : action.payload.product.name, image : action.payload.product.image, price : action.payload.product.price, quantity: action.payload.amount});
           state.countOfItem++;
           state.countOfItemQuantity+= action.payload.amount;
         }

@@ -43,7 +43,7 @@ function ProductCard({
               currency: "VND",
             })}
           </Typography>
-          <AddToCartBtn type="icon" productId={product.id}></AddToCartBtn>
+          <AddToCartBtn type="icon" product={product}></AddToCartBtn>
         </Box>
       </CardContent>
     </Card>
