@@ -11,26 +11,27 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Add } from "@mui/icons-material";
+import AddToCartBtn from "./AddToCartBtn";
 
 function ProductCard({
   product,
   handleViewProductDetail,
 }: {
   product: {
-    id: number;
+    id: string;
     name: string;
+    image: string;
     price: number;
-    imageUrl: string;
   };
-  handleViewProductDetail: (id: number) => void;
+  handleViewProductDetail: (id: string) => void;
 }) {
   return (
     <Card
       className="product-container"
       onClick={() => handleViewProductDetail(product.id)}
-      sx={{ maxWidth: 240 }}
+      sx={{ maxWidth: 216 }}
     >
-      <CardMedia component="img" image={product.imageUrl} height=""></CardMedia>
+      <CardMedia component="img" image={product.image} height=""></CardMedia>
       <CardContent>
         <Typography variant="h6" fontWeight="500">
           {product.name}
@@ -42,9 +43,7 @@ function ProductCard({
               currency: "VND",
             })}
           </Typography>
-          <IconButton className="add-to-cart-btn">
-            <Add color="inherit"></Add>
-          </IconButton>
+          <AddToCartBtn type="icon" productId={product.id}></AddToCartBtn>
         </Box>
       </CardContent>
     </Card>
