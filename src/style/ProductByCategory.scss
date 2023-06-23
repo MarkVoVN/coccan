@@ -25,23 +25,20 @@
             justify-content: flex-start;
             gap: 16px;
 
-
             .product-container {
                 border-radius: 1rem;
                 flex: 1 0 calc(20% - 16px);
-              
+
                 .product-info {
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
                     align-items: center;
 
-
-
                     .add-to-cart-btn {
                         background-color: #EA5857;
                         color: white;
-                      
+
                         &:hover {
                             background-color: #a33d3c;
                         }

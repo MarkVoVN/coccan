@@ -41,7 +41,7 @@ function SearchResultSection({
               </div>
               <div className="search-result-list-container">
                 {result.list.map((product) => (
-                  <div key={product.id} className="product-container">
+                  <div key={product.id} className="search-product-container">
                     <div
                       style={{
                         display: "flex",

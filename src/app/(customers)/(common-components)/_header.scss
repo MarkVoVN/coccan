@@ -58,8 +58,36 @@ $primaryColor: #ea5857;
 
 }
 
+.user-menu-link {
+    text-decoration: none;
+    color: #000000
+}
+
 .user-menu-container {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    margin-top: 8px;
+    border-radius: 8px;
 
-    z-index: 1;
+    .user-menu-item {
+        padding: 8px 16px;
+        margin: 8px;
+        border-radius: 8px;
+
+
+
+        &:hover {
+
+            color: #fff;
+            background-color: $primaryColor;
+
+            .user-menu-item-icon {
+                color: #fff;
+            }
+
+            .user-menu-link {
+                color: #fff;
+            }
+        }
+    }
 }

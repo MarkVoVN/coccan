@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { Add, Remove } from "@mui/icons-material";
 import {
+  Box,
   Button,
   IconButton,
   Table,
@@ -11,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -59,15 +61,31 @@ function CartDetailTable() {
   }, [cart]);
 
   return (
-    <TableContainer className="flex flex-row justify-center">
-      <Table className="w-[80vw]">
+    <TableContainer>
+      <Table>
         <TableHead>
           <TableRow>
-            <TableCell align="right">Item</TableCell>
+            <TableCell>
+              <Typography variant="h6" fontWeight="500">
+                Item
+              </Typography>
+            </TableCell>
             <TableCell></TableCell>
-            <TableCell align="center">Store</TableCell>
-            <TableCell align="center">Quantity</TableCell>
-            <TableCell align="center">Amount</TableCell>
+            <TableCell align="center">
+              <Typography variant="h6" fontWeight="500">
+                Quantity
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="h6" fontWeight="500">
+                Store
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="h6" fontWeight="500">
+                Price
+              </Typography>
+            </TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -82,17 +100,15 @@ function CartDetailTable() {
                 />
               </TableCell>
               <TableCell>
-                <div>{productInfoPlaceholder.name + " " + item.menuItemId}</div>
-                <div>
+                <Typography>
+                  {productInfoPlaceholder.name + " " + item.menuItemId}
+                </Typography>
+                <Typography>
                   {productInfoPlaceholder.price.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
-                </div>
-              </TableCell>
-
-              <TableCell align="center">
-                {productInfoPlaceholder.storeName}
+                </Typography>
               </TableCell>
               <TableCell align="center">
                 <IconButton
@@ -109,7 +125,10 @@ function CartDetailTable() {
                 </IconButton>
               </TableCell>
               <TableCell align="center">
-                {(item.quantity * productInfoPlaceholder.price).toLocaleString(
+                {productInfoPlaceholder.storeName}
+              </TableCell>
+              <TableCell align="center">
+                {(productInfoPlaceholder.price * item.quantity).toLocaleString(
                   "vi-VN",
                   {
                     style: "currency",
@@ -117,7 +136,7 @@ function CartDetailTable() {
                   }
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button onClick={() => handleRemoveItem(item.menuItemId)}>
                   Remove
                 </Button>
@@ -129,12 +148,15 @@ function CartDetailTable() {
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell align="center"></TableCell>
-            <TableCell align="center">Total amount:</TableCell>
+            <TableCell align="center">Total price:</TableCell>
             <TableCell align="center">
               {cartTotalPrice.toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
               })}
+            </TableCell>
+            <TableCell align="center">
+              <Button variant="contained">Checkout</Button>
             </TableCell>
           </TableRow>
         </TableBody>

@@ -40,9 +40,8 @@ import useStorage from "@/hooks/useStorage";
 import { loginUser, logoutUser } from "@/app/GlobalRedux/Features/userSlice";
 import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
 import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
-import theme from "../theme";
+import theme from "../../theme";
 import PreferedLocationSelector from "@/components/PreferedLocationSelector";
-
 function Header() {
   const categoryList = [
     { id: 1, name: "Drink" },
@@ -224,8 +223,12 @@ function Header() {
                 </div>
                 <div className="avatar-login-container">
                   {user.isAuth && (
-                    <IconButton onClick={handleUserMenuClick}>
-                      <Avatar src={user.photoURL} alt={user.displayName} />
+                    <IconButton>
+                      <Avatar
+                        src={user.photoURL}
+                        alt={user.displayName}
+                        onClick={handleUserMenuClick}
+                      />
                     </IconButton>
                   )}
                   {!user.isAuth && (
@@ -285,33 +288,37 @@ function Header() {
               open={isUserMenuOpen}
               anchorEl={userMenuAnchorEl}
               placement="bottom-end"
+              sx={{ zIndex: 2000 }}
             >
               <MenuList className="user-menu-container">
-                <MenuItem onClick={handleUserProfileOpen}>
-                  <ListItemIcon>
+                <MenuItem
+                  className="user-menu-item"
+                  onClick={handleUserProfileOpen}
+                >
+                  <ListItemIcon className="user-menu-item-icon">
                     <Person></Person>
                   </ListItemIcon>
                   <Typography variant="body1">Profile</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <ListItemIcon>
+                <MenuItem className="user-menu-item">
+                  <ListItemIcon className="user-menu-item-icon">
                     <History></History>
                   </ListItemIcon>
-                  <Link
-                    href={"/history"}
-                    style={{ textDecoration: "none", color: "#000000" }}
-                  >
+                  <Link href={"/history"} className="user-menu-link">
                     Order History
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={handleUserProfileOpen}>
-                  <ListItemIcon>
+                <MenuItem
+                  className="user-menu-item"
+                  onClick={handleUserProfileOpen}
+                >
+                  <ListItemIcon className="user-menu-item-icon">
                     <AccountBalanceWallet></AccountBalanceWallet>
                   </ListItemIcon>
                   <Typography variant="body1">Balance</Typography>
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <ListItemIcon>
+                <MenuItem className="user-menu-item" onClick={handleLogout}>
+                  <ListItemIcon className="user-menu-item-icon">
                     <Logout></Logout>
                   </ListItemIcon>
                   <Typography variant="body1">Logout</Typography>

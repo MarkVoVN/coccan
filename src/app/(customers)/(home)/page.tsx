@@ -7,7 +7,7 @@ import ProductByCategorySection from "../../../components/ProductByCategorySecti
 import ProductDetailModal from "@/components/ProductDetailModal";
 import "./style.scss";
 import React from "react";
-import theme from "../theme";
+import theme from "../../theme";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { ThemeProvider } from "@emotion/react";
 import Carousel from "react-material-ui-carousel";
@@ -174,7 +174,7 @@ export default function Home() {
     <>
       <ThemeProvider theme={theme}>
         <div className="container">
-          <Carousel indicators={false}>
+          <Carousel indicators={false} sx={{ borderRadius: "8px" }}>
             <Card>
               <CardMedia
                 component="img"
