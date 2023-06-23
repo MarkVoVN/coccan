@@ -12,7 +12,7 @@ import app from "../../firebase";
 import "./style.scss";
 import React from "react";
 import useStorage from "@/hooks/useStorage";
-import theme from "../(customers)/theme";
+import theme from "../theme";
 
 function LoginPage() {
   const router = useRouter();
