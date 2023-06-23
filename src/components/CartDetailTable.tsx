@@ -64,9 +64,9 @@ function CartDetailTable() {
           <TableRow>
             <TableCell align="right">Item</TableCell>
             <TableCell></TableCell>
-            <TableCell align="center">Quantity</TableCell>
             <TableCell align="center">Store</TableCell>
-            <TableCell align="center">Single Price</TableCell>
+            <TableCell align="center">Quantity</TableCell>
+            <TableCell align="center">Amount</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -81,29 +81,40 @@ function CartDetailTable() {
                 />
               </TableCell>
               <TableCell>
-                {productInfoPlaceholder.name + item.menuItemId}
+                <div>{productInfoPlaceholder.name + " " + item.menuItemId}</div>
+                <div>
+                  {productInfoPlaceholder.price.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </div>
+              </TableCell>
+
+              <TableCell align="center">
+                {productInfoPlaceholder.storeName}
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  onClick={() => handleIncrementItem(item.menuItemId)}
-                >
-                  <Add></Add>
-                </IconButton>
-                {item.quantity}
                 <IconButton
                   onClick={() => handleDecrementItem(item.menuItemId)}
                 >
                   <Remove></Remove>
                 </IconButton>
+                {item.quantity}
+
+                <IconButton
+                  onClick={() => handleIncrementItem(item.menuItemId)}
+                >
+                  <Add></Add>
+                </IconButton>
               </TableCell>
               <TableCell align="center">
-                {productInfoPlaceholder.storeName}
-              </TableCell>
-              <TableCell align="center">
-                {productInfoPlaceholder.price.toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}
+                {(item.quantity * productInfoPlaceholder.price).toLocaleString(
+                  "vi-VN",
+                  {
+                    style: "currency",
+                    currency: "VND",
+                  }
+                )}
               </TableCell>
               <TableCell>
                 <Button onClick={() => handleRemoveItem(item.menuItemId)}>
@@ -115,9 +126,9 @@ function CartDetailTable() {
 
           <TableRow>
             <TableCell></TableCell>
-            <TableCell>Total quantity:</TableCell>
-            <TableCell align="center">{cart.countOfItemQuantity}</TableCell>
-            <TableCell align="center">Total price:</TableCell>
+            <TableCell></TableCell>
+            <TableCell align="center"></TableCell>
+            <TableCell align="center">Total amount:</TableCell>
             <TableCell align="center">
               {cartTotalPrice.toLocaleString("vi-VN", {
                 style: "currency",

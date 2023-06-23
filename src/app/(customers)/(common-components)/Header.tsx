@@ -223,12 +223,8 @@ function Header() {
                 </div>
                 <div className="avatar-login-container">
                   {user.isAuth && (
-                    <IconButton>
-                      <Avatar
-                        src={user.photoURL}
-                        alt={user.displayName}
-                        onClick={handleUserMenuClick}
-                      />
+                    <IconButton onClick={handleUserMenuClick}>
+                      <Avatar src={user.photoURL} alt={user.displayName} />
                     </IconButton>
                   )}
                   {!user.isAuth && (

@@ -7,7 +7,10 @@ export interface OrderdState {
     isSetByUser: boolean,
     sessionId: string,
     locationId: string,
+    timeslotId: string,
   };
+  timeslotList: {id: string, startTime: string, endTime: string}[];
+  locationList: {id: string, name: string, address: string, status: number}[];
 }
 
 const initialState : OrderdState = { value:
@@ -15,48 +18,57 @@ const initialState : OrderdState = { value:
   isSetByUser: false,
   sessionId: '-1',
   locationId: '-1',
-} };
+  timeslotId: '-1',
+},
+timeslotList: [],
+locationList: [],
+};
 
 export const orderSlice = createSlice(
   {
     name: 'order',
     initialState,
     reducers: {
-      setOrderInfo: (_, action : PayloadAction<{value : {
-            sessionId: string,
+      setOrderInfo: (state, action : PayloadAction<{value : {
+            timeslotId: string,
             locationId: string,
           }}>)  => {
-        return {
-          value: {
+          state.value = {
             isSetByUser: true,
-            sessionId: action.payload.value.sessionId,
-            locationId: action.payload.value.locationId
+            timeslotId: action.payload.value.timeslotId,
+            locationId: action.payload.value.locationId,
+            sessionId: initialState.value.sessionId,
           }
-        }
       },
-      updateSessionId: (state, action : PayloadAction<string>) => {
-        return {
-          value: {
+      updateTimeslotId: (state, action : PayloadAction<string>) => {
+
+          state.value = {
             isSetByUser: (action.payload !== '-1' && state.value.locationId !== '-1'),
-            sessionId: action.payload,
-            locationId: state.value.locationId
+            timeslotId: action.payload,
+            locationId: state.value.locationId,
+            sessionId: initialState.value.sessionId,
           }
-        }
+        
       },
       updateLocationId: (state, action : PayloadAction<string>) => {
-        return {
-          value: {
-            isSetByUser: (action.payload !== '-1' && state.value.sessionId !== '-1'),
-            sessionId: state.value.sessionId,
-            locationId: action.payload
+          state.value = {
+            isSetByUser: (action.payload !== '-1' && state.value.timeslotId !== '-1'),
+            timeslotId: state.value.sessionId,
+            locationId: action.payload,
+            sessionId: initialState.value.sessionId,
           }
-        }
+      },
+      setTimeslotList: (state, action : PayloadAction<{id: string, startTime: string, endTime: string}[]>) => {
+        state.timeslotList = action.payload
       },
 
+      setLocationList: (state, action : PayloadAction<{id: string, name: string, address: string, status: number}[]>) => {
+        state.locationList = action.payload
+      }
     }
   }
 );
 
-export const {setOrderInfo, updateSessionId, updateLocationId} = orderSlice.actions;
+export const {setOrderInfo, updateTimeslotId, updateLocationId, setTimeslotList, setLocationList} = orderSlice.actions;
 
 export default orderSlice.reducer;
