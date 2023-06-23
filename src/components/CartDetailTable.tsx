@@ -18,6 +18,7 @@ import {
   addToCartSingle,
   subtractFromCartSingle,
   removeFromCart,
+  incrementItem,
 } from "@/app/GlobalRedux/Features/cartSlice";
 
 function CartDetailTable() {
@@ -33,7 +34,7 @@ function CartDetailTable() {
   const cart = useAppSelector((state) => state.cart);
   const dispatch = useDispatch();
   const handleIncrementItem = (id: string) => {
-    dispatch(addToCartSingle(id));
+    dispatch(incrementItem(id));
   };
 
   const handleDecrementItem = (id: string) => {
