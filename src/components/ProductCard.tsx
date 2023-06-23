@@ -22,6 +22,7 @@ function ProductCard({
     name: string;
     image: string;
     price: number;
+    storeName: string;
   };
   handleViewProductDetail: (id: string) => void;
 }) {
@@ -45,7 +46,6 @@ function ProductCard({
           </Typography>
 
           <AddToCartBtn type="icon" product={product}></AddToCartBtn>
-
         </Box>
       </CardContent>
     </Card>

@@ -107,11 +107,11 @@ function SessionSeletorSection() {
           </Select>
         </FormControl>
         <FormControl>
-          <InputLabel>Session</InputLabel>
+          <InputLabel>Timeslot</InputLabel>
           <Select
             className="selector"
             value={timeslotId}
-            label="Session"
+            label="Timeslot"
             onChange={handleTimeslotIdChange}
           >
             {timeslotList.length > 0 &&

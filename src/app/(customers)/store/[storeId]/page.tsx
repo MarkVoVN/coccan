@@ -77,7 +77,13 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
       id: string;
       name: string;
       image: string;
-      products: { id: string; name: string; image: string; price: number }[];
+      products: {
+        id: string;
+        name: string;
+        image: string;
+        price: number;
+        storeName: string;
+      }[];
     }[]
   >([]);
 
@@ -124,6 +130,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
                 name: product.name,
                 image: product.image,
                 price: 12000,
+                storeName: "ABC",
               });
             });
 
