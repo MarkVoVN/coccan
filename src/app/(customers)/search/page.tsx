@@ -4,6 +4,7 @@ import "./search.scss";
 import { ThemeProvider } from "@mui/material";
 import theme from "../../theme";
 
+
 function SearchPage() {
   const searchResult = {
     type: "store with 3 products",

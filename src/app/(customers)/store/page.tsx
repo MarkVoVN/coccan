@@ -71,7 +71,8 @@ function StoreDetailPage() {
 
   return (
     <>
-      <div className="back-btn-section-wrapper flex flex-row justify-center">
+      <h2>Under revision</h2>
+      {/* <div className="back-btn-section-wrapper flex flex-row justify-center">
         <div className="back-btn-section-container w-[80%] my-[2ren]">
           <Button
             variant="outlined"
@@ -96,7 +97,7 @@ function StoreDetailPage() {
         open={productModalOpen}
         handleClose={handleProductModalClose}
         product={productDetail}
-      ></ProductDetailModal>
+      ></ProductDetailModal> */}
     </>
   );
 }

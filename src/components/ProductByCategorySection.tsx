@@ -10,64 +10,15 @@ function ProductByCategorySection({
   handleViewProductDetail,
 }: {
   category: {
-    categoryId: string;
-    categoryIconUrl: string;
+    id: string;
     name: string;
+    image: string;
+    products: { id: string; name: string; image: string; price: number }[];
   };
-  viewMore: boolean;
-  handleViewProductDetail: (id: number) => void;
-}) {
-  const productList = [
-    {
-      id: 1,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 2,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 3,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 4,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 5,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 6,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 7,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-    {
-      id: 8,
-      name: "Product Name",
-      price: 12000,
-      imageUrl: "/homepage/product-placeholder-img.png",
-    },
-  ];
 
+  viewMore: boolean;
+  handleViewProductDetail: (id: string) => void;
+}) {
   return (
     <Box className="product-by-category-wrapper">
       <Box className="product-by-category-container">
@@ -84,7 +35,7 @@ function ProductByCategorySection({
           )}
         </Box>
         <Box className="product-list-container">
-          {productList.map((product) => (
+          {category.products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

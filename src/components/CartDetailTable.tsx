@@ -116,6 +116,7 @@ function CartDetailTable() {
                   <Remove></Remove>
                 </IconButton>
                 {item.quantity}
+
                 <IconButton
                   onClick={() => handleIncrementItem(item.menuItemId)}
                 >

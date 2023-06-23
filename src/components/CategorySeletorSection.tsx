@@ -14,13 +14,11 @@ import Image from "next/image";
 import React from "react";
 
 function CategorySeletorSection({
-  categoryList,
+  storeList,
+  handleSelectStore,
 }: {
-  categoryList: {
-    categoryId: string;
-    categoryIconUrl: string;
-    name: string;
-  }[];
+  storeList: { id: string; image: string; name: string }[];
+  handleSelectStore: (id: string) => void;
 }) {
   return (
     <Box className="category-wrapper">
@@ -116,6 +114,22 @@ function CategorySeletorSection({
             //   </Box>
             //   <Typography variant="h5">{category.name}</Typography>
             // </Box>
+          Stores
+        </Typography>
+        <Box className="category-list">
+          {storeList.map((store) => (
+            <Box
+              className="category-container"
+              key={store.id}
+              onClick={(e) => {
+                handleSelectStore(store.id);
+              }}
+            >
+              <Box className="category-icon-container">
+                <img src={store.image} alt={store.name}></img>
+              </Box>
+              <Typography variant="h5">{store.name}</Typography>
+            </Box>
           ))}
         </Box> */}
       </Box>

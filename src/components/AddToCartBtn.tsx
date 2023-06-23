@@ -26,14 +26,20 @@ function AddToCartBtn({
           variant="contained"
           size="large"
           className="w-full self-center px-[1rem] bg-[#EA5857] mt-[2rem]"
-          onClick={() => handleAddToCart(productId)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddToCart(productId);
+          }}
         >
           Add to cart
         </Button>
       ) : (
         <IconButton
           className="add-to-cart-btn"
-          onClick={() => handleAddToCart(productId)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddToCart(productId);
+          }}
         >
           <Add color="inherit"></Add>
         </IconButton>
