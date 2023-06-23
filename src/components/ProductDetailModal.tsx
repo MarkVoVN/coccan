@@ -60,7 +60,7 @@ function ProductDetailModal({
                 currency: "VND",
               })}
             </Typography>
-            <AddToCartBtn type="text" productId={product.id}></AddToCartBtn>
+            {/* <AddToCartBtn type="text" productId={product.id}></AddToCartBtn> */}
           </div>
         </div>
       </div>
