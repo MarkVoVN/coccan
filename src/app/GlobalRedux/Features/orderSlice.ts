@@ -16,9 +16,9 @@ export interface OrderdState {
 const initialState : OrderdState = { value:
 {
   isSetByUser: false,
-  sessionId: '-1',
-  locationId: '-1',
-  timeslotId: '-1',
+  sessionId: '',
+  locationId: '',
+  timeslotId: '',
 },
 timeslotList: [],
 locationList: [],
@@ -46,16 +46,16 @@ export const orderSlice = createSlice(
             isSetByUser: (action.payload !== '-1' && state.value.locationId !== '-1'),
             timeslotId: action.payload,
             locationId: state.value.locationId,
-            sessionId: initialState.value.sessionId,
+            sessionId: state.value.sessionId,
           }
         
       },
       updateLocationId: (state, action : PayloadAction<string>) => {
           state.value = {
             isSetByUser: (action.payload !== '-1' && state.value.timeslotId !== '-1'),
-            timeslotId: state.value.sessionId,
+            timeslotId: state.value.timeslotId,
             locationId: action.payload,
-            sessionId: initialState.value.sessionId,
+            sessionId: state.value.sessionId,
           }
       },
       setTimeslotList: (state, action : PayloadAction<{id: string, startTime: string, endTime: string}[]>) => {

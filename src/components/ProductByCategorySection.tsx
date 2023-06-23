@@ -13,7 +13,13 @@ function ProductByCategorySection({
     id: string;
     name: string;
     image: string;
-    products: { id: string; name: string; image: string; price: number }[];
+    products: {
+      id: string;
+      name: string;
+      image: string;
+      price: number;
+      storeName: string;
+    }[];
   };
 
   viewMore: boolean;

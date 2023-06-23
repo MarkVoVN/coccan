@@ -16,6 +16,7 @@ function AddToCartBtn({
     name: string;
     image: string;
     price: number;
+    storeName: string;
   };
 }) {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function AddToCartBtn({
     name: string;
     image: string;
     price: number;
+    storeName: string;
   }) => {
     dispatch(addToCartSingle({ product: product }));
   };
@@ -40,7 +42,6 @@ function AddToCartBtn({
             e.stopPropagation();
 
             handleAddToCart(product);
-
           }}
         >
           Add to cart
@@ -52,7 +53,6 @@ function AddToCartBtn({
             e.stopPropagation();
 
             handleAddToCart(product);
-
           }}
         >
           <Add color="inherit"></Add>

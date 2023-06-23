@@ -83,7 +83,7 @@ function CartDetailTable() {
             </TableCell>
             <TableCell align="center">
               <Typography variant="h6" fontWeight="500">
-                Price
+                Amount
               </Typography>
             </TableCell>
             <TableCell></TableCell>
@@ -93,18 +93,12 @@ function CartDetailTable() {
           {cart.value.map((item) => (
             <TableRow key={item.menuItemId}>
               <TableCell align="center">
-                <img
-                  src={productInfoPlaceholder.imageUrl}
-                  alt={productInfoPlaceholder.name}
-                  width={128}
-                />
+                <img src={item.image} alt={item.name} width={128} />
               </TableCell>
               <TableCell>
+                <Typography>{item.name}</Typography>
                 <Typography>
-                  {productInfoPlaceholder.name + " " + item.menuItemId}
-                </Typography>
-                <Typography>
-                  {productInfoPlaceholder.price.toLocaleString("vi-VN", {
+                  {item.price.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
@@ -124,17 +118,12 @@ function CartDetailTable() {
                   <Add></Add>
                 </IconButton>
               </TableCell>
+              <TableCell align="center">{item.storeName}</TableCell>
               <TableCell align="center">
-                {productInfoPlaceholder.storeName}
-              </TableCell>
-              <TableCell align="center">
-                {(productInfoPlaceholder.price * item.quantity).toLocaleString(
-                  "vi-VN",
-                  {
-                    style: "currency",
-                    currency: "VND",
-                  }
-                )}
+                {(item.price * item.quantity).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
               </TableCell>
               <TableCell align="center">
                 <Button onClick={() => handleRemoveItem(item.menuItemId)}>

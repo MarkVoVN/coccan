@@ -76,7 +76,11 @@ export default function Home() {
     { id: string; image: string; name: string }[]
   >([]);
 
-  const [SelectedStoreId, setSelectedStoreId] = React.useState<string>();
+  const [SelectedStore, setSelectedStore] = React.useState<{
+    id: string;
+    image: string;
+    name: string;
+  }>();
 
   const [
     ProductListByCategoryFromSelectedStoreId,
@@ -86,7 +90,13 @@ export default function Home() {
       id: string;
       name: string;
       image: string;
-      products: { id: string; name: string; image: string; price: number }[];
+      products: {
+        id: string;
+        name: string;
+        image: string;
+        price: number;
+        storeName: string;
+      }[];
     }[]
   >([]);
   const [CategoryList, setCategoryList] = React.useState<
@@ -105,15 +115,15 @@ export default function Home() {
       fetchApi("http://coccan-api.somee.com/api/stores").then(
         (response: { id: string; image: string; name: string }[]) => {
           setStoreList(response);
-          setSelectedStoreId(response[0].id);
+          setSelectedStore(response[0]);
         }
       );
       console.log("Store list length: " + StoreList.length);
     }
 
-    if (SelectedStoreId) {
+    if (SelectedStore) {
       fetchApi(
-        `http://coccan-api.somee.com/api/stores/${SelectedStoreId}`
+        `http://coccan-api.somee.com/api/stores/${SelectedStore.id}`
       ).then(
         (response: {
           id: string;
@@ -145,6 +155,7 @@ export default function Home() {
               name: product.name,
               image: product.image,
               price: 12000,
+              storeName: SelectedStore.name,
             });
           });
 
@@ -167,8 +178,7 @@ export default function Home() {
     if (StoreList.length > 0 && CategoryList.length > 0) {
       setIsFetchLoading(false);
     }
-  }, [StoreList, CategoryList, SelectedStoreId]);
-  const name = useAppSelector((state) => state.user.value.displayName);
+  }, [StoreList, CategoryList, SelectedStore]);
 
   return (
     <>
@@ -207,7 +217,11 @@ export default function Home() {
                 storeList={
                   StoreList as { id: string; image: string; name: string }[]
                 }
-                handleSelectStore={(id: string) => setSelectedStoreId(id)}
+                handleSelectStore={(store: {
+                  id: string;
+                  image: string;
+                  name: string;
+                }) => setSelectedStore(store)}
               ></CategorySeletorSection>
 
               {ProductListByCategoryFromSelectedStoreId.map((category) => (

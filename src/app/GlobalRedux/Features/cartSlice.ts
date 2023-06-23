@@ -9,6 +9,7 @@ export interface CartState {
       name: string;
       image: string;
       price: number;
+      storeName: string,
       quantity : number,
     }[]
   countOfItem : number,
@@ -35,6 +36,7 @@ export const cartSlice = createSlice(
         name: string;
         image: string;
         price: number;
+        storeName: string;
       }}>) => {
         let item = state.value.find(item => item.menuItemId === action.payload.product.id);
         if (item) {
@@ -43,7 +45,13 @@ export const cartSlice = createSlice(
           state.countOfItemQuantity++;
         } else {
           //if item is not in cart, add item to cart
-          state.value.push({ menuItemId: action.payload.product.id, name : action.payload.product.name, image : action.payload.product.image, price : action.payload.product.price, quantity: 1});
+          state.value.push({ 
+            menuItemId: action.payload.product.id, 
+            name : action.payload.product.name, 
+            image : action.payload.product.image, 
+            price : action.payload.product.price, 
+            storeName : action.payload.product.storeName,
+            quantity: 1});
           state.countOfItem++;
           state.countOfItemQuantity++;
         }
@@ -76,6 +84,7 @@ export const cartSlice = createSlice(
         name: string;
         image: string;
         price: number;
+        storeName: string;
       }, amount: number}>) => {
         let item = state.value.find(item => item.menuItemId === action.payload.product.id);
         if (item) {
@@ -84,7 +93,13 @@ export const cartSlice = createSlice(
           state.countOfItemQuantity+= action.payload.amount;
         } else {
           //if item is not in cart, add item to cart
-          state.value.push({ menuItemId: action.payload.product.id, name : action.payload.product.name, image : action.payload.product.image, price : action.payload.product.price, quantity: action.payload.amount});
+          state.value.push({ 
+            menuItemId: action.payload.product.id, 
+            name : action.payload.product.name, 
+            image : action.payload.product.image, 
+            price : action.payload.product.price, 
+            storeName : action.payload.product.storeName,
+            quantity: action.payload.amount});
           state.countOfItem++;
           state.countOfItemQuantity+= action.payload.amount;
         }
