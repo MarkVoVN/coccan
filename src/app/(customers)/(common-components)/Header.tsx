@@ -42,6 +42,7 @@ import { setOrderInfo } from "@/app/GlobalRedux/Features/orderSlice";
 import { setCart } from "@/app/GlobalRedux/Features/cartSlice";
 import theme from "../theme";
 import PreferedLocationSelector from "@/components/PreferedLocationSelector";
+
 function Header() {
   const categoryList = [
     { id: 1, name: "Drink" },

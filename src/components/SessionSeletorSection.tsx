@@ -35,6 +35,7 @@ function SessionSeletorSection() {
 
   const timeslotId = useAppSelector((state) => state.order.value.timeslotId);
 
+
   const locationId = useAppSelector((state) => state.order.value.locationId);
 
   const dispatch = useDispatch();
