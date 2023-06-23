@@ -70,10 +70,10 @@ function SearchResultSection({
                         </Typography>
                       </div>
                     </div>
-                    <AddToCartBtn
+                    {/* <AddToCartBtn
                       type="text"
                       productId={product.id}
-                    ></AddToCartBtn>
+                    ></AddToCartBtn> */}
                   </div>
                 ))}
               </div>

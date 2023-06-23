@@ -8,15 +8,25 @@ import useStorage from "@/hooks/useStorage";
 
 function AddToCartBtn({
   type,
-  productId,
+  product,
 }: {
   type: string;
-  productId: string;
+  product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+  };
 }) {
   const dispatch = useDispatch();
 
-  const handleAddToCart = (productId: string) => {
-    dispatch(addToCartSingle(productId));
+  const handleAddToCart = (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+  }) => {
+    dispatch(addToCartSingle({ product: product }));
   };
 
   return (
@@ -28,7 +38,9 @@ function AddToCartBtn({
           className="w-full self-center px-[1rem] bg-[#EA5857] mt-[2rem]"
           onClick={(e) => {
             e.stopPropagation();
-            handleAddToCart(productId);
+
+            handleAddToCart(product);
+
           }}
         >
           Add to cart
@@ -38,7 +50,9 @@ function AddToCartBtn({
           className="add-to-cart-btn"
           onClick={(e) => {
             e.stopPropagation();
-            handleAddToCart(productId);
+
+            handleAddToCart(product);
+
           }}
         >
           <Add color="inherit"></Add>
