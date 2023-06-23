@@ -1,7 +1,10 @@
-import { Button, Table, TableRow, Typography } from "@mui/material";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { Button, Typography } from "@mui/material";
 import React from "react";
 
 function OrderCheckoutSection() {
+  const orderInfo = useAppSelector((state) => state.order.value);
+  const userInfo = useAppSelector((state) => state.user.value);
   return (
     <div className="w-full flex flex-row justify-center mt-12">
       <div className="order-checkout-container w-[80vw] ">
@@ -10,18 +13,18 @@ function OrderCheckoutSection() {
             <Typography variant="h5">Order Information</Typography>
             <div className="w-full flex flex-row mt-4">
               <div className="w-1/2 py-4">Location:</div>
-              <div className="w-1/2 py-4">Campus Q9 HCM</div>
+              <div className="w-1/2 py-4">{orderInfo.locationId}</div>
             </div>
             <div className="w-full flex flex-row">
               <div className="w-1/2 py-4">Timeslot:</div>
-              <div className="w-1/2 py-4">9:15AM</div>
+              <div className="w-1/2 py-4">{orderInfo.sessionId}</div>
             </div>
           </div>
           <div className="recipient-info-contaier w-fit">
             <Typography variant="h5">Delivery Information</Typography>
             <div className="w-full flex flex-row  mt-4">
               <div className="w-1/2 py-4">Name:</div>
-              <div className="w-1/2 py-4">Vo Minh Khoi K17 HCM</div>
+              <div className="w-1/2 py-4">{userInfo.displayName}</div>
             </div>
             <div className="w-full flex flex-row">
               <div className="w-1/2 py-4">Phone number:</div>

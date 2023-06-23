@@ -12,6 +12,7 @@ import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { ThemeProvider } from "@emotion/react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
+import axios from "axios";
 
 export default function Home() {
   const categoryList = [
@@ -71,11 +72,102 @@ export default function Home() {
     (state) => state.order.value.isSetByUser
   );
 
+  const [StoreList, setStoreList] = React.useState<
+    { id: string; image: string; name: string }[]
+  >([]);
+
+  const [SelectedStoreId, setSelectedStoreId] = React.useState<string>();
+
+  const [
+    ProductListByCategoryFromSelectedStoreId,
+    setProductListByCategoryFromSelectedStoreId,
+  ] = React.useState<
+    {
+      id: string;
+      name: string;
+      image: string;
+      products: { id: string; name: string; image: string; price: number }[];
+    }[]
+  >([]);
+  const [CategoryList, setCategoryList] = React.useState<
+    { id: string; name: string; image: string }[]
+  >([]);
+
+  async function fetchApi(url: string) {
+    const response = await fetch(url);
+    const json = await response.json();
+    return json;
+  }
+
   React.useEffect(() => {
     //fetch api to get product with location and session id
+    if (StoreList.length <= 0) {
+      fetchApi("http://coccan-api.somee.com/api/stores").then(
+        (response: { id: string; image: string; name: string }[]) => {
+          setStoreList(response);
+          setSelectedStoreId(response[0].id);
+        }
+      );
+      console.log("Store list length: " + StoreList.length);
+    }
 
-    setIsFetchLoading(false);
-  }, []);
+    if (SelectedStoreId) {
+      fetchApi(
+        `http://coccan-api.somee.com/api/stores/${SelectedStoreId}`
+      ).then(
+        (response: {
+          id: string;
+          name: string;
+          image: string;
+          products: {
+            id: string;
+            name: string;
+            image: string;
+            category: { id: string; name: string; image: string };
+          }[];
+        }) => {
+          const categories: Record<string, any> = {};
+
+          response.products.forEach((product) => {
+            const categoryId = product.category.id;
+
+            if (!categories[categoryId]) {
+              categories[categoryId] = {
+                id: categoryId,
+                name: product.category.name,
+                image: product.category.image,
+                products: [],
+              };
+            }
+
+            categories[categoryId].products.push({
+              id: product.id,
+              name: product.name,
+              image: product.image,
+              price: 12000,
+            });
+          });
+
+          const categoriesList = Object.values(categories);
+
+          setProductListByCategoryFromSelectedStoreId(categoriesList);
+        }
+      );
+      console.log("Store list length: " + StoreList.length);
+    }
+
+    if (CategoryList.length <= 0) {
+      fetchApi("http://coccan-api.somee.com/api/categories").then(
+        (response: { id: string; name: string; image: string }[]) =>
+          setCategoryList(response)
+      );
+      console.log("Category list length: " + CategoryList);
+    }
+
+    if (StoreList.length > 0 && CategoryList.length > 0) {
+      setIsFetchLoading(false);
+    }
+  }, [StoreList, CategoryList, SelectedStoreId]);
   const name = useAppSelector((state) => state.user.value.displayName);
 
   return (
@@ -112,12 +204,15 @@ export default function Home() {
                 </Box>
               </div>
               <CategorySeletorSection
-                categoryList={categoryList}
+                storeList={
+                  StoreList as { id: string; image: string; name: string }[]
+                }
+                handleSelectStore={(id: string) => setSelectedStoreId(id)}
               ></CategorySeletorSection>
 
-              {categoryList.map((category) => (
+              {ProductListByCategoryFromSelectedStoreId.map((category) => (
                 <ProductByCategorySection
-                  key={category.categoryId}
+                  key={category.id}
                   category={category}
                   viewMore={true}
                   handleViewProductDetail={handleProductModalOpen}

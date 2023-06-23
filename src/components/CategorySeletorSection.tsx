@@ -5,30 +5,31 @@ import Image from "next/image";
 import React from "react";
 
 function CategorySeletorSection({
-  categoryList,
+  storeList,
+  handleSelectStore,
 }: {
-  categoryList: {
-    categoryId: string;
-    categoryIconUrl: string;
-    name: string;
-  }[];
+  storeList: { id: string; image: string; name: string }[];
+  handleSelectStore: (id: string) => void;
 }) {
   return (
     <Box className="category-wrapper">
       <Box className="category-section-container">
         <Typography variant="h3" className="category-title">
-          Category
+          Stores
         </Typography>
         <Box className="category-list">
-          {categoryList.map((category) => (
-            <Box className="category-container" key={category.categoryId}>
+          {storeList.map((store) => (
+            <Box
+              className="category-container"
+              key={store.id}
+              onClick={(e) => {
+                handleSelectStore(store.id);
+              }}
+            >
               <Box className="category-icon-container">
-                <img
-                  src={"/homepage/category/" + category.categoryIconUrl}
-                  alt={category.name}
-                ></img>
+                <img src={store.image} alt={store.name}></img>
               </Box>
-              <Typography variant="h5">{category.name}</Typography>
+              <Typography variant="h5">{store.name}</Typography>
             </Box>
           ))}
         </Box>

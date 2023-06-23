@@ -69,34 +69,111 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
     setProducttModalOpen(false);
   };
 
+  const [
+    ProductListByCategoryFromSelectedStoreId,
+    setProductListByCategoryFromSelectedStoreId,
+  ] = React.useState<
+    {
+      id: string;
+      name: string;
+      image: string;
+      products: { id: string; name: string; image: string; price: number }[];
+    }[]
+  >([]);
+
+  async function fetchApi(url: string) {
+    const response = await fetch(url);
+    const json = await response.json();
+    return json;
+  }
+
+  const [isFetchLoading, setIsFetchLoading] = React.useState(true);
+  const [isError, setIsError] = React.useState(false);
+
+  React.useEffect(() => {
+    if (params.storeId) {
+      fetchApi(`http://coccan-api.somee.com/api/stores/${params.storeId}`)
+        .then(
+          (response: {
+            id: string;
+            name: string;
+            image: string;
+            products: {
+              id: string;
+              name: string;
+              image: string;
+              category: { id: string; name: string; image: string };
+            }[];
+          }) => {
+            const categories: Record<string, any> = {};
+
+            response.products.forEach((product) => {
+              const categoryId = product.category.id;
+
+              if (!categories[categoryId]) {
+                categories[categoryId] = {
+                  id: categoryId,
+                  name: product.category.name,
+                  image: product.category.image,
+                  products: [],
+                };
+              }
+
+              categories[categoryId].products.push({
+                id: product.id,
+                name: product.name,
+                image: product.image,
+                price: 12000,
+              });
+            });
+
+            const categoriesList = Object.values(categories);
+            setIsFetchLoading(false);
+            setProductListByCategoryFromSelectedStoreId(categoriesList);
+          }
+        )
+        .catch((error) => {
+          setIsError(true);
+        });
+    }
+  }, [isError]);
+
   return (
     <>
-      <div className="back-btn-section-wrapper flex flex-row justify-center">
-        <div className="back-btn-section-container w-[80%] my-[2ren]">
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => console.log("return to previous page")}
-            startIcon={<ArrowBackIos></ArrowBackIos>}
-          >
-            Back
-          </Button>
-        </div>
-      </div>
-      <StoreDetailSection store={store}></StoreDetailSection>
-      {categoryList.map((category) => (
-        <ProductByCategorySection
-          key={category.categoryId}
-          category={category}
-          viewMore={false}
-          handleViewProductDetail={handleProductModalOpen}
-        ></ProductByCategorySection>
-      ))}
-      <ProductDetailModal
-        open={productModalOpen}
-        handleClose={handleProductModalClose}
-        product={productDetail}
-      ></ProductDetailModal>
+      {isFetchLoading && !isError && <h2>Loading...</h2>}
+
+      {isError && <h2>An error occurred while loading. Trying again...</h2>}
+
+      {!isFetchLoading && !isError && (
+        <>
+          <div className="back-btn-section-wrapper flex flex-row justify-center">
+            <div className="back-btn-section-container w-[80%] my-[2ren]">
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => console.log("return to previous page")}
+                startIcon={<ArrowBackIos></ArrowBackIos>}
+              >
+                Back
+              </Button>
+            </div>
+          </div>
+          <StoreDetailSection store={store}></StoreDetailSection>
+          {ProductListByCategoryFromSelectedStoreId.map((category) => (
+            <ProductByCategorySection
+              key={category.id}
+              category={category}
+              viewMore={false}
+              handleViewProductDetail={handleProductModalOpen}
+            ></ProductByCategorySection>
+          ))}
+          <ProductDetailModal
+            open={productModalOpen}
+            handleClose={handleProductModalClose}
+            product={productDetail}
+          ></ProductDetailModal>
+        </>
+      )}
     </>
   );
 }
