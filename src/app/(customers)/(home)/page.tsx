@@ -15,51 +15,30 @@ import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 import axios from "axios";
 
 export default function Home() {
-  const categoryList = [
-    {
-      categoryId: "0",
-      categoryIconUrl: "rice.svg",
-      name: "Rice",
-    },
-    {
-      categoryId: "1",
-      categoryIconUrl: "bread.svg",
-      name: "Bread",
-    },
-    {
-      categoryId: "2",
-      categoryIconUrl: "drink.svg",
-      name: "Drink",
-    },
-    {
-      categoryId: "3",
-      categoryIconUrl: "snack.svg",
-      name: "Snack",
-    },
-    {
-      categoryId: "4",
-      categoryIconUrl: "others.svg",
-      name: "Others",
-    },
-  ];
-
-  const productInfoPlaceholder = {
-    id: "8",
-    name: "Product Name",
-    price: 12000,
-    imageUrl: "/homepage/product-placeholder-img.png",
-    description: "Product description",
-    storeName: "Store Name",
-  };
-
   const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
-  const [productDetail, setProductDetail] = React.useState(
-    productInfoPlaceholder
-  );
+  const [productDetail, setProductDetail] = React.useState<{
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }>({
+    id: "-1",
+    name: "Product Name",
+    price: 12000,
+    image: "/homepage/product-placeholder-img.png",
+    storeName: "Store Name",
+  });
 
-  const handleProductModalOpen = () => {
-    setProductDetail(productInfoPlaceholder);
+  const handleProductModalOpen = (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }) => {
+    setProductDetail(product);
     setProducttModalOpen(true);
   };
 
@@ -112,7 +91,7 @@ export default function Home() {
   React.useEffect(() => {
     //fetch api to get product with location and session id
     if (StoreList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/stores").then(
+      fetchApi("https://coccan-api.somee.com/api/stores").then(
         (response: { id: string; image: string; name: string }[]) => {
           setStoreList(response);
           setSelectedStore(response[0]);
@@ -123,7 +102,7 @@ export default function Home() {
 
     if (SelectedStore) {
       fetchApi(
-        `http://coccan-api.somee.com/api/stores/${SelectedStore.id}`
+        `https://coccan-api.somee.com/api/stores/${SelectedStore.id}`
       ).then(
         (response: {
           id: string;
@@ -168,7 +147,7 @@ export default function Home() {
     }
 
     if (CategoryList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/categories").then(
+      fetchApi("https://coccan-api.somee.com/api/categories").then(
         (response: { id: string; name: string; image: string }[]) =>
           setCategoryList(response)
       );

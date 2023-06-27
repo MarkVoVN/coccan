@@ -72,7 +72,7 @@ function Header() {
   };
 
   const handleOrderInfoDialogClose = () => {
-    setOrderInfoDialogOpen(false);
+    if (orderInfo.isSetByUser) setOrderInfoDialogOpen(false);
   };
 
   const orderInfo = useAppSelector((state) => state.order.value);
@@ -158,10 +158,10 @@ function Header() {
             sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
             <Typography variant="h5" fontWeight="500">
-              Please select your session and location
+              Please select your timeslot and location
             </Typography>
             <Typography variant="subtitle2" color="gray">
-              Choose your session and location now to help us show you the
+              Choose your timeslot and location now to help us show you the
               appropriate dishes
             </Typography>
             <SessionSeletorSection></SessionSeletorSection>
