@@ -50,13 +50,6 @@ function Header() {
     { id: 4, name: "Bread" },
   ];
   const router = useRouter();
-  // const [user, setUser] = useState<{
-  //   displayName: string;
-  //   email: string;
-  //   photoURL: string;
-  //   uid: string;
-  //   refreshToken: string;
-  // }>();
 
   const [search, setSearch] = useState("");
 

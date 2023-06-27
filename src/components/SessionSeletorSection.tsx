@@ -19,6 +19,8 @@ import { responsiveProperty } from "@mui/material/styles/cssUtils";
 import {
   setTimeslotList,
   setLocationList,
+  updateSessionId,
+  updateMenuId,
 } from "@/app/GlobalRedux/Features/orderSlice";
 
 function SessionSeletorSection() {
@@ -29,7 +31,7 @@ function SessionSeletorSection() {
     { id: "2", title: "2:45PM" },
     { id: "3", title: "5:15PM" },
   ];
-
+  const orderInfo = useAppSelector((state) => state.order.value);
   const timeslotList = useAppSelector((state) => state.order.timeslotList);
   const locationList = useAppSelector((state) => state.order.locationList);
 
@@ -80,7 +82,33 @@ function SessionSeletorSection() {
         }
       );
     }
-  }, [timeslotList, locationList]);
+
+    if (orderInfo.isSetByUser) {
+      fetchApi("https://coccan-api.somee.com/api/sessions").then(
+        (response: {
+          data: {
+            id: string;
+            date: string;
+            timeSlotId: string;
+            locationId: string;
+            menuId: string;
+          }[];
+          status: string;
+          title: string;
+          errorMessages: [];
+        }) => {
+          var item = response.data.find(
+            (item) =>
+              item.timeSlotId === timeslotId && item.locationId === locationId
+          );
+          if (item) {
+            dispatch(updateSessionId(item.id));
+            dispatch(updateMenuId(item.menuId));
+          }
+        }
+      );
+    }
+  }, [timeslotList, locationList, orderInfo]);
 
   return (
     <div className="selectors-container flex flex-row justify-center w-[100%]">

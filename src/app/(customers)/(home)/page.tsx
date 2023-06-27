@@ -13,8 +13,11 @@ import { ThemeProvider } from "@emotion/react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { finishUpdate } from "@/app/GlobalRedux/Features/orderSlice";
 
 export default function Home() {
+  const dispatch = useDispatch();
   const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
   const [productDetail, setProductDetail] = React.useState<{
@@ -78,28 +81,18 @@ export default function Home() {
       }[];
     }[]
   >([]);
-  const [CategoryList, setCategoryList] = React.useState<
-    { id: string; name: string; image: string }[]
-  >([]);
 
   async function fetchApi(url: string) {
     const response = await fetch(url);
     const json = await response.json();
     return json;
   }
+  const orderInfo = useAppSelector((state) => state.order.value);
+  const isOrderInfoUpdating = useAppSelector(
+    (state) => state.order.value.isUpdating
+  );
 
   React.useEffect(() => {
-    //fetch api to get product with location and session id
-    if (StoreList.length <= 0) {
-      fetchApi("https://coccan-api.somee.com/api/stores").then(
-        (response: { id: string; image: string; name: string }[]) => {
-          setStoreList(response);
-          setSelectedStore(response[0]);
-        }
-      );
-      console.log("Store list length: " + StoreList.length);
-    }
-
     if (SelectedStore) {
       fetchApi(
         `https://coccan-api.somee.com/api/stores/${SelectedStore.id}`
@@ -145,19 +138,33 @@ export default function Home() {
       );
       console.log("Store list length: " + StoreList.length);
     }
+  }, [SelectedStore]);
 
-    if (CategoryList.length <= 0) {
-      fetchApi("https://coccan-api.somee.com/api/categories").then(
-        (response: { id: string; name: string; image: string }[]) =>
-          setCategoryList(response)
+  React.useEffect(() => {
+    //fetch api to get product with location and session id
+    if (isOrderInfoUpdating && orderInfo.sessionId.length > 0) {
+      const params = {
+        filter: JSON.stringify({ session: orderInfo.sessionId }),
+      };
+      const queryParams = new URLSearchParams(params);
+      const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
+      fetchApi(url).then(
+        (response: { id: string; image: string; name: string }[]) => {
+          const uniqueList = Array.from(
+            new Set(response.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+
+          setStoreList(uniqueList);
+          setSelectedStore(uniqueList[0]);
+          dispatch(finishUpdate());
+        }
       );
-      console.log("Category list length: " + CategoryList);
+      console.log("Store list length: " + StoreList.length);
     }
-
-    if (StoreList.length > 0 && CategoryList.length > 0) {
+    if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
-  }, [StoreList, CategoryList, SelectedStore]);
+  }, [orderInfo.sessionId]);
 
   return (
     <>
