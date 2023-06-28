@@ -9,7 +9,7 @@ export interface OrderdState {
     locationId: string,
     timeslotId: string,
     menuId: string,
-    isUpdating: boolean
+    isUpdating: boolean,
   };
   timeslotList: {id: string, startTime: string, endTime: string}[];
   locationList: {id: string, name: string, address: string, status: number}[];
@@ -22,7 +22,7 @@ const initialState : OrderdState = { value:
   locationId: '',
   timeslotId: '',
   menuId: '',
-  isUpdating: true
+  isUpdating: true,
 },
 timeslotList: [],
 locationList: [],

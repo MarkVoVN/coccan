@@ -141,6 +141,7 @@ function Header() {
   useEffect(() => {
     setItem("orderInfo", JSON.stringify(orderInfo));
   }, [orderInfo]);
+
   //const categoryList = useAppSelector((state) => state.category);
 
   return (
@@ -169,6 +170,7 @@ function Header() {
             </Button>
           </DialogActions>
         </Dialog>
+
         <AppBar position="sticky" sx={{ bgcolor: "white" }} className="navbar">
           <Toolbar>
             <div className="navbar-container">

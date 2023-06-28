@@ -101,6 +101,7 @@ export default function Home() {
           id: string;
           name: string;
           image: string;
+          address: string;
           products: {
             id: string;
             name: string;
@@ -111,8 +112,13 @@ export default function Home() {
           const categories: Record<string, any> = {};
 
           response.products.forEach((product) => {
+            if (!product.category)
+              product.category = {
+                id: "placeholder-category",
+                name: "Other",
+                image: "placeholder-img",
+              };
             const categoryId = product.category.id;
-
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
@@ -164,7 +170,12 @@ export default function Home() {
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
-  }, [orderInfo.sessionId]);
+  }, [StoreList, orderInfo.sessionId]);
+
+  // React.useEffect(() => {
+  //   console.log("isFetchLoading" + isFetchLoading);
+  //   console.log("isSetByUser" + isOrderInfoSetByUser);
+  // }, []);
 
   return (
     <>
