@@ -51,14 +51,14 @@ export const orderSlice = createSlice(
           
       },
       updateTimeslotId: (state, action : PayloadAction<string>) => {
-          state.value.isSetByUser = (action.payload !== '-1' && state.value.locationId !== '-1')
+          state.value.isSetByUser = (action.payload !== '' && state.value.locationId !== '')
           state.value.timeslotId = action.payload
           state.value.isUpdating = true
 
 
       },
       updateLocationId: (state, action : PayloadAction<string>) => {
-          state.value.isSetByUser = (action.payload !== '-1' && state.value.locationId !== '-1')
+          state.value.isSetByUser = (action.payload !== '' && state.value.locationId !== '')
           state.value.locationId = action.payload
           state.value.isUpdating = true
 
