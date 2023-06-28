@@ -22,8 +22,10 @@ import {
   removeFromCart,
   incrementItem,
 } from "@/app/GlobalRedux/Features/cartSlice";
+import { useRouter } from "next/navigation";
 
 function CartDetailTable() {
+  const router = useRouter();
   const productInfoPlaceholder = {
     id: "8",
     name: "Product Name",
@@ -34,6 +36,7 @@ function CartDetailTable() {
   };
 
   const cart = useAppSelector((state) => state.cart);
+  const userInfo = useAppSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleIncrementItem = (id: string) => {
     dispatch(incrementItem(id));
@@ -45,6 +48,10 @@ function CartDetailTable() {
 
   const handleRemoveItem = (id: string) => {
     dispatch(removeFromCart(id));
+  };
+
+  const handleCheckout = () => {
+    router.push("/checkout");
   };
 
   const [cartTotalPrice, setCartTotalPrice] = useState(0);
@@ -145,7 +152,13 @@ function CartDetailTable() {
               })}
             </TableCell>
             <TableCell align="center">
-              <Button variant="contained">Checkout</Button>
+              <Button
+                variant="contained"
+                onClick={handleCheckout}
+                disabled={!userInfo.value.isAuth}
+              >
+                Checkout
+              </Button>
             </TableCell>
           </TableRow>
         </TableBody>

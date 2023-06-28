@@ -23,7 +23,6 @@ function CartPage() {
           {cart.value.length > 0 && (
             <>
               <CartDetailTable></CartDetailTable>
-              {/* <OrderCheckoutSection></OrderCheckoutSection> */}
             </>
           )}
           {cart.value.length <= 0 && <h1>CART IS EMPTY</h1>}
