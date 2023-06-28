@@ -93,9 +93,11 @@ export default function Home() {
   );
 
   React.useEffect(() => {
+
     if (SelectedStore) {
       fetchApi(
         `https://coccan-api.somee.com/api/stores/${SelectedStore.id}`
+
       ).then(
         (response: {
           id: string;
@@ -170,12 +172,14 @@ export default function Home() {
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
+
   }, [StoreList, orderInfo.sessionId]);
 
   // React.useEffect(() => {
   //   console.log("isFetchLoading" + isFetchLoading);
   //   console.log("isSetByUser" + isOrderInfoSetByUser);
   // }, []);
+
 
   return (
     <>

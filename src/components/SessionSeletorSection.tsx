@@ -234,6 +234,7 @@ function SessionSeletorSection() {
             variant="contained"
             color="primary"
             onClick={handleSessionChangeConfirmationDialogOK}
+
           >
             OK
           </Button>

@@ -21,8 +21,10 @@ const initialState : OrderdState = { value:
   sessionId: '',
   locationId: '',
   timeslotId: '',
+
   menuId: '',
   isUpdating: true,
+
 },
 timeslotList: [],
 locationList: [],
@@ -53,6 +55,7 @@ export const orderSlice = createSlice(
           state.value.timeslotId = action.payload
           state.value.isUpdating = true
 
+
       },
       updateLocationId: (state, action : PayloadAction<string>) => {
           state.value.isSetByUser = (action.payload !== '-1' && state.value.locationId !== '-1')
@@ -68,6 +71,7 @@ export const orderSlice = createSlice(
       updateMenuId: (state, action : PayloadAction<string>) => {
         state.value.menuId = action.payload;
         state.value.isUpdating = true
+
 
       },
       setTimeslotList: (state, action : PayloadAction<{id: string, startTime: string, endTime: string}[]>) => {
