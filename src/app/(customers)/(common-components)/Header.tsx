@@ -116,22 +116,24 @@ function Header() {
   const { getItem, setItem, removeItem } = useStorage();
   const dispatch = useDispatch();
   useEffect(() => {
-    const userInfoString = getItem("userInfo");
-    if (!userInfoString) return;
-
-    const userInfo = JSON.parse(userInfoString);
-    dispatch(loginUser({ value: userInfo }));
+    const userInfoString = getItem("userInfoLLLLLLL");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      dispatch(loginUser({ value: userInfo }));
+    }
 
     const orderInfoString = getItem("orderInfo");
-    if (!orderInfoString) return;
-
-    const orderInfo = JSON.parse(orderInfoString);
-    dispatch(setOrderInfo({ value: orderInfo }));
-    setOrderInfoDialogOpen(false);
+    if (orderInfoString) {
+      const orderInfo = JSON.parse(orderInfoString);
+      //TODO: validate order information incase the session has passesd
+      dispatch(setOrderInfo({ value: orderInfo }));
+      setOrderInfoDialogOpen(false);
+    }
 
     const cartInfoString = getItem("cartInfo");
-    if (!cartInfoString) return;
-    dispatch(setCart(JSON.parse(cartInfoString)));
+    if (cartInfoString) {
+      dispatch(setCart(JSON.parse(cartInfoString)));
+    }
   }, []);
 
   useEffect(() => {
