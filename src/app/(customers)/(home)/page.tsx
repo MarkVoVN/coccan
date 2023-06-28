@@ -13,53 +13,35 @@ import { ThemeProvider } from "@emotion/react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { finishUpdate } from "@/app/GlobalRedux/Features/orderSlice";
 
 export default function Home() {
-  const categoryList = [
-    {
-      categoryId: "0",
-      categoryIconUrl: "rice.svg",
-      name: "Rice",
-    },
-    {
-      categoryId: "1",
-      categoryIconUrl: "bread.svg",
-      name: "Bread",
-    },
-    {
-      categoryId: "2",
-      categoryIconUrl: "drink.svg",
-      name: "Drink",
-    },
-    {
-      categoryId: "3",
-      categoryIconUrl: "snack.svg",
-      name: "Snack",
-    },
-    {
-      categoryId: "4",
-      categoryIconUrl: "others.svg",
-      name: "Others",
-    },
-  ];
-
-  const productInfoPlaceholder = {
-    id: "8",
-    name: "Product Name",
-    price: 12000,
-    imageUrl: "/homepage/product-placeholder-img.png",
-    description: "Product description",
-    storeName: "Store Name",
-  };
-
+  const dispatch = useDispatch();
   const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
-  const [productDetail, setProductDetail] = React.useState(
-    productInfoPlaceholder
-  );
+  const [productDetail, setProductDetail] = React.useState<{
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }>({
+    id: "-1",
+    name: "Product Name",
+    price: 12000,
+    image: "/homepage/product-placeholder-img.png",
+    storeName: "Store Name",
+  });
 
-  const handleProductModalOpen = () => {
-    setProductDetail(productInfoPlaceholder);
+  const handleProductModalOpen = (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }) => {
+    setProductDetail(product);
     setProducttModalOpen(true);
   };
 
@@ -99,36 +81,29 @@ export default function Home() {
       }[];
     }[]
   >([]);
-  const [CategoryList, setCategoryList] = React.useState<
-    { id: string; name: string; image: string }[]
-  >([]);
 
   async function fetchApi(url: string) {
     const response = await fetch(url);
     const json = await response.json();
     return json;
   }
+  const orderInfo = useAppSelector((state) => state.order.value);
+  const isOrderInfoUpdating = useAppSelector(
+    (state) => state.order.value.isUpdating
+  );
 
   React.useEffect(() => {
-    //fetch api to get product with location and session id
-    if (StoreList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/stores").then(
-        (response: { id: string; image: string; name: string }[]) => {
-          setStoreList(response);
-          setSelectedStore(response[0]);
-        }
-      );
-      console.log("Store list length: " + StoreList.length);
-    }
 
     if (SelectedStore) {
       fetchApi(
-        `http://coccan-api.somee.com/api/stores/${SelectedStore.id}`
+        `https://coccan-api.somee.com/api/stores/${SelectedStore.id}`
+
       ).then(
         (response: {
           id: string;
           name: string;
           image: string;
+          address: string;
           products: {
             id: string;
             name: string;
@@ -139,8 +114,13 @@ export default function Home() {
           const categories: Record<string, any> = {};
 
           response.products.forEach((product) => {
+            if (!product.category)
+              product.category = {
+                id: "placeholder-category",
+                name: "Other",
+                image: "placeholder-img",
+              };
             const categoryId = product.category.id;
-
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
@@ -166,19 +146,40 @@ export default function Home() {
       );
       console.log("Store list length: " + StoreList.length);
     }
+  }, [SelectedStore]);
 
-    if (CategoryList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/categories").then(
-        (response: { id: string; name: string; image: string }[]) =>
-          setCategoryList(response)
+  React.useEffect(() => {
+    //fetch api to get product with location and session id
+    if (isOrderInfoUpdating && orderInfo.sessionId.length > 0) {
+      const params = {
+        filter: JSON.stringify({ session: orderInfo.sessionId }),
+      };
+      const queryParams = new URLSearchParams(params);
+      const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
+      fetchApi(url).then(
+        (response: { id: string; image: string; name: string }[]) => {
+          const uniqueList = Array.from(
+            new Set(response.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+
+          setStoreList(uniqueList);
+          setSelectedStore(uniqueList[0]);
+          dispatch(finishUpdate());
+        }
       );
-      console.log("Category list length: " + CategoryList);
+      console.log("Store list length: " + StoreList.length);
     }
-
-    if (StoreList.length > 0 && CategoryList.length > 0) {
+    if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
-  }, [StoreList, CategoryList, SelectedStore]);
+
+  }, [StoreList, orderInfo.sessionId]);
+
+  // React.useEffect(() => {
+  //   console.log("isFetchLoading" + isFetchLoading);
+  //   console.log("isSetByUser" + isOrderInfoSetByUser);
+  // }, []);
+
 
   return (
     <>

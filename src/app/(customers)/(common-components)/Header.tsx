@@ -50,13 +50,6 @@ function Header() {
     { id: 4, name: "Bread" },
   ];
   const router = useRouter();
-  // const [user, setUser] = useState<{
-  //   displayName: string;
-  //   email: string;
-  //   photoURL: string;
-  //   uid: string;
-  //   refreshToken: string;
-  // }>();
 
   const [search, setSearch] = useState("");
 
@@ -72,7 +65,7 @@ function Header() {
   };
 
   const handleOrderInfoDialogClose = () => {
-    setOrderInfoDialogOpen(false);
+    if (orderInfo.isSetByUser) setOrderInfoDialogOpen(false);
   };
 
   const orderInfo = useAppSelector((state) => state.order.value);
@@ -123,22 +116,24 @@ function Header() {
   const { getItem, setItem, removeItem } = useStorage();
   const dispatch = useDispatch();
   useEffect(() => {
-    const userInfoString = getItem("userInfo");
-    if (!userInfoString) return;
-
-    const userInfo = JSON.parse(userInfoString);
-    dispatch(loginUser({ value: userInfo }));
+    const userInfoString = getItem("userInfoLLLLLLL");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      dispatch(loginUser({ value: userInfo }));
+    }
 
     const orderInfoString = getItem("orderInfo");
-    if (!orderInfoString) return;
-
-    const orderInfo = JSON.parse(orderInfoString);
-    dispatch(setOrderInfo({ value: orderInfo }));
-    setOrderInfoDialogOpen(false);
+    if (orderInfoString) {
+      const orderInfo = JSON.parse(orderInfoString);
+      //TODO: validate order information incase the session has passesd
+      dispatch(setOrderInfo({ value: orderInfo }));
+      setOrderInfoDialogOpen(false);
+    }
 
     const cartInfoString = getItem("cartInfo");
-    if (!cartInfoString) return;
-    dispatch(setCart(JSON.parse(cartInfoString)));
+    if (cartInfoString) {
+      dispatch(setCart(JSON.parse(cartInfoString)));
+    }
   }, []);
 
   useEffect(() => {
@@ -148,6 +143,7 @@ function Header() {
   useEffect(() => {
     setItem("orderInfo", JSON.stringify(orderInfo));
   }, [orderInfo]);
+
   //const categoryList = useAppSelector((state) => state.category);
 
   return (
@@ -158,10 +154,10 @@ function Header() {
             sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
           >
             <Typography variant="h5" fontWeight="500">
-              Please select your session and location
+              Please select your timeslot and location
             </Typography>
             <Typography variant="subtitle2" color="gray">
-              Choose your session and location now to help us show you the
+              Choose your timeslot and location now to help us show you the
               appropriate dishes
             </Typography>
             <SessionSeletorSection></SessionSeletorSection>
@@ -176,6 +172,7 @@ function Header() {
             </Button>
           </DialogActions>
         </Dialog>
+
         <AppBar position="sticky" sx={{ bgcolor: "white" }} className="navbar">
           <Toolbar>
             <div className="navbar-container">

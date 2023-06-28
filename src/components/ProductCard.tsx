@@ -24,12 +24,18 @@ function ProductCard({
     price: number;
     storeName: string;
   };
-  handleViewProductDetail: (id: string) => void;
+  handleViewProductDetail: (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }) => void;
 }) {
   return (
     <Card
       className="product-container"
-      onClick={() => handleViewProductDetail(product.id)}
+      onClick={() => handleViewProductDetail(product)}
       sx={{ maxWidth: 216 }}
     >
       <CardMedia component="img" image={product.image} height=""></CardMedia>

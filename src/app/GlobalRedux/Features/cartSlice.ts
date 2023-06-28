@@ -19,7 +19,7 @@ export interface CartState {
 const initialState : CartState = { 
   value: [],
   countOfItem: 0,
-  countOfItemQuantity: 0
+  countOfItemQuantity: 0,
 };
 
 export const cartSlice = createSlice(
@@ -29,6 +29,10 @@ export const cartSlice = createSlice(
     reducers: {
       setCart: (_, action : PayloadAction<CartState>) => {
         return action.payload
+      },
+
+      resetCart: () => {
+        return initialState
       },
 
       addToCartSingle: (state, action : PayloadAction<{product: {
@@ -119,6 +123,6 @@ export const cartSlice = createSlice(
   }
 );
 
-export const {setCart, addToCartSingle, incrementItem, subtractFromCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
+export const {setCart, resetCart, addToCartSingle, incrementItem, subtractFromCartSingle, addToCartByAmount, removeFromCart} = cartSlice.actions;
 
 export default cartSlice.reducer;

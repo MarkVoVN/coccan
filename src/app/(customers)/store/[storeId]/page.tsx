@@ -49,7 +49,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
     id: "8",
     name: "Product Name",
     price: 12000,
-    imageUrl: "/homepage/product-placeholder-img.png",
+    image: "/homepage/product-placeholder-img.png",
     description: "Product description",
     storeName: "Store Name",
   };

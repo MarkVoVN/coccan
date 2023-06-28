@@ -23,7 +23,13 @@ function ProductByCategorySection({
   };
 
   viewMore: boolean;
-  handleViewProductDetail: (id: string) => void;
+  handleViewProductDetail: (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+  }) => void;
 }) {
   return (
     <Box className="product-by-category-wrapper">
