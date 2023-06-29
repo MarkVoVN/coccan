@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
+import axios from "axios";
 
 function CheckoutPage() {
   const router = useRouter();
@@ -157,12 +158,9 @@ function CheckoutPage() {
   const handlePlacingOrder = () => {
     const date = new Date();
     setIsOrderCreating(true);
-    fetch("http://coccan-api.somee.com/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+
+    axios
+      .post("http://coccan-api.somee.com/api/orders", {
         orderTime: date.toISOString(),
         serviceFee: serviceFee,
         totalPrice: cartTotalAmount + deliveryFee + serviceFee,
@@ -170,35 +168,18 @@ function CheckoutPage() {
         sessionId: orderInfo.value.sessionId,
         pickUpSpotId: selectedPickupspotId,
         status: 1,
-      }),
-    })
+      })
       .then((response) => {
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error("Network response was not ok.");
         }
-        return response.json();
+        return response.data;
       })
-      .then(
-        (responseData: {
-          data: {
-            id: string;
-            orderTime: string;
-            serviceFee: number;
-            totalPrice: number;
-            customerId: string;
-            sessionId: string;
-            pickUpSpotId: string;
-            status: number;
-          };
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          // Handle successful response
-          const orderId = responseData.data.id;
-          createOrderDetails(orderId);
-        }
-      )
+      .then((responseData) => {
+        // Handle successful response
+        const orderId = responseData.data.id;
+        createOrderDetails(orderId);
+      })
       .catch((error) => {
         // Handle error
         console.error("Error:", error);
@@ -211,19 +192,14 @@ function CheckoutPage() {
   ) {
     const url = "https://coccan-api.somee.com/api/orderdetails";
 
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    return axios
+      .post(url, {
         quantity: quantity,
         menuDetailId: menudetailId,
         orderId: orderId,
-      }),
-    };
-
-    return fetch(url, requestOptions)
+      })
       .then((response) => {
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error("Request failed.");
         }
       })

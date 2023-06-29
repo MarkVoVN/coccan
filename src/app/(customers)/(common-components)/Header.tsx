@@ -116,7 +116,6 @@ function Header() {
   const { getItem, setItem, removeItem } = useStorage();
   const dispatch = useDispatch();
   useEffect(() => {
-
     const userInfoString = getItem("userInfo");
 
     if (userInfoString) {
@@ -128,8 +127,10 @@ function Header() {
     if (orderInfoString) {
       const orderInfo = JSON.parse(orderInfoString);
       //TODO: validate order information incase the session has passesd
-      dispatch(setOrderInfo({ value: orderInfo }));
-      setOrderInfoDialogOpen(false);
+      if (orderInfo.isSetByUser) {
+        dispatch(setOrderInfo({ value: orderInfo }));
+        setOrderInfoDialogOpen(false);
+      }
     }
 
     const cartInfoString = getItem("cartInfo");
@@ -222,12 +223,8 @@ function Header() {
                 </div>
                 <div className="avatar-login-container">
                   {user.isAuth && (
-                    <IconButton>
-                      <Avatar
-                        src={user.photoURL}
-                        alt={user.displayName}
-                        onClick={handleUserMenuClick}
-                      />
+                    <IconButton onClick={handleUserMenuClick}>
+                      <Avatar src={user.photoURL} alt={user.displayName} />
                     </IconButton>
                   )}
                   {!user.isAuth && (

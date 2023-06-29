@@ -26,17 +26,12 @@ import {
   setLocationList,
   updateSessionId,
   updateMenuId,
+  setSessionUnavailable,
 } from "@/app/GlobalRedux/Features/orderSlice";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
+import axios from "axios";
 
 function SessionSeletorSection() {
-  const sessionList = [
-    { id: "-1", title: " " },
-    { id: "0", title: "9:15AM" },
-    { id: "1", title: "11:45AM" },
-    { id: "2", title: "2:45PM" },
-    { id: "3", title: "5:15PM" },
-  ];
   const cartInfo = useAppSelector((state) => state.cart);
   const orderInfo = useAppSelector((state) => state.order.value);
   const timeslotList = useAppSelector((state) => state.order.timeslotList);
@@ -107,61 +102,66 @@ function SessionSeletorSection() {
     return json;
   }
 
+  const [isError, setIsError] = useState(false);
+
   React.useEffect(() => {
     //timeslot list is empty, fetch it
+
     if (timeslotList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/timeslots").then(
-        (response: { id: string; startTime: string; endTime: string }[]) => {
-          dispatch(setTimeslotList(response));
-        }
-      );
+      axios
+        .get("https://coccan-api.somee.com/api/timeslots")
+        .then((response) => {
+          setIsError(false);
+          dispatch(setTimeslotList(response.data));
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.log(error);
+        });
     }
 
     //location list is empty, fetch it
     if (locationList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/locations").then(
-        (response: {
-          data: {
-            id: string;
-            name: string;
-            address: string;
-            status: number;
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          dispatch(setLocationList(response.data));
-        }
-      );
+      axios
+        .get("https://coccan-api.somee.com/api/locations")
+        .then((response) => {
+          setIsError(false);
+          dispatch(setLocationList(response.data.data));
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.log(error);
+        });
     }
 
     if (orderInfo.isSetByUser) {
-      fetchApi("https://coccan-api.somee.com/api/sessions").then(
-        (response: {
-          data: {
-            id: string;
-            date: string;
-            timeSlotId: string;
-            locationId: string;
-            menuId: string;
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          var item = response.data.find(
-            (item) =>
+      axios
+        .get("https://coccan-api.somee.com/api/sessions")
+        .then((response) => {
+          var item = response.data.data.find(
+            (item: {
+              id: string;
+              date: string;
+              timeSlotId: string;
+              locationId: string;
+              menuId: string;
+            }) =>
               item.timeSlotId === timeslotId && item.locationId === locationId
           );
           if (item) {
             dispatch(updateSessionId(item.id));
             dispatch(updateMenuId(item.menuId));
+          } else {
+            // TODO: unable to find session => App closed
+            dispatch(setSessionUnavailable());
           }
-        }
-      );
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.log(error);
+        });
     }
-  }, [timeslotList, locationList, orderInfo]);
+  }, [timeslotList, locationList, orderInfo, isError]);
 
   return (
     <>
@@ -234,7 +234,6 @@ function SessionSeletorSection() {
             variant="contained"
             color="primary"
             onClick={handleSessionChangeConfirmationDialogOK}
-
           >
             OK
           </Button>
