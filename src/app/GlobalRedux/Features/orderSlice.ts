@@ -36,12 +36,14 @@ export const orderSlice = createSlice(
     initialState,
     reducers: {
       setOrderInfo: (state, action : PayloadAction<{value : {
-            timeslotId: string,
-            locationId: string,
-            sessionId: string,
-            menuId: string,
+        isSetByUser: boolean,
+        sessionId: string,
+        locationId: string,
+        timeslotId: string,
+        menuId: string,
+        isUpdating: boolean,
           }}>)  => {
-            state.value.isSetByUser = true
+            state.value.isSetByUser = action.payload.value.isSetByUser
             state.value.timeslotId = action.payload.value.timeslotId
             state.value.locationId = action.payload.value.locationId
             state.value.sessionId = action.payload.value.sessionId

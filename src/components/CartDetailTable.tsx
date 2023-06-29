@@ -60,9 +60,7 @@ function CartDetailTable() {
     var total = 0;
     cart.value.map((item) => {
       //get price from api
-      var price = productInfoPlaceholder.price;
-
-      total += price * item.quantity;
+      total += item.price * item.quantity;
     });
     setCartTotalPrice(total);
   }, [cart]);
