@@ -116,7 +116,7 @@ function Header() {
   const { getItem, setItem, removeItem } = useStorage();
   const dispatch = useDispatch();
   useEffect(() => {
-    const userInfoString = getItem("userInfoLLLLLLL");
+    const userInfoString = getItem("userInfo");
     if (userInfoString) {
       const userInfo = JSON.parse(userInfoString);
       dispatch(loginUser({ value: userInfo }));

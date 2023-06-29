@@ -5,12 +5,13 @@ import {PayloadAction, createSlice} from "@reduxjs/toolkit"
 export interface CartState {
   value: 
     {
-      menuItemId: string,
+      productId: string,
       name: string;
       image: string;
       price: number;
       storeName: string,
       quantity : number,
+      menudetailId: string;
     }[]
   countOfItem : number,
   countOfItemQuantity : number
@@ -41,8 +42,9 @@ export const cartSlice = createSlice(
         image: string;
         price: number;
         storeName: string;
+        menudetailId: string;
       }}>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload.product.id);
+        let item = state.value.find(item => item.menudetailId === action.payload.product.menudetailId);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity++;
@@ -50,18 +52,19 @@ export const cartSlice = createSlice(
         } else {
           //if item is not in cart, add item to cart
           state.value.push({ 
-            menuItemId: action.payload.product.id, 
+            productId: action.payload.product.id, 
             name : action.payload.product.name, 
             image : action.payload.product.image, 
             price : action.payload.product.price, 
             storeName : action.payload.product.storeName,
-            quantity: 1});
+            quantity: 1,
+            menudetailId : action.payload.product.menudetailId});
           state.countOfItem++;
           state.countOfItemQuantity++;
         }
       },
       incrementItem: (state, action : PayloadAction<string>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload);
+        let item = state.value.find(item => item.menudetailId === action.payload);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity++;
@@ -70,7 +73,7 @@ export const cartSlice = createSlice(
       },
 
       subtractFromCartSingle: (state, action : PayloadAction<string>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload);
+        let item = state.value.find(item => item.menudetailId === action.payload);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity--;
@@ -89,8 +92,9 @@ export const cartSlice = createSlice(
         image: string;
         price: number;
         storeName: string;
+        menudetailId: string;
       }, amount: number}>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload.product.id);
+        let item = state.value.find(item => item.menudetailId === action.payload.product.menudetailId);
         if (item) {
           //if item is already in cart, increment the quantity
           item.quantity+= action.payload.amount;
@@ -98,12 +102,13 @@ export const cartSlice = createSlice(
         } else {
           //if item is not in cart, add item to cart
           state.value.push({ 
-            menuItemId: action.payload.product.id, 
+            productId: action.payload.product.id, 
             name : action.payload.product.name, 
             image : action.payload.product.image, 
             price : action.payload.product.price, 
             storeName : action.payload.product.storeName,
-            quantity: action.payload.amount});
+            quantity: action.payload.amount,
+            menudetailId: action.payload.product.menudetailId});
           state.countOfItem++;
           state.countOfItemQuantity+= action.payload.amount;
         }
@@ -111,7 +116,7 @@ export const cartSlice = createSlice(
       },
 
       removeFromCart: (state, action : PayloadAction<string>) => {
-        let item = state.value.find(item => item.menuItemId === action.payload);
+        let item = state.value.find(item => item.menudetailId === action.payload);
         if (item) {
           //if item is already in cart, increment the quantity
           state.countOfItemQuantity -= item.quantity;

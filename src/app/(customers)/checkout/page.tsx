@@ -1,8 +1,12 @@
 "use client";
 
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,8 +15,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Save } from "@mui/icons-material";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
+
 function CheckoutPage() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const orderInfo = useAppSelector((state) => state.order);
   const cartInfo = useAppSelector((state) => state.cart);
   const location = orderInfo.locationList.find(
@@ -82,6 +94,8 @@ function CheckoutPage() {
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
 
+  const [isOrderCreating, setIsOrderCreating] = useState(false);
+
   React.useEffect(() => {
     if (pickupspotList.length <= 0 && location) {
       fetchApi("http://coccan-api.somee.com/api/pickupspots").then(
@@ -129,6 +143,128 @@ function CheckoutPage() {
     setServiceFee(service);
     setCartTotalAmount(total);
   }, []);
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+  const handleConfirmDialogOpen = () => {
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDialogClose = () => {
+    setConfirmDialogOpen(false);
+  };
+
+  const handlePlacingOrder = () => {
+    const date = new Date();
+    setIsOrderCreating(true);
+    fetch("http://coccan-api.somee.com/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        orderTime: date.toISOString(),
+        serviceFee: serviceFee,
+        totalPrice: cartTotalAmount + deliveryFee + serviceFee,
+        customerId: userInfo.customerId,
+        sessionId: orderInfo.value.sessionId,
+        pickUpSpotId: selectedPickupspotId,
+        status: 1,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+        return response.json();
+      })
+      .then(
+        (responseData: {
+          data: {
+            id: string;
+            orderTime: string;
+            serviceFee: number;
+            totalPrice: number;
+            customerId: string;
+            sessionId: string;
+            pickUpSpotId: string;
+            status: number;
+          };
+          status: string;
+          title: string;
+          errorMessages: [];
+        }) => {
+          // Handle successful response
+          const orderId = responseData.data.id;
+          createOrderDetails(orderId);
+        }
+      )
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+      });
+  };
+
+  function createOrderDetail(
+    { menudetailId, quantity }: { menudetailId: string; quantity: number },
+    orderId: string
+  ) {
+    const url = "https://coccan-api.somee.com/api/orderdetails";
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        quantity: quantity,
+        menuDetailId: menudetailId,
+        orderId: orderId,
+      }),
+    };
+
+    return fetch(url, requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        throw error;
+      });
+  }
+
+  async function createOrderDetails(orderId: string) {
+    for (const product of cartInfo.value) {
+      let retryCount = 0;
+      let success = false;
+
+      while (!success && retryCount < 4) {
+        // Retry up to 3 times
+        try {
+          await createOrderDetail(product, orderId);
+          success = true;
+        } catch (error) {
+          console.error(
+            `Request failed for product ${product.menudetailId}. Retrying...`
+          );
+          retryCount++;
+        }
+      }
+
+      if (!success) {
+        console.error(
+          `Failed to process product ${product.menudetailId} after 4 retries.`
+        );
+      }
+    }
+
+    console.log("Done");
+    setIsOrderCreating(false);
+    setConfirmDialogOpen(false);
+    //TODO: pop up thank you for ordering, redirect to homepage or order page
+    dispatch(resetCart());
+    router.push("/");
+  }
 
   return (
     <>
@@ -222,9 +358,40 @@ function CheckoutPage() {
             variant="outlined"
             size="large"
             disabled={phoneNumber.length == 0 || !isPhoneNumberValid}
+            onClick={handleConfirmDialogOpen}
           >
             PLACE ORDER
           </Button>
+          <Dialog open={confirmDialogOpen} onClose={handleConfirmDialogClose}>
+            <DialogContent
+              sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
+              <Typography variant="h5" fontWeight="500">
+                Confirm Order Information
+              </Typography>
+              <Typography variant="subtitle2" color="gray">
+                Please make sure your contact information is correct
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleConfirmDialogClose}
+              >
+                Cancel
+              </Button>
+              <LoadingButton
+                loading={isOrderCreating}
+                loadingPosition="start"
+                variant="contained"
+                color="primary"
+                onClick={handlePlacingOrder}
+              >
+                Order
+              </LoadingButton>
+            </DialogActions>
+          </Dialog>
         </div>
       )}
     </>

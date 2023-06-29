@@ -78,6 +78,7 @@ export default function Home() {
         image: string;
         price: number;
         storeName: string;
+        menudetailId: string;
       }[];
     }[]
   >([]);
@@ -93,49 +94,60 @@ export default function Home() {
   );
 
   React.useEffect(() => {
-
+    //{"session":"2a86deb4-d4de-48e0-8310-c7e74160290a","store":"65683668-932e-4cef-962e-c30588d92c28" }
     if (SelectedStore) {
-      fetchApi(
-        `https://coccan-api.somee.com/api/stores/${SelectedStore.id}`
+      const params = {
+        filter: JSON.stringify({
+          session: orderInfo.sessionId,
+          store: SelectedStore.id,
+        }),
+      };
+      const queryParams = new URLSearchParams(params);
+      const url = `https://coccan-api.somee.com/api/menudetails?${queryParams.toString()}`;
 
-      ).then(
+      fetchApi(url).then(
         (response: {
-          id: string;
-          name: string;
-          image: string;
-          address: string;
-          products: {
+          data: {
             id: string;
-            name: string;
-            image: string;
-            category: { id: string; name: string; image: string };
+            price: number;
+            menuId: string;
+            product: {
+              id: string;
+              name: string;
+              image: string;
+              category: { id: string; name: string; image: string };
+            };
           }[];
+          status: string;
+          title: string;
+          errorMessages: [];
         }) => {
           const categories: Record<string, any> = {};
 
-          response.products.forEach((product) => {
-            if (!product.category)
-              product.category = {
+          response.data.forEach((menudetail) => {
+            if (!menudetail.product.category)
+              menudetail.product.category = {
                 id: "placeholder-category",
                 name: "Other",
                 image: "placeholder-img",
               };
-            const categoryId = product.category.id;
+            const categoryId = menudetail.product.category.id;
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
-                name: product.category.name,
-                image: product.category.image,
+                name: menudetail.product.category.name,
+                image: menudetail.product.category.image,
                 products: [],
               };
             }
 
             categories[categoryId].products.push({
-              id: product.id,
-              name: product.name,
-              image: product.image,
-              price: 12000,
+              id: menudetail.product.id,
+              name: menudetail.product.name,
+              image: menudetail.product.image,
+              price: menudetail.price,
               storeName: SelectedStore.name,
+              menudetailId: menudetail.id,
             });
           });
 
@@ -172,14 +184,12 @@ export default function Home() {
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
-
   }, [StoreList, orderInfo.sessionId]);
 
   // React.useEffect(() => {
   //   console.log("isFetchLoading" + isFetchLoading);
   //   console.log("isSetByUser" + isOrderInfoSetByUser);
   // }, []);
-
 
   return (
     <>
