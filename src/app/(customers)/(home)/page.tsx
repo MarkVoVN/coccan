@@ -26,12 +26,14 @@ export default function Home() {
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   }>({
     id: "-1",
     name: "Product Name",
     price: 12000,
     image: "/homepage/product-placeholder-img.png",
     storeName: "Store Name",
+    menudetailId: "menudetailid",
   });
 
   const handleProductModalOpen = (product: {
@@ -40,6 +42,7 @@ export default function Home() {
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   }) => {
     setProductDetail(product);
     setProducttModalOpen(true);
@@ -94,7 +97,6 @@ export default function Home() {
   );
 
   React.useEffect(() => {
-    //{"session":"2a86deb4-d4de-48e0-8310-c7e74160290a","store":"65683668-932e-4cef-962e-c30588d92c28" }
     if (SelectedStore) {
       const params = {
         filter: JSON.stringify({
@@ -156,7 +158,6 @@ export default function Home() {
           setProductListByCategoryFromSelectedStoreId(categoriesList);
         }
       );
-      console.log("Store list length: " + StoreList.length);
     }
   }, [SelectedStore]);
 
