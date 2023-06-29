@@ -198,6 +198,11 @@ export default function Home() {
     <>
       <ThemeProvider theme={theme}>
         <div className="container">
+          <div className="selectors-wrapper">
+            <Box sx={{ marginTop: "36px" }}>
+              <SessionSeletorSection></SessionSeletorSection>
+            </Box>
+          </div>
           <Carousel indicators={false} sx={{ borderRadius: "8px" }}>
             <Card>
               <CardMedia
@@ -220,39 +225,41 @@ export default function Home() {
             </>
           )}
 
-          {!(isFetchLoading || !isOrderInfoSetByUser) && (
+          {!orderInfo.isSessionAvailable && (
             <>
-              <div className="selectors-wrapper">
-                <Box sx={{ marginTop: "36px" }}>
-                  <SessionSeletorSection></SessionSeletorSection>
-                </Box>
-              </div>
-              <CategorySeletorSection
-                storeList={
-                  StoreList as { id: string; image: string; name: string }[]
-                }
-                handleSelectStore={(store: {
-                  id: string;
-                  image: string;
-                  name: string;
-                }) => setSelectedStore(store)}
-              ></CategorySeletorSection>
-
-              {ProductListByCategoryFromSelectedStoreId.map((category) => (
-                <ProductByCategorySection
-                  key={category.id}
-                  category={category}
-                  viewMore={true}
-                  handleViewProductDetail={handleProductModalOpen}
-                ></ProductByCategorySection>
-              ))}
-              <ProductDetailModal
-                open={productModalOpen}
-                handleClose={handleProductModalClose}
-                product={productDetail}
-              ></ProductDetailModal>
+              <h2>This session is not active</h2>
             </>
           )}
+
+          {!(isFetchLoading || !isOrderInfoSetByUser) &&
+            orderInfo.isSessionAvailable && (
+              <>
+                <CategorySeletorSection
+                  storeList={
+                    StoreList as { id: string; image: string; name: string }[]
+                  }
+                  handleSelectStore={(store: {
+                    id: string;
+                    image: string;
+                    name: string;
+                  }) => setSelectedStore(store)}
+                ></CategorySeletorSection>
+
+                {ProductListByCategoryFromSelectedStoreId.map((category) => (
+                  <ProductByCategorySection
+                    key={category.id}
+                    category={category}
+                    viewMore={true}
+                    handleViewProductDetail={handleProductModalOpen}
+                  ></ProductByCategorySection>
+                ))}
+                <ProductDetailModal
+                  open={productModalOpen}
+                  handleClose={handleProductModalClose}
+                  product={productDetail}
+                ></ProductDetailModal>
+              </>
+            )}
         </div>
       </ThemeProvider>
     </>

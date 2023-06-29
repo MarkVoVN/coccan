@@ -10,6 +10,7 @@ export interface OrderdState {
     timeslotId: string,
     menuId: string,
     isUpdating: boolean,
+    isSessionAvailable: boolean,
   };
   timeslotList: {id: string, startTime: string, endTime: string}[];
   locationList: {id: string, name: string, address: string, status: number}[];
@@ -21,10 +22,9 @@ const initialState : OrderdState = { value:
   sessionId: '',
   locationId: '',
   timeslotId: '',
-
   menuId: '',
   isUpdating: true,
-
+  isSessionAvailable: true
 },
 timeslotList: [],
 locationList: [],
@@ -49,7 +49,6 @@ export const orderSlice = createSlice(
             state.value.sessionId = action.payload.value.sessionId
             state.value.menuId = action.payload.value.menuId
             state.value.isUpdating = true
-
           
       },
       updateTimeslotId: (state, action : PayloadAction<string>) => {
@@ -72,7 +71,7 @@ export const orderSlice = createSlice(
       updateSessionId: (state, action : PayloadAction<string>) => {
         state.value.sessionId = action.payload;
         state.value.isUpdating = true
-
+        state.value.isSessionAvailable = true
       },
       updateMenuId: (state, action : PayloadAction<string>) => {
         state.value.menuId = action.payload;
@@ -93,12 +92,16 @@ export const orderSlice = createSlice(
 
       finishUpdate: (state) => {
         state.value.isUpdating = false
+      },
+
+      setSessionUnavailable: (state) => {
+        state.value.isSessionAvailable = false
       }
 
     }
   }
 );
 
-export const {setOrderInfo, updateTimeslotId, updateLocationId, updateSessionId, updateMenuId, finishUpdate, setTimeslotList, setLocationList} = orderSlice.actions;
+export const {setOrderInfo, updateTimeslotId, updateLocationId, updateSessionId, updateMenuId, finishUpdate, setTimeslotList, setLocationList, setSessionUnavailable} = orderSlice.actions;
 
 export default orderSlice.reducer;
