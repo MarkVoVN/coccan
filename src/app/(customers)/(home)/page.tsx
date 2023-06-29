@@ -133,7 +133,9 @@ export default function Home() {
                 name: "Other",
                 image: "placeholder-img",
               };
+
             const categoryId = menudetail.product.category.id;
+
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
