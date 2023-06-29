@@ -94,6 +94,7 @@ export default function Home() {
   );
 
   React.useEffect(() => {
+
     //{"session":"2a86deb4-d4de-48e0-8310-c7e74160290a","store":"65683668-932e-4cef-962e-c30588d92c28" }
     if (SelectedStore) {
       const params = {
@@ -108,6 +109,7 @@ export default function Home() {
       fetchApi(url).then(
         (response: {
           data: {
+
             id: string;
             price: number;
             menuId: string;
@@ -124,14 +126,18 @@ export default function Home() {
         }) => {
           const categories: Record<string, any> = {};
 
+
           response.data.forEach((menudetail) => {
             if (!menudetail.product.category)
               menudetail.product.category = {
+
                 id: "placeholder-category",
                 name: "Other",
                 image: "placeholder-img",
               };
+
             const categoryId = menudetail.product.category.id;
+
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
@@ -160,6 +166,7 @@ export default function Home() {
     }
   }, [SelectedStore]);
 
+
   React.useEffect(() => {
     //fetch api to get product with location and session id
     if (isOrderInfoUpdating && orderInfo.sessionId.length > 0) {
@@ -174,6 +181,7 @@ export default function Home() {
             new Set(response.map((obj) => JSON.stringify(obj)))
           ).map((str) => JSON.parse(str));
 
+
           setStoreList(uniqueList);
           setSelectedStore(uniqueList[0]);
           dispatch(finishUpdate());
@@ -184,12 +192,14 @@ export default function Home() {
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
+
   }, [StoreList, orderInfo.sessionId]);
 
   // React.useEffect(() => {
   //   console.log("isFetchLoading" + isFetchLoading);
   //   console.log("isSetByUser" + isOrderInfoSetByUser);
   // }, []);
+
 
   return (
     <>

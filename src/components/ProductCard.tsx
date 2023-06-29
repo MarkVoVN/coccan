@@ -32,6 +32,7 @@ function ProductCard({
     price: number;
     storeName: string;
     menudetailId: string;
+
   }) => void;
 }) {
   return (
