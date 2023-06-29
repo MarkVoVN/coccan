@@ -19,6 +19,7 @@ function ProductByCategorySection({
       image: string;
       price: number;
       storeName: string;
+      menudetailId: string;
     }[];
   };
 
@@ -29,6 +30,9 @@ function ProductByCategorySection({
     image: string;
     price: number;
     storeName: string;
+
+    menudetailId: string;
+
   }) => void;
 }) {
   return (

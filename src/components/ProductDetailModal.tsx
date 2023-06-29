@@ -17,6 +17,7 @@ function ProductDetailModal({
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   };
 }) {
   return (
