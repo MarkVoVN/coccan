@@ -175,7 +175,6 @@ function SessionSeletorSection() {
               label="Location"
               onChange={handleLocationIdChange}
             >
-              <MenuItem value={"-1"} disabled></MenuItem>
               {locationList.length > 0 &&
                 locationList.map((location) => (
                   <MenuItem

@@ -1,23 +1,8 @@
 "use client";
 
-import {
-  Box,
-  Stack,
-  Typography,
-  SvgIcon,
-  Card,
-  CardMedia,
-  CardActionArea,
-  CardContent,
-  Button,
-  Avatar,
-  IconButton,
-} from "@mui/material";
-import Image from "next/image";
-import { type } from "os";
-import React, { useState } from "react";
-import { Carousel, ScrollingCarousel } from "@trendyol-js/react-carousel";
-import { Add, NavigateBefore, NavigateNext } from "@mui/icons-material";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { Carousel } from "@trendyol-js/react-carousel";
 import "../style/CategorySelectorSection.scss";
 
 function CategorySeletorSection({
@@ -40,29 +25,9 @@ function CategorySeletorSection({
       leftArrow={<NavigateBefore></NavigateBefore>}
       rightArrow={<NavigateNext></NavigateNext>}
       className="carousel-container"
+      dynamic
     >
       {storeList.map((store) => (
-        // <Card
-        //   className="store-card"
-        //   sx={{ minWidth: 200, bgcolor: "primary" }}
-        //   key={store.id}
-        //   onClick={(e) => {
-        //     handleSelectStore(store);
-        //   }}
-        // >
-        //   <CardActionArea>
-        //     <CardMedia
-        //       component="img"
-        //       image={store.image}
-        //       height="140px"
-        //     ></CardMedia>
-        //     <CardContent>
-        //       <Typography variant="body1" className="store-title" align="left">
-        //         {store.name}
-        //       </Typography>
-        //     </CardContent>
-        //   </CardActionArea>
-        // </Card>
         <Box
           sx={{
             width: "240px",
