@@ -1,0 +1,16 @@
+$primary: #EA5857;
+
+.store-card {
+    background-color: $primary;
+    color: white;
+    border-radius: 16px;
+    flex: 1 0 calc(25% - 16px);
+    margin-left: 16px;
+
+}
+
+.carousel-container {
+    align-items: center;
+    color: $primary;
+    margin-bottom: 32px;
+}
