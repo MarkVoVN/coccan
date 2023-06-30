@@ -30,11 +30,16 @@ function ProductCard({
     <Card
       className="product-container"
       onClick={() => handleViewProductDetail(product.id)}
-      sx={{ maxWidth: 216 }}
+      sx={{ maxWidth: 216, maxHeight: 320 }}
     >
-      <CardMedia component="img" image={product.image} height=""></CardMedia>
+      <CardMedia component="img" image={product.image} height="200"></CardMedia>
       <CardContent>
-        <Typography variant="h6" fontWeight="500">
+        <Typography
+          variant="h6"
+          fontWeight="500"
+          lineHeight={1.5}
+          sx={{ height: "56px" }}
+        >
           {product.name}
         </Typography>
         <Box className="product-info">

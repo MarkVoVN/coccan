@@ -184,7 +184,15 @@ export default function Home() {
     <>
       <ThemeProvider theme={theme}>
         <div className="container">
-          <Carousel indicators={false} sx={{ borderRadius: "8px" }}>
+          <div className="selectors-wrapper">
+            <Box sx={{ marginTop: "32px" }}>
+              <SessionSeletorSection></SessionSeletorSection>
+            </Box>
+          </div>
+          <Carousel
+            indicators={false}
+            sx={{ marginBottom: "32px", borderRadius: "8px" }}
+          >
             <Card>
               <CardMedia
                 component="img"
@@ -208,11 +216,6 @@ export default function Home() {
 
           {!(isFetchLoading || !isOrderInfoSetByUser) && (
             <>
-              <div className="selectors-wrapper">
-                <Box sx={{ marginTop: "36px" }}>
-                  <SessionSeletorSection></SessionSeletorSection>
-                </Box>
-              </div>
               <CategorySeletorSection
                 storeList={
                   StoreList as { id: string; image: string; name: string }[]
