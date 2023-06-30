@@ -199,11 +199,14 @@ export default function Home() {
       <ThemeProvider theme={theme}>
         <div className="container">
           <div className="selectors-wrapper">
-            <Box sx={{ marginTop: "36px" }}>
+            <Box sx={{ marginTop: "32px" }}>
               <SessionSeletorSection></SessionSeletorSection>
             </Box>
           </div>
-          <Carousel indicators={false} sx={{ borderRadius: "8px" }}>
+          <Carousel
+            indicators={false}
+            sx={{ marginBottom: "32px", borderRadius: "8px" }}
+          >
             <Card>
               <CardMedia
                 component="img"
@@ -227,6 +230,29 @@ export default function Home() {
 
           {!orderInfo.isSessionAvailable && (
             <>
+              <CategorySeletorSection
+                storeList={
+                  StoreList as { id: string; image: string; name: string }[]
+                }
+                handleSelectStore={(store: {
+                  id: string;
+                  image: string;
+                  name: string;
+                }) => setSelectedStore(store)}
+              ></CategorySeletorSection>
+              {ProductListByCategoryFromSelectedStoreId.map((category) => (
+                <ProductByCategorySection
+                  key={category.id}
+                  category={category}
+                  viewMore={true}
+                  handleViewProductDetail={handleProductModalOpen}
+                ></ProductByCategorySection>
+              ))}
+              <ProductDetailModal
+                open={productModalOpen}
+                handleClose={handleProductModalClose}
+                product={productDetail}
+              ></ProductDetailModal>
               <h2>This session is not active</h2>
             </>
           )}

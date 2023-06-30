@@ -1,3 +1,5 @@
+$primary: #EA5857;
+
 .container {
     margin-top: 64px;
     max-width: 1140px;
@@ -35,58 +37,8 @@
 
 }
 
-.category-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 2rem 0;
-
-    .category-section-container {
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        justify-content: center;
-
-        text-align: center;
-        color: #EA5857;
-
-        .category-title {
-            font-weight: 700;
-
-
-        }
-
-        .category-list {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-
-            .category-container {
-                display: flex;
-                flex-direction: column;
-                align-content: center;
-                justify-content: center;
-                padding: 1rem;
-
-                .category-icon-container {
-                    margin-bottom: 1rem;
-
-                    img {
-                        height: 72px;
-                    }
-                }
-            }
-        }
-
+.selectors-container {
+    .selector {
+        margin-right: 1rem;
     }
-
-    .store-card {
-        background-color: #EA5857;
-        color: white;
-        border-radius: 16px;
-        flex: 1 0 calc(25% - 16px);
-    }
-
-
-
 }

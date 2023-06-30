@@ -9,9 +9,16 @@ import {
   CardMedia,
   CardActionArea,
   CardContent,
+  Button,
+  Avatar,
+  IconButton,
 } from "@mui/material";
 import Image from "next/image";
-import React from "react";
+import { type } from "os";
+import React, { useState } from "react";
+import { Carousel, ScrollingCarousel } from "@trendyol-js/react-carousel";
+import { Add, NavigateBefore, NavigateNext } from "@mui/icons-material";
+import "../style/CategorySelectorSection.scss";
 
 function CategorySeletorSection({
   storeList,
@@ -25,57 +32,65 @@ function CategorySeletorSection({
   }) => void;
 }) {
   return (
-    <Box className="category-wrapper">
-      <Box className="category-section-container">
-        <Typography variant="h3" className="category-title">
-          Store
-        </Typography>
+    <Carousel
+      show={3.5}
+      slide={1}
+      infinite={true}
+      swiping={true}
+      leftArrow={<NavigateBefore></NavigateBefore>}
+      rightArrow={<NavigateNext></NavigateNext>}
+      className="carousel-container"
+    >
+      {storeList.map((store) => (
+        // <Card
+        //   className="store-card"
+        //   sx={{ minWidth: 200, bgcolor: "primary" }}
+        //   key={store.id}
+        //   onClick={(e) => {
+        //     handleSelectStore(store);
+        //   }}
+        // >
+        //   <CardActionArea>
+        //     <CardMedia
+        //       component="img"
+        //       image={store.image}
+        //       height="140px"
+        //     ></CardMedia>
+        //     <CardContent>
+        //       <Typography variant="body1" className="store-title" align="left">
+        //         {store.name}
+        //       </Typography>
+        //     </CardContent>
+        //   </CardActionArea>
+        // </Card>
         <Box
-          className="store-list"
           sx={{
+            width: "240px",
             display: "flex",
-            flexDirection: "row",
+            alignItems: "center",
             gap: "16px",
-            flexWrap: "wrap",
           }}
+          key={store.id}
         >
-          {storeList.map((store) => (
-            <Card
-              className="store-card"
-              sx={{ minWidth: 200, bgcolor: "primary" }}
-              key={store.id}
-              onClick={(e) => {
-                handleSelectStore(store);
+          <IconButton
+            onClick={(e) => {
+              handleSelectStore(store);
+            }}
+          >
+            <Avatar
+              src={store.image}
+              sx={{
+                width: "104px",
+                height: "104px",
               }}
-            >
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  image={store.image}
-                  height="140px"
-                ></CardMedia>
-                <CardContent>
-                  <Typography
-                    variant="body1"
-                    className="store-title"
-                    align="left"
-                  >
-                    {store.name}
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    className="store-title"
-                    align="left"
-                  >
-                    Address: TBA
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          ))}
+            />
+          </IconButton>
+          <Typography variant="body1" className="store-title" align="left">
+            {store.name}
+          </Typography>
         </Box>
-      </Box>
-    </Box>
+      ))}
+    </Carousel>
   );
 }
 
