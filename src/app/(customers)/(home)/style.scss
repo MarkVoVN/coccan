@@ -35,12 +35,6 @@
 
 }
 
-.selectors-container {
-    .selector {
-        margin-right: 1rem;
-    }
-}
-
 .category-wrapper {
     display: flex;
     flex-direction: row;
@@ -85,6 +79,7 @@
         }
 
     }
+
     .store-card {
         background-color: #EA5857;
         color: white;
@@ -92,6 +87,6 @@
         flex: 1 0 calc(25% - 16px);
     }
 
-    
+
 
 }

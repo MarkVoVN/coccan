@@ -71,13 +71,13 @@ function CheckoutPage() {
 
     if (/\D/.test(number)) {
       setIsPhoneNumberValid(false);
-      setErrorMessage("phone number not contain characters");
+      setErrorMessage("Phone number not contain characters");
       return;
     }
 
     if (!/^0\d{9,10}$/.test(number)) {
       setIsPhoneNumberValid(false);
-      setErrorMessage("phone number is not valid");
+      setErrorMessage("Phone number is not valid");
       return;
     }
 
