@@ -14,10 +14,10 @@ function ProductDetailModal({
   product: {
     id: string;
     name: string;
+    image: string;
     price: number;
-    imageUrl: string;
-    description: string;
     storeName: string;
+    menudetailId: string;
   };
 }) {
   return (
@@ -42,15 +42,15 @@ function ProductDetailModal({
         </div>
         <div className="modal-body flex flex-row ">
           <div className="product-img-container w-[20vw] h-fit m-[2rem] p-[1rem]">
-            <img src={product.imageUrl} alt={"Image of " + product.name}></img>
+            <img src={product.image} alt={"Image of " + product.name}></img>
           </div>
           <div className="product-info flex flex-col  w-[30vw] p-[2rem]">
             <Typography variant="h3" className="my-[1rem]">
               {product.name}
             </Typography>
-            <Typography variant="h6" className="mb-[2rem] font-thin">
+            {/* <Typography variant="h6" className="mb-[2rem] font-thin">
               {product.description}
-            </Typography>
+            </Typography> */}
             <Typography variant="h5" className="my-[1rem]">
               {"Store: " + product.storeName}
             </Typography>
@@ -60,7 +60,7 @@ function ProductDetailModal({
                 currency: "VND",
               })}
             </Typography>
-            {/* <AddToCartBtn type="text" productId={product.id}></AddToCartBtn> */}
+            <AddToCartBtn type="text" product={product}></AddToCartBtn>
           </div>
         </div>
       </div>

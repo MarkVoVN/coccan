@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 import ProductByCategorySection from "@/components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
+import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 
 function StoreDetailPage({ params }: { params: { storeId: string } }) {
   const store = {
@@ -49,7 +50,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
     id: "8",
     name: "Product Name",
     price: 12000,
-    imageUrl: "/homepage/product-placeholder-img.png",
+    image: "/homepage/product-placeholder-img.png",
     description: "Product description",
     storeName: "Store Name",
   };
@@ -83,6 +84,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
         image: string;
         price: number;
         storeName: string;
+        menudetailId: string;
       }[];
     }[]
   >([]);
@@ -96,14 +98,26 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
   const [isFetchLoading, setIsFetchLoading] = React.useState(true);
   const [isError, setIsError] = React.useState(false);
 
+  const sessionId = useAppSelector((state) => state.order.value.sessionId);
   React.useEffect(() => {
-    if (params.storeId) {
-      fetchApi(`http://coccan-api.somee.com/api/stores/${params.storeId}`)
+    if (params.storeId && sessionId.length > 0) {
+      const parameters = {
+        filter: JSON.stringify({
+          session: sessionId,
+        }),
+      };
+      const queryParams = new URLSearchParams(parameters);
+      fetchApi(
+        `http://coccan-api.somee.com/api/stores/${
+          params.storeId
+        }?${queryParams.toString()}`
+      )
         .then(
           (response: {
             id: string;
             name: string;
             image: string;
+            address: string;
             products: {
               id: string;
               name: string;
@@ -114,6 +128,13 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
             const categories: Record<string, any> = {};
 
             response.products.forEach((product) => {
+              if (!product.category)
+                product.category = {
+                  id: "placeholder-category-id",
+                  name: "Other",
+                  image: "placeholder-category-image",
+                };
+
               const categoryId = product.category.id;
 
               if (!categories[categoryId]) {
@@ -166,7 +187,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
             </div>
           </div>
           <StoreDetailSection store={store}></StoreDetailSection>
-          {ProductListByCategoryFromSelectedStoreId.map((category) => (
+          {/* {ProductListByCategoryFromSelectedStoreId.map((category) => (
             <ProductByCategorySection
               key={category.id}
               category={category}
@@ -178,7 +199,7 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
             open={productModalOpen}
             handleClose={handleProductModalClose}
             product={productDetail}
-          ></ProductDetailModal>
+          ></ProductDetailModal> */}
         </>
       )}
     </>

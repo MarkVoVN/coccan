@@ -14,6 +14,8 @@ export interface UserState {
     refreshToken: string,
     preferedLocationId: string
     balance: number,
+    customerId: string,
+    phoneNumber: string,
   }
 
 }
@@ -27,7 +29,9 @@ const initialState : UserState = {
     uid: "",
     refreshToken: "",
     preferedLocationId: "-1",
-    balance: -1
+    balance: -1,
+    customerId: "",
+    phoneNumber: "",
   }
 
 };
@@ -45,6 +49,8 @@ export const userSlice = createSlice(
         refreshToken: string,
         preferedLocationId: string
         balance: number,
+        customerId: string,
+        phoneNumber: string,
       }}>) => {
         return {
           value: {
@@ -56,6 +62,8 @@ export const userSlice = createSlice(
             refreshToken: action.payload.value.refreshToken,
             preferedLocationId: action.payload.value.preferedLocationId,
             balance: action.payload.value.balance,
+            customerId: action.payload.value.customerId,
+            phoneNumber: action.payload.value.phoneNumber,
           }
         }
       },

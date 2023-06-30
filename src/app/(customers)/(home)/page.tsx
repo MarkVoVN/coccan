@@ -13,53 +13,38 @@ import { ThemeProvider } from "@emotion/react";
 import Carousel from "react-material-ui-carousel";
 import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { finishUpdate } from "@/app/GlobalRedux/Features/orderSlice";
 
 export default function Home() {
-  const categoryList = [
-    {
-      categoryId: "0",
-      categoryIconUrl: "rice.svg",
-      name: "Rice",
-    },
-    {
-      categoryId: "1",
-      categoryIconUrl: "bread.svg",
-      name: "Bread",
-    },
-    {
-      categoryId: "2",
-      categoryIconUrl: "drink.svg",
-      name: "Drink",
-    },
-    {
-      categoryId: "3",
-      categoryIconUrl: "snack.svg",
-      name: "Snack",
-    },
-    {
-      categoryId: "4",
-      categoryIconUrl: "others.svg",
-      name: "Others",
-    },
-  ];
-
-  const productInfoPlaceholder = {
-    id: "8",
-    name: "Product Name",
-    price: 12000,
-    imageUrl: "/homepage/product-placeholder-img.png",
-    description: "Product description",
-    storeName: "Store Name",
-  };
-
+  const dispatch = useDispatch();
   const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
-  const [productDetail, setProductDetail] = React.useState(
-    productInfoPlaceholder
-  );
+  const [productDetail, setProductDetail] = React.useState<{
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+    menudetailId: string;
+  }>({
+    id: "-1",
+    name: "Product Name",
+    price: 12000,
+    image: "/homepage/product-placeholder-img.png",
+    storeName: "Store Name",
+    menudetailId: "menudetailid",
+  });
 
-  const handleProductModalOpen = () => {
-    setProductDetail(productInfoPlaceholder);
+  const handleProductModalOpen = (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+    menudetailId: string;
+  }) => {
+    setProductDetail(product);
     setProducttModalOpen(true);
   };
 
@@ -96,11 +81,9 @@ export default function Home() {
         image: string;
         price: number;
         storeName: string;
+        menudetailId: string;
       }[];
     }[]
-  >([]);
-  const [CategoryList, setCategoryList] = React.useState<
-    { id: string; name: string; image: string }[]
   >([]);
 
   async function fetchApi(url: string) {
@@ -108,54 +91,67 @@ export default function Home() {
     const json = await response.json();
     return json;
   }
+  const orderInfo = useAppSelector((state) => state.order.value);
+  const isOrderInfoUpdating = useAppSelector(
+    (state) => state.order.value.isUpdating
+  );
 
   React.useEffect(() => {
-    //fetch api to get product with location and session id
-    if (StoreList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/stores").then(
-        (response: { id: string; image: string; name: string }[]) => {
-          setStoreList(response);
-          setSelectedStore(response[0]);
-        }
-      );
-      console.log("Store list length: " + StoreList.length);
-    }
-
     if (SelectedStore) {
-      fetchApi(
-        `http://coccan-api.somee.com/api/stores/${SelectedStore.id}`
-      ).then(
+      const params = {
+        filter: JSON.stringify({
+          session: orderInfo.sessionId,
+          store: SelectedStore.id,
+        }),
+      };
+      const queryParams = new URLSearchParams(params);
+      const url = `https://coccan-api.somee.com/api/menudetails?${queryParams.toString()}`;
+
+      fetchApi(url).then(
         (response: {
-          id: string;
-          name: string;
-          image: string;
-          products: {
+          data: {
             id: string;
-            name: string;
-            image: string;
-            category: { id: string; name: string; image: string };
+            price: number;
+            menuId: string;
+            product: {
+              id: string;
+              name: string;
+              image: string;
+              category: { id: string; name: string; image: string };
+            };
           }[];
+          status: string;
+          title: string;
+          errorMessages: [];
         }) => {
           const categories: Record<string, any> = {};
 
-          response.products.forEach((product) => {
-            const categoryId = product.category.id;
+          response.data.forEach((menudetail) => {
+            if (!menudetail.product.category)
+              menudetail.product.category = {
+                id: "placeholder-category",
+                name: "Other",
+                image: "placeholder-img",
+              };
+
+            const categoryId = menudetail.product.category.id;
 
             if (!categories[categoryId]) {
               categories[categoryId] = {
                 id: categoryId,
-                name: product.category.name,
-                image: product.category.image,
+                name: menudetail.product.category.name,
+                image: menudetail.product.category.image,
                 products: [],
               };
             }
 
             categories[categoryId].products.push({
-              id: product.id,
-              name: product.name,
-              image: product.image,
-              price: 12000,
+              id: menudetail.product.id,
+              name: menudetail.product.name,
+              image: menudetail.product.image,
+              price: menudetail.price,
               storeName: SelectedStore.name,
+              menudetailId: menudetail.id,
             });
           });
 
@@ -164,21 +160,39 @@ export default function Home() {
           setProductListByCategoryFromSelectedStoreId(categoriesList);
         }
       );
+    }
+  }, [SelectedStore]);
+
+  React.useEffect(() => {
+    //fetch api to get product with location and session id
+    if (isOrderInfoUpdating && orderInfo.sessionId.length > 0) {
+      const params = {
+        filter: JSON.stringify({ session: orderInfo.sessionId }),
+      };
+      const queryParams = new URLSearchParams(params);
+      const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
+      fetchApi(url).then(
+        (response: { id: string; image: string; name: string }[]) => {
+          const uniqueList = Array.from(
+            new Set(response.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+
+          setStoreList(uniqueList);
+          setSelectedStore(uniqueList[0]);
+          dispatch(finishUpdate());
+        }
+      );
       console.log("Store list length: " + StoreList.length);
     }
-
-    if (CategoryList.length <= 0) {
-      fetchApi("http://coccan-api.somee.com/api/categories").then(
-        (response: { id: string; name: string; image: string }[]) =>
-          setCategoryList(response)
-      );
-      console.log("Category list length: " + CategoryList);
-    }
-
-    if (StoreList.length > 0 && CategoryList.length > 0) {
+    if (StoreList.length > 0) {
       setIsFetchLoading(false);
     }
-  }, [StoreList, CategoryList, SelectedStore]);
+  }, [StoreList, orderInfo.sessionId]);
+
+  // React.useEffect(() => {
+  //   console.log("isFetchLoading" + isFetchLoading);
+  //   console.log("isSetByUser" + isOrderInfoSetByUser);
+  // }, []);
 
   return (
     <>
@@ -214,7 +228,7 @@ export default function Home() {
             </>
           )}
 
-          {!(isFetchLoading || !isOrderInfoSetByUser) && (
+          {!orderInfo.isSessionAvailable && (
             <>
               <CategorySeletorSection
                 storeList={
@@ -226,7 +240,6 @@ export default function Home() {
                   name: string;
                 }) => setSelectedStore(store)}
               ></CategorySeletorSection>
-
               {ProductListByCategoryFromSelectedStoreId.map((category) => (
                 <ProductByCategorySection
                   key={category.id}
@@ -240,8 +253,39 @@ export default function Home() {
                 handleClose={handleProductModalClose}
                 product={productDetail}
               ></ProductDetailModal>
+              <h2>This session is not active</h2>
             </>
           )}
+
+          {!(isFetchLoading || !isOrderInfoSetByUser) &&
+            orderInfo.isSessionAvailable && (
+              <>
+                <CategorySeletorSection
+                  storeList={
+                    StoreList as { id: string; image: string; name: string }[]
+                  }
+                  handleSelectStore={(store: {
+                    id: string;
+                    image: string;
+                    name: string;
+                  }) => setSelectedStore(store)}
+                ></CategorySeletorSection>
+
+                {ProductListByCategoryFromSelectedStoreId.map((category) => (
+                  <ProductByCategorySection
+                    key={category.id}
+                    category={category}
+                    viewMore={true}
+                    handleViewProductDetail={handleProductModalOpen}
+                  ></ProductByCategorySection>
+                ))}
+                <ProductDetailModal
+                  open={productModalOpen}
+                  handleClose={handleProductModalClose}
+                  product={productDetail}
+                ></ProductDetailModal>
+              </>
+            )}
         </div>
       </ThemeProvider>
     </>

@@ -10,40 +10,115 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import app from "../../firebase";
 import "./style.scss";
-import React from "react";
+import React, { useState } from "react";
 import useStorage from "@/hooks/useStorage";
 import theme from "../theme";
 
 function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { getItem, setItem, removeItem } = useStorage();
+  const [isLoginProcesssing, setIsLoginProcesssing] = useState(false);
+  async function fetchApi(url: string) {
+    const response = await fetch(url);
+    const json = await response.json();
+    return json;
+  }
 
   const login = () => {
+    setIsLoginProcesssing(true);
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
+
     signInWithPopup(auth, provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const user = result.user;
-        const userInfo = {
-          displayName: user.displayName as string | undefined,
-          email: user.email as string | undefined,
-          photoURL: user.photoURL as string | undefined,
-          uid: user.uid,
-          refreshToken: user.refreshToken,
-          preferedLocationId: "-1", //TODO: fetch BE api to get this field
-          balance: -1,
-        };
+        var customerId = "";
+        var phoneNumber = "";
+        fetchApi("http://coccan-api.somee.com/api/customers").then(
+          (
+            response: {
+              id: string;
+              fullname: string;
+              image: string;
+              email: string;
+              phone: string;
+            }[]
+          ) => {
+            var userInfoOnBE = response.find(
+              (item) => item.email == user.email
+            );
+            if (userInfoOnBE) {
+              //customer already exists in BE
+              customerId = userInfoOnBE.id;
+              phoneNumber = userInfoOnBE.phone;
+              const userInfo = {
+                displayName: user.displayName as string | undefined,
+                email: user.email as string | undefined,
+                photoURL: user.photoURL as string | undefined,
+                uid: user.uid,
+                refreshToken: user.refreshToken,
+                preferedLocationId: "-1", //TODO: fetch BE api to get this field
+                balance: -1,
+                customerId: customerId,
+                phoneNumber: phoneNumber,
+              };
+              dispatch(loginUser({ value: userInfo }));
+              setItem("userInfo", JSON.stringify(userInfo));
 
-        dispatch(loginUser({ value: userInfo }));
-        sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
-        router.push("/");
+              router.push("/");
+            } else {
+              //customer login for the first time -> create new customer in BE
+              fetch("http://coccan-api.somee.com/api/customers", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  fullname: user.displayName,
+                  image: user.photoURL,
+                  email: user.email,
+                  phone: "0123456789", //default value for creating user. This will be updated later when user checkout or update profile
+                }),
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok.");
+                  }
+                  return response.json();
+                })
+                .then((responseData) => {
+                  // Handle successful response
+                  customerId = responseData.id;
+                  phoneNumber = responseData.phone;
+                  const userInfo = {
+                    displayName: user.displayName as string | undefined,
+                    email: user.email as string | undefined,
+                    photoURL: user.photoURL as string | undefined,
+                    uid: user.uid,
+                    refreshToken: user.refreshToken,
+                    preferedLocationId: "-1", //TODO: fetch BE api to get this field
+                    balance: -1,
+                    customerId: customerId,
+                    phoneNumber: phoneNumber,
+                  };
+                  dispatch(loginUser({ value: userInfo }));
+                  setItem("userInfo", JSON.stringify(userInfo));
+                  router.push("/");
+                })
+                .catch((error) => {
+                  // Handle error
+                  console.error("Error:", error);
+                });
+            }
+          }
+        );
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const { getItem, setItem, removeItem } = useStorage();
 
   //if user is saved in session, proceed to login user
   React.useEffect(() => {

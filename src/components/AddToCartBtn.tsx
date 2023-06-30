@@ -17,6 +17,7 @@ function AddToCartBtn({
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   };
 }) {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ function AddToCartBtn({
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   }) => {
     dispatch(addToCartSingle({ product: product }));
   };

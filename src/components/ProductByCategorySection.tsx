@@ -19,11 +19,21 @@ function ProductByCategorySection({
       image: string;
       price: number;
       storeName: string;
+      menudetailId: string;
     }[];
   };
 
   viewMore: boolean;
-  handleViewProductDetail: (id: string) => void;
+  handleViewProductDetail: (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+
+    menudetailId: string;
+
+  }) => void;
 }) {
   return (
     <Box className="product-by-category-wrapper">

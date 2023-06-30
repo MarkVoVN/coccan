@@ -23,8 +23,17 @@ function ProductCard({
     image: string;
     price: number;
     storeName: string;
+    menudetailId: string;
   };
-  handleViewProductDetail: (id: string) => void;
+  handleViewProductDetail: (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+    menudetailId: string;
+
+  }) => void;
 }) {
   return (
     <Card

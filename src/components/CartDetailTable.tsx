@@ -22,8 +22,10 @@ import {
   removeFromCart,
   incrementItem,
 } from "@/app/GlobalRedux/Features/cartSlice";
+import { useRouter } from "next/navigation";
 
 function CartDetailTable() {
+  const router = useRouter();
   const productInfoPlaceholder = {
     id: "8",
     name: "Product Name",
@@ -34,6 +36,7 @@ function CartDetailTable() {
   };
 
   const cart = useAppSelector((state) => state.cart);
+  const userInfo = useAppSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleIncrementItem = (id: string) => {
     dispatch(incrementItem(id));
@@ -47,15 +50,17 @@ function CartDetailTable() {
     dispatch(removeFromCart(id));
   };
 
+  const handleCheckout = () => {
+    router.push("/checkout");
+  };
+
   const [cartTotalPrice, setCartTotalPrice] = useState(0);
   useEffect(() => {
     //Calculate total price
     var total = 0;
     cart.value.map((item) => {
       //get price from api
-      var price = productInfoPlaceholder.price;
-
-      total += price * item.quantity;
+      total += item.price * item.quantity;
     });
     setCartTotalPrice(total);
   }, [cart]);
@@ -91,7 +96,7 @@ function CartDetailTable() {
         </TableHead>
         <TableBody>
           {cart.value.map((item) => (
-            <TableRow key={item.menuItemId}>
+            <TableRow key={item.menudetailId}>
               <TableCell align="center">
                 <img src={item.image} alt={item.name} width={128} />
               </TableCell>
@@ -106,14 +111,14 @@ function CartDetailTable() {
               </TableCell>
               <TableCell align="center">
                 <IconButton
-                  onClick={() => handleDecrementItem(item.menuItemId)}
+                  onClick={() => handleDecrementItem(item.menudetailId)}
                 >
                   <Remove></Remove>
                 </IconButton>
                 {item.quantity}
 
                 <IconButton
-                  onClick={() => handleIncrementItem(item.menuItemId)}
+                  onClick={() => handleIncrementItem(item.menudetailId)}
                 >
                   <Add></Add>
                 </IconButton>
@@ -126,7 +131,7 @@ function CartDetailTable() {
                 })}
               </TableCell>
               <TableCell align="center">
-                <Button onClick={() => handleRemoveItem(item.menuItemId)}>
+                <Button onClick={() => handleRemoveItem(item.menudetailId)}>
                   Remove
                 </Button>
               </TableCell>
@@ -145,7 +150,13 @@ function CartDetailTable() {
               })}
             </TableCell>
             <TableCell align="center">
-              <Button variant="contained">Checkout</Button>
+              <Button
+                variant="contained"
+                onClick={handleCheckout}
+                disabled={!userInfo.value.isAuth}
+              >
+                Checkout
+              </Button>
             </TableCell>
           </TableRow>
         </TableBody>
