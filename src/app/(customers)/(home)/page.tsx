@@ -173,12 +173,12 @@ export default function Home() {
       const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
       fetchApi(url).then(
         (response: { id: string; image: string; name: string }[]) => {
-          const uniqueList = Array.from(
-            new Set(response.map((obj) => JSON.stringify(obj)))
-          ).map((str) => JSON.parse(str));
+          // const uniqueList = Array.from(
+          //   new Set(response.map((obj) => JSON.stringify(obj)))
+          // ).map((str) => JSON.parse(str));
 
-          setStoreList(uniqueList);
-          setSelectedStore(uniqueList[0]);
+          setStoreList(response);
+          setSelectedStore(response[0]);
           dispatch(finishUpdate());
         }
       );
@@ -230,29 +230,6 @@ export default function Home() {
 
           {!orderInfo.isSessionAvailable && (
             <>
-              <CategorySeletorSection
-                storeList={
-                  StoreList as { id: string; image: string; name: string }[]
-                }
-                handleSelectStore={(store: {
-                  id: string;
-                  image: string;
-                  name: string;
-                }) => setSelectedStore(store)}
-              ></CategorySeletorSection>
-              {ProductListByCategoryFromSelectedStoreId.map((category) => (
-                <ProductByCategorySection
-                  key={category.id}
-                  category={category}
-                  viewMore={true}
-                  handleViewProductDetail={handleProductModalOpen}
-                ></ProductByCategorySection>
-              ))}
-              <ProductDetailModal
-                open={productModalOpen}
-                handleClose={handleProductModalClose}
-                product={productDetail}
-              ></ProductDetailModal>
               <h2>This session is not active</h2>
             </>
           )}
@@ -275,7 +252,7 @@ export default function Home() {
                   <ProductByCategorySection
                     key={category.id}
                     category={category}
-                    viewMore={true}
+                    viewMore={false}
                     handleViewProductDetail={handleProductModalOpen}
                   ></ProductByCategorySection>
                 ))}

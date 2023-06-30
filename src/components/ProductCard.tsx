@@ -37,7 +37,7 @@ function ProductCard({
   return (
     <Card
       className="product-container"
-      // onClick={() => handleViewProductDetail(product.id)}
+      onClick={() => handleViewProductDetail(product)}
       sx={{ maxWidth: 216, maxHeight: 320 }}
     >
       <CardMedia component="img" image={product.image} height="200"></CardMedia>
