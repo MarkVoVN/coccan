@@ -4,10 +4,12 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import ProductCard from "@/components/ProductCard";
 import "@/style/ProductByCategory.scss";
+import { useRouter } from "next/navigation";
 function ProductByCategorySection({
   category,
   viewMore,
   handleViewProductDetail,
+  store,
 }: {
   category: {
     id: string;
@@ -32,9 +34,16 @@ function ProductByCategorySection({
     storeName: string;
 
     menudetailId: string;
-
   }) => void;
+  store:
+    | {
+        id: string;
+        image: string;
+        name: string;
+      }
+    | undefined;
 }) {
+  const router = useRouter();
   return (
     <Box className="product-by-category-wrapper">
       <Box className="product-by-category-container">
@@ -43,7 +52,11 @@ function ProductByCategorySection({
             {category.name}
           </Typography>
           {viewMore ? (
-            <Button variant="contained" className="view-more-btn">
+            <Button
+              variant="contained"
+              className="view-more-btn"
+              onClick={() => router.push(`/store/${store?.id}`)}
+            >
               View more
             </Button>
           ) : (

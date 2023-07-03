@@ -4,14 +4,7 @@ import React from "react";
 function StoreDetailSection({
   store,
 }: {
-  store: {
-    id: string;
-    name: string;
-    logoUrl: string;
-    description: string;
-    address: string;
-    contact: string;
-  };
+  store: { id: string; name: string; image: string; address: string };
 }) {
   return (
     <div className="store-detail-section-wrapper flex flex-row justify-center">
@@ -19,9 +12,6 @@ function StoreDetailSection({
         <div className="store-info-container p-[1rem]">
           <div className="store-title">
             <Typography variant="h1">{store.name}</Typography>
-          </div>
-          <div className="store-description py-[1rem]">
-            <Typography variant="body1">{store.description}</Typography>
           </div>
           <div className="store-addresses flex flex-row">
             <Typography variant="h6" className="mr-[1rem]">
@@ -32,12 +22,11 @@ function StoreDetailSection({
           <div className="store-contact flex flex-row">
             <Typography variant="h6" className="mr-[1rem]">
               Contact:
-            </Typography>
-            <Typography variant="h6">{store.contact}</Typography>
+            </Typography>{" "}
           </div>
         </div>
         <div className="store-logo-container p-[1rem]">
-          <img src={store.logoUrl} alt={store.name + " store logo"} />
+          <img src={store.image} alt={store.name + " store logo"} />
         </div>
       </div>
     </div>
