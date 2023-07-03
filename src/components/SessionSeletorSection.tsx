@@ -126,7 +126,7 @@ function SessionSeletorSection() {
         .get("https://coccan-api.somee.com/api/locations")
         .then((response) => {
           setIsError(false);
-          dispatch(setLocationList(response.data.data));
+          dispatch(setLocationList(response.data));
         })
         .catch((error) => {
           setIsError(true);
@@ -138,7 +138,7 @@ function SessionSeletorSection() {
       axios
         .get("https://coccan-api.somee.com/api/sessions")
         .then((response) => {
-          var item = response.data.data.find(
+          var item = response.data.find(
             (item: {
               id: string;
               date: string;

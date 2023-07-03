@@ -15,7 +15,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Save } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -99,27 +98,20 @@ function CheckoutPage() {
 
   React.useEffect(() => {
     if (pickupspotList.length <= 0 && location) {
-      fetchApi("http://coccan-api.somee.com/api/pickupspots").then(
-        (response: {
-          data: {
+      axios("http://coccan-api.somee.com/api/pickupspots").then((response) => {
+        var pickupspotList = response.data.filter(
+          (item: {
             id: string;
             fullname: string;
             address: string;
             locationId: string;
             status: number;
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          var pickupspotList = response.data.filter(
-            (item) => item.locationId == location.id
-          );
-          // if (pickupspotList.length > 0)
-          //   setSelectedPickupspotId(pickupspotList[0].id);
-          setPickupspotList(pickupspotList);
-        }
-      );
+          }) => item.locationId == location.id
+        );
+        // if (pickupspotList.length > 0)
+        //   setSelectedPickupspotId(pickupspotList[0].id);
+        setPickupspotList(pickupspotList);
+      });
     }
     var total = 0;
     const uniqueStore = new Set();
