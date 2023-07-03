@@ -108,8 +108,8 @@ export default function Home() {
       const url = `https://coccan-api.somee.com/api/menudetails?${queryParams.toString()}`;
 
       fetchApi(url).then(
-        (response: {
-          data: {
+        (
+          response: {
             id: string;
             price: number;
             menuId: string;
@@ -119,14 +119,11 @@ export default function Home() {
               image: string;
               category: { id: string; name: string; image: string };
             };
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
+          }[]
+        ) => {
           const categories: Record<string, any> = {};
 
-          response.data.forEach((menudetail) => {
+          response.forEach((menudetail) => {
             if (!menudetail.product.category)
               menudetail.product.category = {
                 id: "placeholder-category",
@@ -170,18 +167,13 @@ export default function Home() {
         filter: JSON.stringify({ session: orderInfo.sessionId }),
       };
       const queryParams = new URLSearchParams(params);
-      const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
-      fetchApi(url).then(
-        (response: { id: string; image: string; name: string }[]) => {
-          // const uniqueList = Array.from(
-          //   new Set(response.map((obj) => JSON.stringify(obj)))
-          // ).map((str) => JSON.parse(str));
-
-          setStoreList(response);
-          setSelectedStore(response[0]);
+      axios
+        .get("https://coccan-api.somee.com/api/stores", { params: queryParams })
+        .then((response) => {
+          setStoreList(response.data);
+          setSelectedStore(response.data[0]);
           dispatch(finishUpdate());
-        }
-      );
+        });
       console.log("Store list length: " + StoreList.length);
     }
     if (StoreList.length > 0) {
@@ -211,14 +203,14 @@ export default function Home() {
               <CardMedia
                 component="img"
                 image="/homepage/Food-Facebook-Cover-Banner-13.png"
-                height=""
+                height="200"
               ></CardMedia>
             </Card>
             <Card>
               <CardMedia
                 component="img"
                 image="/homepage/Food-Facebook-Cover-Banner-19.png"
-                height=""
+                height="200"
               ></CardMedia>
             </Card>
           </Carousel>
