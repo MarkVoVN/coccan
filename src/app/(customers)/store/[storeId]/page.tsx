@@ -92,8 +92,6 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
 
   const sessionId = useAppSelector((state) => state.order.value.sessionId);
   React.useEffect(() => {
-    console.log(`storeId + ${params.storeId}`);
-    console.log(`sessionId + ${sessionId}`);
     if (params.storeId && sessionId.length > 0) {
       const parameters = {
         filter: JSON.stringify({

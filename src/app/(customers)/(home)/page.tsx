@@ -172,7 +172,6 @@ export default function Home() {
           setSelectedStore(response.data[0]);
           dispatch(finishUpdate());
         });
-      console.log("Store list length: " + StoreList.length);
     }
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
