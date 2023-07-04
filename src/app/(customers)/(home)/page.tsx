@@ -107,11 +107,13 @@ export default function Home() {
       const queryParams = new URLSearchParams(params);
       const url = `https://coccan-api.somee.com/api/menudetails`;
 
+
       axios.get(url, { params: queryParams }).then((response) => {
         const categories: Record<string, any> = {};
 
         response.data.forEach(
           (menudetail: {
+
             id: string;
             price: number;
             menuId: string;
@@ -121,7 +123,9 @@ export default function Home() {
               image: string;
               category: { id: string; name: string; image: string };
             };
+
           }) => {
+
             if (!menudetail.product.category)
               menudetail.product.category = {
                 id: "placeholder-category",
@@ -172,6 +176,7 @@ export default function Home() {
           setSelectedStore(response.data[0]);
           dispatch(finishUpdate());
         });
+
     }
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
