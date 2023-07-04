@@ -7,45 +7,11 @@ import { ArrowBackIos } from "@mui/icons-material";
 import ProductByCategorySection from "@/components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 function StoreDetailPage({ params }: { params: { storeId: string } }) {
-  const store = {
-    id: "1",
-    name: "711 Bakery",
-    logoUrl: "/search/store-logo-placeholder.svg",
-    description: "We sell the best pastry in the area",
-    address: "161A Nguyen Van Tang, P. Long Thanh My, TP. Thu duc",
-    contact: "0909 123 456",
-  };
-
-  const categoryList = [
-    {
-      categoryId: "0",
-      categoryIconUrl: "rice.svg",
-      name: "Rice",
-    },
-    {
-      categoryId: "1",
-      categoryIconUrl: "bread.svg",
-      name: "Bread",
-    },
-    {
-      categoryId: "2",
-      categoryIconUrl: "drink.svg",
-      name: "Drink",
-    },
-    {
-      categoryId: "3",
-      categoryIconUrl: "snack.svg",
-      name: "Snack",
-    },
-    {
-      categoryId: "4",
-      categoryIconUrl: "others.svg",
-      name: "Others",
-    },
-  ];
-
+  const router = useRouter();
   const productInfoPlaceholder = {
     id: "8",
     name: "Product Name",
@@ -53,16 +19,36 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
     image: "/homepage/product-placeholder-img.png",
     description: "Product description",
     storeName: "Store Name",
+    menudetailId: "menudetail-placeholder",
   };
 
-  const [productModalOpen, setProducttModalOpen] = React.useState(true);
+  const [productModalOpen, setProducttModalOpen] = React.useState(false);
 
-  const [productDetail, setProductDetail] = React.useState(
-    productInfoPlaceholder
-  );
+  const [productDetail, setProductDetail] = React.useState<{
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+    menudetailId: string;
+  }>({
+    id: "-1",
+    name: "Product Name",
+    price: 12000,
+    image: "/homepage/product-placeholder-img.png",
+    storeName: "Store Name",
+    menudetailId: "menudetailid",
+  });
 
-  const handleProductModalOpen = () => {
-    setProductDetail(productInfoPlaceholder);
+  const handleProductModalOpen = (product: {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    storeName: string;
+    menudetailId: string;
+  }) => {
+    setProductDetail(product);
     setProducttModalOpen(true);
   };
 
@@ -88,14 +74,20 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
       }[];
     }[]
   >([]);
-
-  async function fetchApi(url: string) {
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
-  }
+  const [StoreInfo, setStoreInfo] = React.useState<{
+    id: string;
+    name: string;
+    image: string;
+    address: string;
+  }>({
+    id: "place-holder",
+    name: "Store name placeholder",
+    image: "/search/store-logo-placeholder.svg",
+    address: "161A Nguyen Van Tang, P. Long Thanh My, TP. Thu duc",
+  });
 
   const [isFetchLoading, setIsFetchLoading] = React.useState(true);
+  const [isStoreLoading, setIsStoreLoading] = React.useState(true);
   const [isError, setIsError] = React.useState(false);
 
   const sessionId = useAppSelector((state) => state.order.value.sessionId);
@@ -107,99 +99,118 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
         }),
       };
       const queryParams = new URLSearchParams(parameters);
-      fetchApi(
-        `http://coccan-api.somee.com/api/stores/${
-          params.storeId
-        }?${queryParams.toString()}`
-      )
-        .then(
-          (response: {
+      axios
+        .get(`http://coccan-api.somee.com/api/stores/${params.storeId}`, {
+          params: queryParams,
+        })
+        .then((response) => {
+          setStoreInfo({
+            id: response.data.id,
+            name: response.data.name,
+            image: response.data.image,
+            address: response.data.address,
+          });
+          setIsStoreLoading(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+        });
+      //fetch product details for this Store
+      const parameterForMenuDetails = {
+        filter: JSON.stringify({
+          session: sessionId,
+          store: params.storeId,
+        }),
+      };
+      const queryParams2 = new URLSearchParams(parameterForMenuDetails);
+      const url = `https://coccan-api.somee.com/api/menudetails`;
+
+      axios.get(url, { params: queryParams2 }).then((response) => {
+        const categories: Record<string, any> = {};
+
+        response.data.forEach(
+          (menudetail: {
             id: string;
-            name: string;
-            image: string;
-            address: string;
-            products: {
+            price: number;
+            menuId: string;
+            product: {
               id: string;
               name: string;
               image: string;
               category: { id: string; name: string; image: string };
-            }[];
+            };
           }) => {
-            const categories: Record<string, any> = {};
+            if (!menudetail.product.category)
+              menudetail.product.category = {
+                id: "placeholder-category",
+                name: "Other",
+                image: "placeholder-img",
+              };
 
-            response.products.forEach((product) => {
-              if (!product.category)
-                product.category = {
-                  id: "placeholder-category-id",
-                  name: "Other",
-                  image: "placeholder-category-image",
-                };
+            const categoryId = menudetail.product.category.id;
 
-              const categoryId = product.category.id;
+            if (!categories[categoryId]) {
+              categories[categoryId] = {
+                id: categoryId,
+                name: menudetail.product.category.name,
+                image: menudetail.product.category.image,
+                products: [],
+              };
+            }
 
-              if (!categories[categoryId]) {
-                categories[categoryId] = {
-                  id: categoryId,
-                  name: product.category.name,
-                  image: product.category.image,
-                  products: [],
-                };
-              }
-
-              categories[categoryId].products.push({
-                id: product.id,
-                name: product.name,
-                image: product.image,
-                price: 12000,
-                storeName: "ABC",
-              });
+            categories[categoryId].products.push({
+              id: menudetail.product.id,
+              name: menudetail.product.name,
+              image: menudetail.product.image,
+              price: menudetail.price,
+              storeName: StoreInfo.name,
+              menudetailId: menudetail.id,
             });
-
-            const categoriesList = Object.values(categories);
-            setIsFetchLoading(false);
-            setProductListByCategoryFromSelectedStoreId(categoriesList);
           }
-        )
-        .catch((error) => {
-          setIsError(true);
-        });
+        );
+
+        const categoriesList = Object.values(categories);
+        setIsFetchLoading(false);
+        setProductListByCategoryFromSelectedStoreId(categoriesList);
+      });
     }
-  }, [isError]);
+  }, [isError, sessionId]);
 
   return (
     <>
-      {isFetchLoading && !isError && <h2>Loading...</h2>}
+      {(isFetchLoading || isStoreLoading) && !isError && <h2>Loading...</h2>}
 
       {isError && <h2>An error occurred while loading. Trying again...</h2>}
 
-      {!isFetchLoading && !isError && (
+      {!isFetchLoading && !isStoreLoading && !isError && (
         <>
           <div className="back-btn-section-wrapper flex flex-row justify-center">
             <div className="back-btn-section-container w-[80%] my-[2ren]">
               <Button
                 variant="outlined"
                 size="large"
-                onClick={() => console.log("return to previous page")}
+                onClick={() => router.back()}
                 startIcon={<ArrowBackIos></ArrowBackIos>}
               >
                 Back
               </Button>
             </div>
           </div>
-          <StoreDetailSection store={store}></StoreDetailSection>
-          {/* {ProductListByCategoryFromSelectedStoreId.map((category) => (
+          <StoreDetailSection store={StoreInfo}></StoreDetailSection>
+          {ProductListByCategoryFromSelectedStoreId.map((category) => (
             <ProductByCategorySection
               key={category.id}
               category={category}
               viewMore={false}
               handleViewProductDetail={handleProductModalOpen}
+              store={undefined}
             ></ProductByCategorySection>
           ))}
           <ProductDetailModal
             open={productModalOpen}
             handleClose={handleProductModalClose}
             product={productDetail}
-          ></ProductDetailModal> */}
+          ></ProductDetailModal>
         </>
       )}
     </>

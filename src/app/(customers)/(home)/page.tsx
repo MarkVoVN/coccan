@@ -105,11 +105,15 @@ export default function Home() {
         }),
       };
       const queryParams = new URLSearchParams(params);
-      const url = `https://coccan-api.somee.com/api/menudetails?${queryParams.toString()}`;
+      const url = `https://coccan-api.somee.com/api/menudetails`;
 
-      fetchApi(url).then(
-        (
-          response: {
+
+      axios.get(url, { params: queryParams }).then((response) => {
+        const categories: Record<string, any> = {};
+
+        response.data.forEach(
+          (menudetail: {
+
             id: string;
             price: number;
             menuId: string;
@@ -119,11 +123,9 @@ export default function Home() {
               image: string;
               category: { id: string; name: string; image: string };
             };
-          }[]
-        ) => {
-          const categories: Record<string, any> = {};
 
-          response.forEach((menudetail) => {
+          }) => {
+
             if (!menudetail.product.category)
               menudetail.product.category = {
                 id: "placeholder-category",
@@ -150,13 +152,13 @@ export default function Home() {
               storeName: SelectedStore.name,
               menudetailId: menudetail.id,
             });
-          });
+          }
+        );
 
-          const categoriesList = Object.values(categories);
+        const categoriesList = Object.values(categories);
 
-          setProductListByCategoryFromSelectedStoreId(categoriesList);
-        }
-      );
+        setProductListByCategoryFromSelectedStoreId(categoriesList);
+      });
     }
   }, [SelectedStore]);
 
@@ -174,7 +176,7 @@ export default function Home() {
           setSelectedStore(response.data[0]);
           dispatch(finishUpdate());
         });
-      console.log("Store list length: " + StoreList.length);
+
     }
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
@@ -244,8 +246,9 @@ export default function Home() {
                   <ProductByCategorySection
                     key={category.id}
                     category={category}
-                    viewMore={false}
+                    viewMore={true}
                     handleViewProductDetail={handleProductModalOpen}
+                    store={SelectedStore}
                   ></ProductByCategorySection>
                 ))}
                 <ProductDetailModal

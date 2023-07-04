@@ -2,12 +2,12 @@
 import SearchResultSection from "@/components/SearchResultSection";
 import "./search.scss";
 import { ThemeProvider } from "@mui/material";
-import theme from "../../theme";
+import theme from "../../../theme";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import React from "react";
 import axios, { AxiosResponse } from "axios";
 
-function SearchPage() {
+function SearchPage({ params }: { params: { keyword: string } }) {
   const sessionId = useAppSelector((state) => state.order.value.sessionId);
   const [StoreList, setStoreList] = React.useState<
     {
@@ -35,6 +35,7 @@ function SearchPage() {
   React.useEffect(() => {
     const parameter = {
       filter: JSON.stringify({
+        search: decodeURIComponent(params.keyword),
         session: sessionId,
       }),
     };
@@ -126,7 +127,7 @@ function SearchPage() {
         console.log(error);
         setIsError(true);
       });
-  }, [sessionId, isError]);
+  }, [sessionId, params.keyword, isError]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -145,7 +146,7 @@ function SearchPage() {
         <>
           <SearchResultSection
             StoreList={StoreList}
-            keyword={decodeURIComponent("")}
+            keyword={decodeURIComponent(params.keyword)}
           ></SearchResultSection>
         </>
       )}

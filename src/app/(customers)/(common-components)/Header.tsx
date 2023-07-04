@@ -59,9 +59,8 @@ function Header() {
 
   const searchProduct = () => {
     //pass props and redirect to search page
-
     console.log("searching for" + location + " " + search);
-    router.push("/search");
+    router.push(`/search/${search}`);
   };
 
   const handleOrderInfoDialogClose = () => {
