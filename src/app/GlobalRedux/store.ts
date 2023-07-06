@@ -5,6 +5,7 @@ import userReducer from "@/app/GlobalRedux/Features/userSlice";
 import orderReducer from "@/app/GlobalRedux/Features/orderSlice";
 import cartReducer from "@/app/GlobalRedux/Features/cartSlice";
 import categoryReducer from './Features/categorySlice';
+import staffReducer from './Features/staffSlice';
 
 export const store = configureStore(
   {
@@ -13,6 +14,7 @@ export const store = configureStore(
       user: userReducer,
       cart: cartReducer,
       category: categoryReducer,
+      staff: staffReducer,
     }
   }
 );
