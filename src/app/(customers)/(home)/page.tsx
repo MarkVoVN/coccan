@@ -105,11 +105,13 @@ export default function Home() {
         }),
       };
       const queryParams = new URLSearchParams(params);
-      const url = `https://coccan-api.somee.com/api/menudetails?${queryParams.toString()}`;
+      const url = `https://coccan-api.somee.com/api/menudetails`;
 
-      fetchApi(url).then(
-        (response: {
-          data: {
+      axios.get(url, { params: queryParams }).then((response) => {
+        const categories: Record<string, any> = {};
+
+        response.data.forEach(
+          (menudetail: {
             id: string;
             price: number;
             menuId: string;
@@ -119,14 +121,7 @@ export default function Home() {
               image: string;
               category: { id: string; name: string; image: string };
             };
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          const categories: Record<string, any> = {};
-
-          response.data.forEach((menudetail) => {
+          }) => {
             if (!menudetail.product.category)
               menudetail.product.category = {
                 id: "placeholder-category",
@@ -153,13 +148,13 @@ export default function Home() {
               storeName: SelectedStore.name,
               menudetailId: menudetail.id,
             });
-          });
+          }
+        );
 
-          const categoriesList = Object.values(categories);
+        const categoriesList = Object.values(categories);
 
-          setProductListByCategoryFromSelectedStoreId(categoriesList);
-        }
-      );
+        setProductListByCategoryFromSelectedStoreId(categoriesList);
+      });
     }
   }, [SelectedStore]);
 
@@ -170,19 +165,13 @@ export default function Home() {
         filter: JSON.stringify({ session: orderInfo.sessionId }),
       };
       const queryParams = new URLSearchParams(params);
-      const url = `https://coccan-api.somee.com/api/stores?${queryParams.toString()}`;
-      fetchApi(url).then(
-        (response: { id: string; image: string; name: string }[]) => {
-          const uniqueList = Array.from(
-            new Set(response.map((obj) => JSON.stringify(obj)))
-          ).map((str) => JSON.parse(str));
-
-          setStoreList(uniqueList);
-          setSelectedStore(uniqueList[0]);
+      axios
+        .get("https://coccan-api.somee.com/api/stores", { params: queryParams })
+        .then((response) => {
+          setStoreList(response.data);
+          setSelectedStore(response.data[0]);
           dispatch(finishUpdate());
-        }
-      );
-      console.log("Store list length: " + StoreList.length);
+        });
     }
     if (StoreList.length > 0) {
       setIsFetchLoading(false);
@@ -211,14 +200,14 @@ export default function Home() {
               <CardMedia
                 component="img"
                 image="/homepage/Food-Facebook-Cover-Banner-13.png"
-                height=""
+                height="200"
               ></CardMedia>
             </Card>
             <Card>
               <CardMedia
                 component="img"
                 image="/homepage/Food-Facebook-Cover-Banner-19.png"
-                height=""
+                height="200"
               ></CardMedia>
             </Card>
           </Carousel>
@@ -230,29 +219,6 @@ export default function Home() {
 
           {!orderInfo.isSessionAvailable && (
             <>
-              <CategorySeletorSection
-                storeList={
-                  StoreList as { id: string; image: string; name: string }[]
-                }
-                handleSelectStore={(store: {
-                  id: string;
-                  image: string;
-                  name: string;
-                }) => setSelectedStore(store)}
-              ></CategorySeletorSection>
-              {ProductListByCategoryFromSelectedStoreId.map((category) => (
-                <ProductByCategorySection
-                  key={category.id}
-                  category={category}
-                  viewMore={true}
-                  handleViewProductDetail={handleProductModalOpen}
-                ></ProductByCategorySection>
-              ))}
-              <ProductDetailModal
-                open={productModalOpen}
-                handleClose={handleProductModalClose}
-                product={productDetail}
-              ></ProductDetailModal>
               <h2>This session is not active</h2>
             </>
           )}
@@ -277,6 +243,7 @@ export default function Home() {
                     category={category}
                     viewMore={true}
                     handleViewProductDetail={handleProductModalOpen}
+                    store={SelectedStore}
                   ></ProductByCategorySection>
                 ))}
                 <ProductDetailModal

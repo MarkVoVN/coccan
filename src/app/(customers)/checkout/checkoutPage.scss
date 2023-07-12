@@ -1,0 +1,26 @@
+$primary: #ea5857;
+
+.container {
+    margin-top: 64px;
+    margin-bottom: 64px;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info-container {
+    flex: 1 0 30%;
+    width: 100%;
+}
+
+.content-container {
+    border: 3px solid $primary;
+    border-radius: 8px;
+}
+
+.order-information-section {
+    flex: 1;
+    margin: 32px;
+    padding: 16px;
+    border-radius: 8px;
+}

@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import { LoadingButton } from "@mui/lab";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -13,6 +14,7 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
+  ThemeProvider,
   Typography,
 } from "@mui/material";
 import { Save } from "@mui/icons-material";
@@ -21,6 +23,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
 import axios from "axios";
+import "./checkoutPage.scss";
+import theme from "../theme";
 
 function CheckoutPage() {
   const router = useRouter();
@@ -99,27 +103,20 @@ function CheckoutPage() {
 
   React.useEffect(() => {
     if (pickupspotList.length <= 0 && location) {
-      fetchApi("http://coccan-api.somee.com/api/pickupspots").then(
-        (response: {
-          data: {
+      axios("http://coccan-api.somee.com/api/pickupspots").then((response) => {
+        var pickupspotList = response.data.filter(
+          (item: {
             id: string;
             fullname: string;
             address: string;
             locationId: string;
             status: number;
-          }[];
-          status: string;
-          title: string;
-          errorMessages: [];
-        }) => {
-          var pickupspotList = response.data.filter(
-            (item) => item.locationId == location.id
-          );
-          // if (pickupspotList.length > 0)
-          //   setSelectedPickupspotId(pickupspotList[0].id);
-          setPickupspotList(pickupspotList);
-        }
-      );
+          }) => item.locationId == location.id
+        );
+        // if (pickupspotList.length > 0)
+        //   setSelectedPickupspotId(pickupspotList[0].id);
+        setPickupspotList(pickupspotList);
+      });
     }
     var total = 0;
     const uniqueStore = new Set();
@@ -246,129 +243,219 @@ function CheckoutPage() {
     <>
       {!userInfo.isAuth && <h2>You must login to checkout</h2>}
       {userInfo.isAuth && (
-        <div>
-          <div className="order-information-section">
-            <Typography variant="h5">Order Information</Typography>
-            <div>
-              <span>Total amount:</span>
-              <span>{cartTotalAmount}</span>
-            </div>
-            <div>
-              <span>Delivery Fee:</span>
-              <span>{deliveryFee}</span>
-            </div>
-            <div>
-              <span> Service Fee:</span>
-              <span>{serviceFee}</span>
-            </div>
-            <div>
-              <span> Total:</span>
-              <span>{cartTotalAmount + deliveryFee + serviceFee}</span>
-            </div>
-          </div>
-          <div className="delivery-info-section">
-            <Typography variant="h5">Delivery Information</Typography>
-            <div>
-              <span>Location:</span>
-              <span>{location?.name}</span>
-            </div>
-            <div>
-              <span>Timeslot:</span>
-              <span>{timeslot?.startTime + "-" + timeslot?.endTime}</span>
-            </div>
-            <div>
-              <span>
-                <FormControl>
-                  <InputLabel>Pickupspot</InputLabel>
-                  <Select
-                    className="selector"
-                    value={selectedPickupspotId}
-                    label="Pickupspot"
-                    onChange={handlePickspotSelect}
-                    required
-                  >
-                    {pickupspotList.length > 0 &&
-                      pickupspotList.map((spot) => (
-                        <MenuItem
-                          key={spot.id}
-                          value={spot.id}
-                          disabled={spot.status === 0}
-                        >
-                          {spot.fullname}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </span>
-            </div>
-            <div>
-              <span>
-                <TextField
-                  label="Delivery Notes"
-                  value={deliveryNote}
-                  onChange={handleChangeDeliveryNote}
-                ></TextField>
-              </span>
-            </div>
-          </div>
-          <div className="contact-into-section">
-            <Typography variant="h5">Contact Information</Typography>
-
-            <div>
-              <span>Name: </span>
-              <span>{userInfo.displayName}</span>
-            </div>
-            <div>
-              <span>Phone number: </span>
-              <TextField
-                error={!isPhoneNumberValid}
-                label="Phone number"
-                value={phoneNumber}
-                onChange={handleChangePhoneNumber}
-                helperText={isPhoneNumberValid ? "" : errorMessage}
-                required
-              ></TextField>
-            </div>
-          </div>
-          <Button
-            variant="outlined"
-            size="large"
-            disabled={phoneNumber.length == 0 || !isPhoneNumberValid}
-            onClick={handleConfirmDialogOpen}
-          >
-            PLACE ORDER
-          </Button>
-          <Dialog open={confirmDialogOpen} onClose={handleConfirmDialogClose}>
-            <DialogContent
-              sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+        <ThemeProvider theme={theme}>
+          <div className="container">
+            <Box
+              className="content-container"
+              sx={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
             >
-              <Typography variant="h5" fontWeight="500">
-                Confirm Order Information
-              </Typography>
-              <Typography variant="subtitle2" color="gray">
-                Please make sure your contact information is correct
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleConfirmDialogClose}
+              <Box
+                className="info-container"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "32px",
+                  padding: "32px",
+                }}
               >
-                Cancel
-              </Button>
-              <LoadingButton
-                loading={isOrderCreating}
-                loadingPosition="start"
-                variant="contained"
-                color="primary"
-                onClick={handlePlacingOrder}
+                <Box
+                  className="contact-info-section"
+                  sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+                >
+                  <Typography variant="h5" fontWeight="600">
+                    Contact Information
+                  </Typography>
+                  <div>
+                    <Typography variant="h6">{userInfo.displayName}</Typography>
+                  </div>
+                  <div>
+                    <TextField
+                      error={!isPhoneNumberValid}
+                      label="Phone number"
+                      value={phoneNumber}
+                      onChange={handleChangePhoneNumber}
+                      helperText={isPhoneNumberValid ? "" : errorMessage}
+                      sx={{ width: "100%" }}
+                      required
+                    ></TextField>
+                  </div>
+                </Box>
+                <Box
+                  className="delivery-info-section"
+                  sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+                >
+                  <Typography variant="h5" fontWeight="600">
+                    Delivery Information
+                  </Typography>
+                  <div>
+                    <Typography variant="subtitle1">Location:</Typography>
+                    <Typography variant="h6">{location?.name}</Typography>
+                  </div>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box sx={{ width: "100%" }}>
+                      <Typography variant="subtitle1">Time slot:</Typography>
+                      <Typography variant="h6">
+                        {timeslot?.startTime + " - " + timeslot?.endTime}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ width: "100%" }}>
+                      <FormControl sx={{ width: "100%" }}>
+                        <InputLabel>Pickup spot</InputLabel>
+                        <Select
+                          className="selector"
+                          value={selectedPickupspotId}
+                          label="Pickupspot"
+                          onChange={handlePickspotSelect}
+                          required
+                        >
+                          {pickupspotList.length > 0 &&
+                            pickupspotList.map((spot) => (
+                              <MenuItem
+                                key={spot.id}
+                                value={spot.id}
+                                disabled={spot.status === 0}
+                              >
+                                {spot.fullname}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Box>
+                  <div>
+                    <TextField
+                      label="Delivery Notes"
+                      value={deliveryNote}
+                      onChange={handleChangeDeliveryNote}
+                      sx={{ width: "100%" }}
+                    ></TextField>
+                  </div>
+                </Box>
+                <Button
+                  variant="contained"
+                  size="large"
+                  disabled={phoneNumber.length == 0 || !isPhoneNumberValid}
+                  onClick={handleConfirmDialogOpen}
+                  sx={{ width: "100%" }}
+                >
+                  PLACE ORDER
+                </Button>
+              </Box>
+              <Box
+                className="order-information-section"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "32px",
+                  bgcolor: "primary.main",
+                  color: "white",
+                }}
               >
-                Order
-              </LoadingButton>
-            </DialogActions>
-          </Dialog>
-        </div>
+                <Typography variant="h5" fontWeight="600">
+                  Order Information
+                </Typography>
+                <div>
+                  <Typography variant="subtitle1"> You've to pay</Typography>
+                  <Typography variant="h2">
+                    {(
+                      cartTotalAmount +
+                      deliveryFee +
+                      serviceFee
+                    ).toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Typography>
+                </div>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography variant="subtitle1">Total amount:</Typography>
+                  <Typography variant="h5">
+                    {cartTotalAmount.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography variant="subtitle1">Delivery Fee:</Typography>
+                  <Typography variant="h5">
+                    {deliveryFee.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography variant="subtitle1"> Service Fee:</Typography>
+                  <Typography variant="h5">
+                    {serviceFee.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Dialog open={confirmDialogOpen} onClose={handleConfirmDialogClose}>
+              <DialogContent
+                sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              >
+                <Typography variant="h5" fontWeight="500">
+                  Confirm Order Information
+                </Typography>
+                <Typography variant="subtitle2" color="gray">
+                  Please make sure your contact information is correct
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <LoadingButton
+                  loading={isOrderCreating}
+                  loadingPosition="start"
+                  variant="contained"
+                  color="primary"
+                  onClick={handlePlacingOrder}
+                >
+                  Order
+                </LoadingButton>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleConfirmDialogClose}
+                >
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        </ThemeProvider>
       )}
     </>
   );
