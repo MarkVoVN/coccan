@@ -13,6 +13,7 @@ import "./style.scss";
 import React, { useState } from "react";
 import useStorage from "@/hooks/useStorage";
 import theme from "../theme";
+import { LoadingButton } from "@mui/lab";
 
 function LoginPage() {
   const router = useRouter();
@@ -105,11 +106,13 @@ function LoginPage() {
                   };
                   dispatch(loginUser({ value: userInfo }));
                   setItem("userInfo", JSON.stringify(userInfo));
+                  setIsLoginProcesssing(false);
                   router.push("/");
                 })
                 .catch((error) => {
                   // Handle error
                   console.error("Error:", error);
+                  setIsLoginProcesssing(false);
                 });
             }
           }
@@ -129,8 +132,6 @@ function LoginPage() {
     dispatch(loginUser({ value: userInfo }));
     router.push("/");
   }, []);
-
-  const displayName = useAppSelector((state) => state.user.value.displayName);
 
   return (
     <>
@@ -165,11 +166,16 @@ function LoginPage() {
                 </svg>
                 <div className="title">COCCAN</div>
               </div>
-              <Button className="button" variant="contained" onClick={login}>
+              <LoadingButton
+                loading={isLoginProcesssing}
+                className="button"
+                variant="contained"
+                onClick={login}
+              >
                 <Typography variant="h5" fontWeight="500">
                   Sign in with FPT mail
                 </Typography>
-              </Button>
+              </LoadingButton>
             </div>
           </div>
         </div>

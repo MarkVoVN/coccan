@@ -106,7 +106,6 @@ export default function Home() {
       };
       const queryParams = new URLSearchParams(params);
       const url = `https://coccan-api.somee.com/api/menudetails`;
-
       axios.get(url, { params: queryParams }).then((response) => {
         const categories: Record<string, any> = {};
 
