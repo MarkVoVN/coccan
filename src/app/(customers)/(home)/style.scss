@@ -7,9 +7,37 @@ $primary: #EA5857;
     margin-right: auto;
 }
 
-.selectors-container {
-    margin-bottom: 32px;
+.cta-container {
+    width: 100vw;
 
+    .cta {
+        width: 80vw;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .cta-subtitle {
+            padding: 2rem 0;
+        }
+
+        .cta-btn-container {
+
+            .cta-btn-order {
+                background-color: #EA5857;
+            }
+
+            .cta-btn-guide {
+                color: #EA5857;
+                border-color: #EA5857;
+            }
+        }
+    }
+
+
+}
+
+.selectors-container {
     .selector {
         margin-right: 1rem;
     }

@@ -170,7 +170,7 @@ function SessionSeletorSection() {
           <FormControl>
             <InputLabel>Location</InputLabel>
             <Select
-              className="selector"
+              className="session-selector"
               value={locationId}
               label="Location"
               onChange={handleLocationIdChange}
@@ -190,7 +190,7 @@ function SessionSeletorSection() {
           <FormControl>
             <InputLabel>Timeslot</InputLabel>
             <Select
-              className="selector"
+              className="session-selector"
               value={timeslotId}
               label="Timeslot"
               onChange={handleTimeslotIdChange}
