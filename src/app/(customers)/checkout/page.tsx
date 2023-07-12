@@ -364,7 +364,7 @@ function CheckoutPage() {
                   Order Information
                 </Typography>
                 <div>
-                  <Typography variant="subtitle1"> You've to pay</Typography>
+                  <Typography variant="subtitle1">You have to pay</Typography>
                   <Typography variant="h2">
                     {(
                       cartTotalAmount +
