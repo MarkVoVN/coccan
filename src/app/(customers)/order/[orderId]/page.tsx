@@ -15,11 +15,14 @@ import {
   TableHead,
   TableRow,
   TextField,
+  ThemeProvider,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./orderDetails.scss";
+import theme from "../../../theme";
 
 type Order = {
   id: string;
@@ -168,15 +171,6 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
 
   return (
     <>
-      <Breadcrumbs>
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
-        <Link underline="hover" color="inherit" href="/history">
-          History
-        </Link>
-        <Typography color="text.primary">Order details</Typography>
-      </Breadcrumbs>
       {isFetchLoading && !isError && <h2> Loading...</h2>}
 
       {isError && <h2>An error occured. {errorMessage}</h2>}
@@ -192,7 +186,7 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
         OrderDetailList &&
         OrderDetailList.length > 0 && (
           <>
-            <Box
+            {/* <Box
               className="content-container"
               sx={{
                 display: "flex",
@@ -254,7 +248,7 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
                     </Box>
                     <Box sx={{ width: "100%" }}>
                       <FormControl sx={{ width: "100%" }}>
-                        {/* <InputLabel>Pickup spot</InputLabel> */}
+                        { <InputLabel>Pickup spot</InputLabel>}
                         <TextField
                           label="Pickup spot"
                           value={Order?.pickUpSpotFullName}
@@ -341,72 +335,108 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
                   </Typography>
                 </Box>
               </Box>
-            </Box>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">
-                      <Typography variant="h6" fontWeight="500">
-                        Item
-                      </Typography>
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell align="center">
-                      <Typography variant="h6" fontWeight="500">
-                        Quantity
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography variant="h6" fontWeight="500">
-                        Amount
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {OrderDetailList?.map((od) => (
-                    <TableRow key={od.id}>
-                      <TableCell align="center">
-                        <img
-                          src={
-                            od.menuDetail ? od.menuDetail.product?.image : ""
-                          }
-                          alt={od.menuDetail ? od.menuDetail.product?.name : ""}
-                          width={128}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{od.menuDetail?.product?.name}</Typography>
-                        <Typography>
-                          {od.menuDetail?.price.toLocaleString("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          })}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">{od.quantity}</TableCell>
-                      <TableCell align="center">
-                        {(od.menuDetail
-                          ? od.menuDetail.price * od.quantity
-                          : "0"
-                        ).toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Button
-              variant="contained"
-              onClick={handleCancel}
-              disabled={!isCancellable}
-            >
-              {btnMsg}
-            </Button>
+            </Box> */}
+            <ThemeProvider theme={theme}>
+              <Box className="container">
+                <Breadcrumbs sx={{ marginBottom: "16px" }}>
+                  <Link underline="hover" color="inherit" href="/">
+                    Home
+                  </Link>
+                  <Link underline="hover" color="inherit" href="/history">
+                    History
+                  </Link>
+                  <Typography color="text.primary">Order details</Typography>
+                </Breadcrumbs>
+                <Box>
+                  <Typography variant="h3" fontWeight={500}>
+                    Order Details
+                  </Typography>
+                </Box>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant="h6" fontWeight="500">
+                            Item
+                          </Typography>
+                        </TableCell>
+                        <TableCell></TableCell>
+                        <TableCell align="center">
+                          <Typography variant="h6" fontWeight="500">
+                            Quantity
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="h6" fontWeight="500">
+                            Amount
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {OrderDetailList?.map((od) => (
+                        <TableRow key={od.id}>
+                          <TableCell>
+                            <img
+                              src={
+                                od.menuDetail
+                                  ? od.menuDetail.product?.image
+                                  : ""
+                              }
+                              alt={
+                                od.menuDetail ? od.menuDetail.product?.name : ""
+                              }
+                              width={128}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography>
+                              {od.menuDetail?.product?.name}
+                            </Typography>
+                            <Typography>
+                              {od.menuDetail?.price.toLocaleString("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              })}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">{od.quantity}</TableCell>
+                          <TableCell align="center">
+                            {(od.menuDetail
+                              ? od.menuDetail.price * od.quantity
+                              : "0"
+                            ).toLocaleString("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "flex-end",
+                    marginTop: "32px",
+                  }}
+                >
+                  <Tooltip title="Cancel order" arrow>
+                    <Button
+                      variant="contained"
+                      onClick={handleCancel}
+                      disabled={!isCancellable}
+                      size="large"
+                    >
+                      {btnMsg}
+                    </Button>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </ThemeProvider>
           </>
         )}
     </>
