@@ -67,11 +67,9 @@ function HistoryPage() {
   //const [orderList, setOrderList] = useState<Order[]>();
   const [orderHistory, setOrderHistory] = useState<Order[]>();
 
-
   const [isFetchLoading, setIsFetchLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
 
   useEffect(() => {
     if (!user.isAuth) return;
@@ -93,10 +91,12 @@ function HistoryPage() {
         return response;
       })
       .then((response) => {
-
-        setOrderHistory(response.data);
+        var list: Order[] = [];
+        response.data.map((item: any) => {
+          if (item.orderDetailCount != 0) list.push(item);
+        });
+        setOrderHistory(list);
         setIsFetchLoading(false);
-
       })
       .catch((error) => {
         console.log(error);
@@ -104,7 +104,6 @@ function HistoryPage() {
         setErrorMessage(error.message);
         setIsFetchLoading(false);
       });
-
   }, [user.isAuth]);
 
   const displayStatus = (status: number) => {
@@ -122,14 +121,11 @@ function HistoryPage() {
     }
   };
 
-
   return (
     <Box className="order-history-wrapper">
       <Box className="order-history-container">
         <Box className="title">
           <Typography variant="h2">Order History</Typography>
-
-
         </Box>
         {isFetchLoading && !isError && <h2> Loading...</h2>}
 
@@ -138,7 +134,6 @@ function HistoryPage() {
         {!isFetchLoading &&
           !isError &&
           (!orderHistory || orderHistory.length == 0) && (
-
             <h2>Your order history is empty</h2>
           )}
 
@@ -189,7 +184,6 @@ function HistoryPage() {
               </Table>
             </TableContainer>
           )}
-
       </Box>
     </Box>
   );
