@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -210,21 +211,21 @@ function SessionSeletorSection() {
         open={SessionChangeConfirmationDialogOpen}
         onClose={handleSessionChangeConfirmationDialogClose}
       >
-        <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
-        >
+        <DialogTitle>
           <Typography variant="h5" fontWeight="500">
-            You are changing your timeslot or location
+            You are changing your time slot or location
           </Typography>
-          <Typography variant="subtitle2" color="gray">
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="h6" color="gray">
             Changing your timeslot or location will affect the available dishes
             .Therefore, your cart will be reset. Continue?
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button
-            variant="contained"
-            color="secondary"
+            variant="outlined"
+            color="primary"
             onClick={handleSessionChangeConfirmationDialogClose}
           >
             Cancel

@@ -25,7 +25,6 @@ import axios from "axios";
 import "./checkoutPage.scss";
 import theme from "../../theme";
 
-
 function CheckoutPage() {
   const router = useRouter();
   const dispatch = useDispatch();
