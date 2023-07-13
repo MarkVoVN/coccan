@@ -23,7 +23,8 @@ import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
 import axios from "axios";
 import "./checkoutPage.scss";
-import theme from "../theme";
+import theme from "../../theme";
+
 
 function CheckoutPage() {
   const router = useRouter();
