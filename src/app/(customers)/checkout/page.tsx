@@ -38,9 +38,7 @@ function CheckoutPage() {
 
   const orderInfo = useAppSelector((state) => state.order);
   const cartInfo = useAppSelector((state) => state.cart);
-  // const location = orderInfo.locationList.find(
-  //   (location) => location.id == orderInfo.value.locationId
-  // );
+
   const [location, setLocation] = useState<Location>();
   const timeslot = orderInfo.timeslotList.find(
     (timeslot) => timeslot.id == orderInfo.value.timeslotId

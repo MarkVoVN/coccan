@@ -198,6 +198,12 @@ function Header() {
                     value={search}
                     type="search"
                     onChange={handleSearchChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        searchProduct();
+                      }
+                    }}
                     fullWidth={true}
                     InputProps={{
                       endAdornment: (
