@@ -120,7 +120,7 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
 
     const params = {
       filter: JSON.stringify({
-        orderId: Order.id,
+        orderid: Order.id,
       }),
     };
     const queryParams = new URLSearchParams(params);
