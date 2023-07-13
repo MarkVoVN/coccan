@@ -1,9 +1,17 @@
 "use client";
 
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import { Carousel } from "@trendyol-js/react-carousel";
 import "../style/CategorySelectorSection.scss";
+import theme from "../app/theme";
 
 function CategorySeletorSection({
   storeList,
@@ -17,45 +25,47 @@ function CategorySeletorSection({
   }) => void;
 }) {
   return (
-    <Carousel
-      show={3.5}
-      slide={1}
-      infinite={true}
-      swiping={true}
-      leftArrow={<NavigateBefore></NavigateBefore>}
-      rightArrow={<NavigateNext></NavigateNext>}
-      className="carousel-container"
-      dynamic
-    >
-      {storeList.map((store) => (
-        <Box
-          sx={{
-            width: "240px",
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-          }}
-          key={store.id}
-        >
-          <IconButton
-            onClick={(e) => {
-              handleSelectStore(store);
+    <ThemeProvider theme={theme}>
+      <Carousel
+        show={3.5}
+        slide={1}
+        infinite={true}
+        swiping={true}
+        leftArrow={<NavigateBefore></NavigateBefore>}
+        rightArrow={<NavigateNext></NavigateNext>}
+        className="carousel-container"
+        dynamic
+      >
+        {storeList.map((store) => (
+          <Box
+            sx={{
+              width: "240px",
+              display: "flex",
+              alignItems: "center",
             }}
+            key={store.id}
           >
-            <Avatar
-              src={store.image}
-              sx={{
-                width: "104px",
-                height: "104px",
+            <Button
+              variant="outlined"
+              onClick={(e) => {
+                handleSelectStore(store);
               }}
-            />
-          </IconButton>
-          <Typography variant="body1" className="store-title" align="left">
-            {store.name}
-          </Typography>
-        </Box>
-      ))}
-    </Carousel>
+            >
+              <img
+                src={store.image}
+                alt={"Store image"}
+                className="store-image"
+                width={100}
+                height={100}
+              />
+              <Typography variant="body1" className="store-title" align="left">
+                {store.name}
+              </Typography>
+            </Button>
+          </Box>
+        ))}
+      </Carousel>
+    </ThemeProvider>
   );
 }
 

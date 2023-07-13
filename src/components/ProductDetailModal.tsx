@@ -1,8 +1,17 @@
 import React from "react";
-import { Modal, Typography, Button, IconButton } from "@mui/material";
+import {
+  Modal,
+  Typography,
+  Button,
+  IconButton,
+  ThemeProvider,
+  Box,
+  Dialog,
+} from "@mui/material";
 import "@/style/ProductDetailModal.scss";
 import { ArrowBackIos } from "@mui/icons-material";
 import AddToCartBtn from "@/components/AddToCartBtn";
+import theme from "../app/theme";
 
 function ProductDetailModal({
   open,
@@ -21,50 +30,99 @@ function ProductDetailModal({
   };
 }) {
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      className="modal-wrapper flex flex-row justify-center items-center"
-    >
-      <div className="modal-container">
-        <div className="modal-title px-[2rem] flex flex-row">
-          <IconButton onClick={handleClose} size="large" className="">
-            <ArrowBackIos></ArrowBackIos>
-          </IconButton>
-
-          <div className="w-full flex flex-row justify-center py-[0.3rem] pr-12">
-            <Typography variant="h4" className="font-thin">
-              Product detail
-            </Typography>
-          </div>
-        </div>
-        <div className="modal-body flex flex-row ">
-          <div className="product-img-container w-[20vw] h-fit m-[2rem] p-[1rem]">
-            <img src={product.image} alt={"Image of " + product.name}></img>
-          </div>
-          <div className="product-info flex flex-col  w-[30vw] p-[2rem]">
-            <Typography variant="h3" className="my-[1rem]">
-              {product.name}
-            </Typography>
-            {/* <Typography variant="h6" className="mb-[2rem] font-thin">
+    <ThemeProvider theme={theme}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        maxWidth={false}
+      >
+        <Box
+          className="modal-container"
+          sx={{
+            bgcolor: "background.default",
+          }}
+        >
+          <Box
+            className="modal-title"
+            sx={{
+              bgcolor: "secondary.main",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              color: "#fff",
+              padding: "8px",
+              gap: "216px",
+            }}
+          >
+            <IconButton
+              onClick={handleClose}
+              size="large"
+              sx={{ position: "absolute" }}
+            >
+              <ArrowBackIos sx={{ color: "#fff" }}></ArrowBackIos>
+            </IconButton>
+            <Box
+              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+            >
+              <Typography variant="h4">Product detail</Typography>
+            </Box>
+          </Box>
+          <Box
+            className="modal-body"
+            sx={{
+              display: "flex",
+              padding: "64px",
+              alignItems: "center",
+              gap: "32px",
+            }}
+          >
+            <Box
+              className="product-img-container"
+              sx={{
+                borderRadius: "16px",
+                overflow: "hidden",
+                width: "fit-content",
+              }}
+            >
+              <img
+                src={product.image}
+                alt={"Image of " + product.name}
+                width={256}
+                height={256}
+              ></img>
+            </Box>
+            <Box
+              className="product-info"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                maxWidth: "400px",
+              }}
+            >
+              <Typography variant="h3" fontWeight="600">
+                {product.name}
+              </Typography>
+              {/* <Typography variant="h6" className="mb-[2rem] font-thin">
               {product.description}
             </Typography> */}
-            <Typography variant="h5" className="my-[1rem]">
-              {"Store: " + product.storeName}
-            </Typography>
-            <Typography variant="h4">
-              {product.price.toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              })}
-            </Typography>
-            <AddToCartBtn type="text" product={product}></AddToCartBtn>
-          </div>
-        </div>
-      </div>
-    </Modal>
+              <Typography variant="h6">
+                {"Store: " + product.storeName}
+              </Typography>
+              <Typography variant="h5">
+                {product.price.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </Typography>
+              <AddToCartBtn type="text" product={product}></AddToCartBtn>
+            </Box>
+          </Box>
+        </Box>
+      </Dialog>
+    </ThemeProvider>
   );
 }
 

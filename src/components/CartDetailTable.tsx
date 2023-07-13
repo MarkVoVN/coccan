@@ -1,10 +1,16 @@
 "use client";
 
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, Warning } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Table,
   TableBody,
@@ -49,9 +55,18 @@ function CartDetailTable() {
   const handleRemoveItem = (id: string) => {
     dispatch(removeFromCart(id));
   };
+  const [warningDialogOpen, setWarningDialogOpen] = React.useState(false);
+
+  const handleCloseWarningDialog = () => {
+    setWarningDialogOpen(false);
+  };
 
   const handleCheckout = () => {
-    router.push("/checkout");
+    if (userInfo.value.isAuth) {
+      router.push("/checkout");
+    } else {
+      setWarningDialogOpen(true);
+    }
   };
 
   const [cartTotalPrice, setCartTotalPrice] = useState(0);
@@ -66,102 +81,120 @@ function CartDetailTable() {
   }, [cart]);
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" fontWeight="500">
-                Item
-              </Typography>
-            </TableCell>
-            <TableCell></TableCell>
-            <TableCell align="center">
-              <Typography variant="h6" fontWeight="500">
-                Quantity
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography variant="h6" fontWeight="500">
-                Store
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography variant="h6" fontWeight="500">
-                Amount
-              </Typography>
-            </TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {cart.value.map((item) => (
-            <TableRow key={item.menudetailId}>
-              <TableCell align="center">
-                <img src={item.image} alt={item.name} width={128} />
-              </TableCell>
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
               <TableCell>
-                <Typography>{item.name}</Typography>
-                <Typography>
-                  {item.price.toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  })}
+                <Typography variant="h6" fontWeight="500">
+                  Item
+                </Typography>
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center">
+                <Typography variant="h6" fontWeight="500">
+                  Quantity
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  onClick={() => handleDecrementItem(item.menudetailId)}
-                >
-                  <Remove></Remove>
-                </IconButton>
-                {item.quantity}
-
-                <IconButton
-                  onClick={() => handleIncrementItem(item.menudetailId)}
-                >
-                  <Add></Add>
-                </IconButton>
+                <Typography variant="h6" fontWeight="500">
+                  Store
+                </Typography>
               </TableCell>
-              <TableCell align="center">{item.storeName}</TableCell>
               <TableCell align="center">
-                {(item.price * item.quantity).toLocaleString("vi-VN", {
+                <Typography variant="h6" fontWeight="500">
+                  Amount
+                </Typography>
+              </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cart.value.map((item) => (
+              <TableRow key={item.menudetailId}>
+                <TableCell align="center">
+                  <img src={item.image} alt={item.name} width={128} />
+                </TableCell>
+                <TableCell>
+                  <Typography>{item.name}</Typography>
+                  <Typography>
+                    {item.price.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    onClick={() => handleDecrementItem(item.menudetailId)}
+                  >
+                    <Remove></Remove>
+                  </IconButton>
+                  {item.quantity}
+
+                  <IconButton
+                    onClick={() => handleIncrementItem(item.menudetailId)}
+                  >
+                    <Add></Add>
+                  </IconButton>
+                </TableCell>
+                <TableCell align="center">{item.storeName}</TableCell>
+                <TableCell align="center">
+                  {(item.price * item.quantity).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </TableCell>
+                <TableCell align="center">
+                  <Button onClick={() => handleRemoveItem(item.menudetailId)}>
+                    Remove
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center">Total price:</TableCell>
+              <TableCell align="center">
+                {cartTotalPrice.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 })}
               </TableCell>
               <TableCell align="center">
-                <Button onClick={() => handleRemoveItem(item.menudetailId)}>
-                  Remove
+                <Button
+                  variant="contained"
+                  onClick={handleCheckout}
+                  // disabled={!userInfo.value.isAuth}
+                >
+                  Checkout
                 </Button>
               </TableCell>
             </TableRow>
-          ))}
-
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-            <TableCell align="center"></TableCell>
-            <TableCell align="center">Total price:</TableCell>
-            <TableCell align="center">
-              {cartTotalPrice.toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              })}
-            </TableCell>
-            <TableCell align="center">
-              <Button
-                variant="contained"
-                onClick={handleCheckout}
-                disabled={!userInfo.value.isAuth}
-              >
-                Checkout
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog open={warningDialogOpen} onClose={handleCloseWarningDialog}>
+        <DialogTitle>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <Warning sx={{ color: "primary.main" }}></Warning>
+            <Typography variant="h5">Warning</Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="h4">You must login to checkout.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={handleCloseWarningDialog}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
