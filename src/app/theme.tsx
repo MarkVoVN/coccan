@@ -8,6 +8,9 @@ const theme = createTheme({
     secondary: {
       main: "#FECC64",
     },
+    error: {
+      main: "#D32F2F",
+    },
   },
   typography: {
     fontFamily: "Montserrat",

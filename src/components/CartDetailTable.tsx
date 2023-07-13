@@ -181,7 +181,7 @@ function CartDetailTable() {
       <Dialog open={warningDialogOpen} onClose={handleCloseWarningDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <Warning sx={{ color: "primary.main" }}></Warning>
+            <Warning sx={{ color: "error.main" }}></Warning>
             <Typography variant="h5">Warning</Typography>
           </Box>
         </DialogTitle>
