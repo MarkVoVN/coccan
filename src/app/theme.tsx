@@ -13,7 +13,6 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Montserrat",
     h1: {
       fontSize: "96px",
     },
