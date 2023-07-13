@@ -1,8 +1,11 @@
 "use client";
 
+import { Chip } from "@mui/material";
 import {
   Datagrid,
   DateField,
+  EditButton,
+  FunctionField,
   List,
   NumberField,
   ReferenceField,
@@ -11,15 +14,54 @@ import {
 
 export const OrderList = () => (
   <List>
-    <Datagrid rowClick="edit">
-      <TextField source="id" />
+
+    <Datagrid rowClick="show">
+
+      {/* <TextField source="id" /> */}
       <DateField source="orderTime" />
-      <NumberField source="serviceFee" />
+      {/* <NumberField source="serviceFee" /> */}
       <NumberField source="totalPrice" />
       <ReferenceField source="customerId" reference="customers" />
-      <ReferenceField source="sessionId" reference="sessions" />
-      <ReferenceField source="pickUpSpotId" reference="pickUpSpots" />
-      <NumberField source="status" />
+
+      <ReferenceField
+        source="sessionId"
+        reference="sessions"
+        label="Session's Timeslot"
+      >
+        <ReferenceField source="timeSlotId" reference="timeslots">
+          <TextField source="startTime"></TextField>-
+          <TextField source="endTime"></TextField>
+        </ReferenceField>
+      </ReferenceField>
+      <ReferenceField source="sessionId" reference="sessions" label="Location">
+        <ReferenceField source="locationId" reference="locations">
+          <TextField source="name"></TextField>
+        </ReferenceField>
+      </ReferenceField>
+      <ReferenceField source="pickUpSpotId" reference="pickUpSpots">
+        <TextField source="fullname"></TextField>
+      </ReferenceField>
+      <FunctionField
+        label="Status"
+        render={(record: any) => {
+          switch (record.orderStatus) {
+            case 0:
+              return <Chip color="primary" label={"Pending"}></Chip>;
+            case 1:
+              return <Chip color="secondary" label={"Delivered"}></Chip>;
+            // case 2:
+            //   return <Chip color="primary" label={"Shipping"}></Chip>;
+            case 2:
+              return <Chip color="success" label={"Completed"}></Chip>;
+            case 3:
+              return <Chip color="warning" label={"Canceled"}></Chip>;
+            default:
+              return <Chip color="error" label={"Not documented"}></Chip>;
+          }
+        }}
+      ></FunctionField>
+      <EditButton></EditButton>
+
     </Datagrid>
   </List>
 );

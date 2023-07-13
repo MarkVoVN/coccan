@@ -4,11 +4,15 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#ea5857",
-      light: "#ee7979",
+    },
+    secondary: {
+      main: "#FECC64",
+    },
+    error: {
+      main: "#D32F2F",
     },
   },
   typography: {
-    fontFamily: "Montserrat",
     h1: {
       fontSize: "96px",
     },

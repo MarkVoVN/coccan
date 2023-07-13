@@ -17,7 +17,7 @@ function PreferedLocationSelector() {
     dispatch(updatePreferedLocation(e.target.value));
   };
   return (
-    <div className="selectors-container flex flex-row w-[100%]">
+    <div className="selectors-container">
       <div>
         <Select
           className="selector"

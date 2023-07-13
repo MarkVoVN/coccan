@@ -1,5 +1,8 @@
 .container {
+    margin-top: 64px;
     max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .search-result-name {
@@ -22,4 +25,5 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
 }

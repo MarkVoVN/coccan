@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 
 function StoreDetailSection({
@@ -7,28 +7,37 @@ function StoreDetailSection({
   store: { id: string; name: string; image: string; address: string };
 }) {
   return (
-    <div className="store-detail-section-wrapper flex flex-row justify-center">
-      <div className="store-detail-section-container w-[80%] flex flex-row justify-between">
-        <div className="store-info-container p-[1rem]">
-          <div className="store-title">
-            <Typography variant="h1">{store.name}</Typography>
-          </div>
-          <div className="store-addresses flex flex-row">
-            <Typography variant="h6" className="mr-[1rem]">
-              Address:
+    <div className="store-detail-section-wrapper">
+      <Box
+        className="store-detail-section-container"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "32px 0px",
+        }}
+      >
+        <Box className="store-info-container">
+          <Box className="store-title" sx={{ marginBottom: "16px" }}>
+            <Typography variant="h3" fontWeight={600}>
+              {store.name}
             </Typography>
-            <Typography variant="h6">{store.address}</Typography>
+          </Box>
+          <div className="store-addresses">
+            <Typography variant="h6">Address: {store.address}</Typography>
           </div>
-          <div className="store-contact flex flex-row">
-            <Typography variant="h6" className="mr-[1rem]">
-              Contact:
-            </Typography>{" "}
+          <div className="store-contact">
+            <Typography variant="h6">Contact:</Typography>
           </div>
-        </div>
-        <div className="store-logo-container p-[1rem]">
-          <img src={store.image} alt={store.name + " store logo"} />
-        </div>
-      </div>
+        </Box>
+        <Box className="store-logo-container">
+          <img
+            width={216}
+            height={216}
+            src={store.image}
+            alt={store.name + " store logo"}
+          />
+        </Box>
+      </Box>
     </div>
   );
 }
