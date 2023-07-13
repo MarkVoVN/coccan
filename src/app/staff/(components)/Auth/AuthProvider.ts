@@ -7,12 +7,17 @@ const authProvider : AuthProvider = {
         return Promise.resolve();
       }
 
-      if (username == 'shipper' && password == 'shipper') {
-        localStorage.setItem('role', username);
-        return Promise.resolve();
-      }
+      // if (username == 'shipper' && password == 'shipper') {
+      //   localStorage.setItem('role', username);
+      //   return Promise.resolve();
+      // }
 
-      if (username == 'hubmanager' && password == 'hubmanager') {
+      // if (username == 'hubmanager' && password == 'hubmanager') {
+      //   localStorage.setItem('role', username);
+      //   return Promise.resolve();
+      // }
+
+      if (username == 'staff' && password == 'staff') {
         localStorage.setItem('role', username);
         return Promise.resolve();
       }
@@ -34,11 +39,13 @@ const authProvider : AuthProvider = {
       // other error code (404, 500, etc): no need to log out
       return Promise.resolve();
   },
-  getIdentity: () =>
-      Promise.resolve({
+  getIdentity: () => {
+      const fullName = localStorage.getItem('role')
+      return Promise.resolve({
           id: 'user',
-          fullName: 'John Doe',
-      }),
+          fullName: fullName? fullName : "ERROR",
+      })
+    },
   getPermissions: () => {
     const role = localStorage.getItem('role');
     return role ? Promise.resolve(role) : Promise.reject();

@@ -37,6 +37,10 @@ import { OrderDetails } from "../(components)/Order/OrderDetailsList";
 import { PickupspotList } from "../(components)/PickuUpSpot/pickupspotList";
 import { PickupspotEdit } from "../(components)/PickuUpSpot/pickupspotEdit";
 import ViewPendingOrdersByStore from "../(pages)/viewPendingOrdersByStore";
+import { StaffList } from "../(components)/Staff/StaffList";
+import { StaffEdit } from "../(components)/Staff/StaffEdit";
+import { StaffCreate } from "../(components)/Staff/StaffCreate";
+import { StaffShow } from "../(components)/Staff/StaffShow";
 
 const App = () => {
   return (
@@ -108,13 +112,14 @@ const App = () => {
                 edit={CustomerEdit}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
-              {/* <Resource
+              <Resource
                 name="staffs"
-                list={ListGuesser}
-                edit={EditGuesser}
-                create={EditGuesser}
+                list={StaffList}
+                edit={StaffEdit}
+                show={StaffShow}
+                create={StaffCreate}
                 recordRepresentation={(record) => record.fullname}
-              ></Resource> */}
+              ></Resource>
               <Resource
                 name="pickupspots"
                 list={PickupspotList}
@@ -124,26 +129,34 @@ const App = () => {
               {/* Miscellanious */}
             </>
           ) : null}
-          {permissions == "shipper" ? (
+          {permissions == "staff" ? (
             <>
-              <Resource name="stores" list={StoreList}></Resource>
-              <Resource name="categories" list={CategoryList}></Resource>
+              <Resource
+                name="orders"
+                list={OrderList}
+                show={OrderShow}
+                edit={OrderEdit}
+                create={OrderCreate}
+                icon={ReceiptLongOutlined}
+                recordRepresentation={(record) => record.id}
+              >
+                <Route path=":id/details" element={<OrderDetails />} />
+                <Route path="byStore" element={<ViewPendingOrdersByStore />} />
+              </Resource>
+              <Resource
+                name="orderdetails"
+                list={OrderdetailList}
+                edit={EditGuesser}
+                show={ShowGuesser}
+                create={EditGuesser}
+                recordRepresentation={(record) => record.menuDetailId}
+              ></Resource>
+              {/* Accounts */}
               <Resource
                 name="customers"
                 list={CustomerList}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
-              <Resource name="menudetails" list={MenudetailList}></Resource>
-              <Resource
-                name="menus"
-                list={MenuList}
-                recordRepresentation={(record) => record.name}
-              ></Resource>
-              <Resource name="orderdetails" list={OrderdetailList}></Resource>
-              <Resource name="orders" list={OrderList}></Resource>
-              <Resource name="products" list={ProductList}></Resource>
-              <Resource name="locations" list={LocationList}></Resource>
-              <Resource name="timeslots" list={TimeslotList}></Resource>
             </>
           ) : null}
           {/* <CustomRoutes>

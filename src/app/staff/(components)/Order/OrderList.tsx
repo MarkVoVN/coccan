@@ -4,6 +4,7 @@ import { Chip } from "@mui/material";
 import {
   Datagrid,
   DateField,
+  EditButton,
   FunctionField,
   List,
   NumberField,
@@ -40,22 +41,23 @@ export const OrderList = () => (
       <FunctionField
         label="Status"
         render={(record: any) => {
-          switch (record.status) {
+          switch (record.orderStatus) {
             case 0:
-              return <Chip color="error" label={"Cancelled"}></Chip>;
+              return <Chip color="primary" label={"Pending"}></Chip>;
             case 1:
-              return <Chip color="info" label={"Pending"}></Chip>;
+              return <Chip color="secondary" label={"Delivered"}></Chip>;
             // case 2:
             //   return <Chip color="primary" label={"Shipping"}></Chip>;
             case 2:
-              return <Chip color="secondary" label={"Delivered"}></Chip>;
-            case 3:
               return <Chip color="success" label={"Completed"}></Chip>;
+            case 3:
+              return <Chip color="warning" label={"Canceled"}></Chip>;
             default:
-              return <Chip color="warning" label={"Not documented"}></Chip>;
+              return <Chip color="error" label={"Not documented"}></Chip>;
           }
         }}
       ></FunctionField>
+      <EditButton></EditButton>
     </Datagrid>
   </List>
 );
