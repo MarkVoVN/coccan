@@ -42,7 +42,9 @@ import { StaffList } from "../(components)/Staff/StaffList";
 import { StaffEdit } from "../(components)/Staff/StaffEdit";
 import { StaffCreate } from "../(components)/Staff/StaffCreate";
 import { StaffShow } from "../(components)/Staff/StaffShow";
-
+import { ProductShow } from "../(components)/Product/ProductShow";
+import { ProductEdit } from "../(components)/Product/ProductEdit";
+import { ProductCreate } from "../(components)/Product/ProductCreate";
 
 const App = () => {
   return (
@@ -60,7 +62,6 @@ const App = () => {
               <Resource
                 name="orders"
                 list={OrderList}
-
                 show={OrderShow}
                 edit={OrderEdit}
                 create={OrderCreate}
@@ -76,7 +77,6 @@ const App = () => {
                 edit={EditGuesser}
                 show={ShowGuesser}
                 create={EditGuesser}
-
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
               {/* Session configuration */}
@@ -108,11 +108,21 @@ const App = () => {
                 list={StoreList}
                 edit={StoreEdit}
                 create={StoreCreate}
+                recordRepresentation={(record) => record.name}
               ></Resource>
-              <Resource name="categories" list={CategoryList}></Resource>
-              <Resource name="products" list={ProductList}></Resource>
+              <Resource
+                name="categories"
+                list={CategoryList}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="products"
+                list={ProductList}
+                show={ProductShow}
+                edit={ProductEdit}
+                create={ProductCreate}
+              ></Resource>
               {/* Accounts */}
-
               <Resource
                 name="customers"
                 list={CustomerList}
@@ -127,7 +137,6 @@ const App = () => {
                 create={StaffCreate}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
-
               <Resource
                 name="pickupspots"
                 list={PickupspotList}
@@ -135,7 +144,6 @@ const App = () => {
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
               {/* Miscellanious */}
-
             </>
           ) : null}
           {permissions == "staff" ? (
