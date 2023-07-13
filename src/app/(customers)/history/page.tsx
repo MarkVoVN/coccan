@@ -16,6 +16,7 @@ import {
   Button,
 } from "@mui/material";
 import "./orderHistory.scss";
+
 import { useRouter } from "next/navigation";
 
 type Order = {
@@ -26,6 +27,7 @@ type Order = {
   customerId: string;
   sessionId: string;
   pickUpSpotId: string;
+
   pickUpSpotFullName: string;
   locationID: string;
   locationName: string;
@@ -38,6 +40,7 @@ type Order = {
 
 function HistoryPage() {
   const router = useRouter();
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -60,15 +63,19 @@ function HistoryPage() {
   };
 
   const user = useAppSelector((state) => state.user.value);
+
   //const [orderList, setOrderList] = useState<Order[]>();
   const [orderHistory, setOrderHistory] = useState<Order[]>();
+
 
   const [isFetchLoading, setIsFetchLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+
   useEffect(() => {
     if (!user.isAuth) return;
+
     const params = {
       filter: JSON.stringify({
         customerid: user.customerId,
@@ -86,8 +93,10 @@ function HistoryPage() {
         return response;
       })
       .then((response) => {
+
         setOrderHistory(response.data);
         setIsFetchLoading(false);
+
       })
       .catch((error) => {
         console.log(error);
@@ -95,6 +104,7 @@ function HistoryPage() {
         setErrorMessage(error.message);
         setIsFetchLoading(false);
       });
+
   }, [user.isAuth]);
 
   const displayStatus = (status: number) => {
@@ -112,11 +122,14 @@ function HistoryPage() {
     }
   };
 
+
   return (
     <Box className="order-history-wrapper">
       <Box className="order-history-container">
         <Box className="title">
           <Typography variant="h2">Order History</Typography>
+
+
         </Box>
         {isFetchLoading && !isError && <h2> Loading...</h2>}
 
@@ -125,6 +138,7 @@ function HistoryPage() {
         {!isFetchLoading &&
           !isError &&
           (!orderHistory || orderHistory.length == 0) && (
+
             <h2>Your order history is empty</h2>
           )}
 
@@ -175,6 +189,7 @@ function HistoryPage() {
               </Table>
             </TableContainer>
           )}
+
       </Box>
     </Box>
   );

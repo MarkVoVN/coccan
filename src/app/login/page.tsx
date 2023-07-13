@@ -137,7 +137,7 @@ function LoginPage() {
     <>
       <ThemeProvider theme={theme}>
         <div className="background">
-          <div className="container">
+          <div className="login-container">
             <div className="content">
               <div className="logo">
                 <svg

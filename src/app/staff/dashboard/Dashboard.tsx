@@ -30,6 +30,7 @@ import { Route } from "react-router-dom";
 import { MyLayout } from "./dashboardLayout";
 import { ReceiptLongOutlined } from "@mui/icons-material";
 import { CustomerEdit } from "../(components)/Customer/CustomerEdit";
+
 import { OrderShow } from "../(components)/Order/OrderShow";
 import { OrderEdit } from "../(components)/Order/OrderEdit";
 import { OrderCreate } from "../(components)/Order/OrderCreate";
@@ -41,6 +42,7 @@ import { StaffList } from "../(components)/Staff/StaffList";
 import { StaffEdit } from "../(components)/Staff/StaffEdit";
 import { StaffCreate } from "../(components)/Staff/StaffCreate";
 import { StaffShow } from "../(components)/Staff/StaffShow";
+
 
 const App = () => {
   return (
@@ -58,6 +60,7 @@ const App = () => {
               <Resource
                 name="orders"
                 list={OrderList}
+
                 show={OrderShow}
                 edit={OrderEdit}
                 create={OrderCreate}
@@ -73,10 +76,12 @@ const App = () => {
                 edit={EditGuesser}
                 show={ShowGuesser}
                 create={EditGuesser}
+
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
               {/* Session configuration */}
               <Resource name="sessions" list={SessionList}></Resource>
+
               <Resource
                 name="locations"
                 list={LocationList}
@@ -89,6 +94,7 @@ const App = () => {
                   return `${record.startTime}-${record.endTime}`;
                 }}
               ></Resource>
+
               {/* Menu */}
               <Resource
                 name="menus"
@@ -106,6 +112,7 @@ const App = () => {
               <Resource name="categories" list={CategoryList}></Resource>
               <Resource name="products" list={ProductList}></Resource>
               {/* Accounts */}
+
               <Resource
                 name="customers"
                 list={CustomerList}
@@ -120,6 +127,7 @@ const App = () => {
                 create={StaffCreate}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
+
               <Resource
                 name="pickupspots"
                 list={PickupspotList}
@@ -127,6 +135,7 @@ const App = () => {
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
               {/* Miscellanious */}
+
             </>
           ) : null}
           {permissions == "staff" ? (

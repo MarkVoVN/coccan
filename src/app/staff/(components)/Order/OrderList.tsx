@@ -14,12 +14,15 @@ import {
 
 export const OrderList = () => (
   <List>
+
     <Datagrid rowClick="show">
+
       {/* <TextField source="id" /> */}
       <DateField source="orderTime" />
       {/* <NumberField source="serviceFee" /> */}
       <NumberField source="totalPrice" />
       <ReferenceField source="customerId" reference="customers" />
+
       <ReferenceField
         source="sessionId"
         reference="sessions"
@@ -58,6 +61,7 @@ export const OrderList = () => (
         }}
       ></FunctionField>
       <EditButton></EditButton>
+
     </Datagrid>
   </List>
 );
