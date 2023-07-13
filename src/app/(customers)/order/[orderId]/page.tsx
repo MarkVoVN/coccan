@@ -127,7 +127,7 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
     const url = `https://coccan-api.somee.com/api/orderdetails`;
 
     axios
-      .get(url)
+      .get(url, { params: queryParams })
       .then((response) => {
         if (response.status !== 200) {
           throw new Error("Request error: " + response.status);

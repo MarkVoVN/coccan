@@ -93,6 +93,11 @@ function HistoryPage() {
       })
       .then((response) => {
         setOrderHistory(response.data);
+        var list: Order[] = [];
+        response.data.map((item: any) => {
+          if (item.orderDetailCount != 0) list.push(item);
+        });
+        setOrderHistory(list);
         setIsFetchLoading(false);
       })
       .catch((error) => {
