@@ -2,13 +2,15 @@
 
 import React from "react";
 import StoreDetailSection from "@/components/StoreDetailSection";
-import { Button } from "@mui/material";
+import { Box, Button, ThemeProvider } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 import ProductByCategorySection from "@/components/ProductByCategorySection";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import theme from "@/app/theme";
+import "./store.scss";
 
 function StoreDetailPage({ params }: { params: { storeId: string } }) {
   const router = useRouter();
@@ -178,41 +180,41 @@ function StoreDetailPage({ params }: { params: { storeId: string } }) {
 
   return (
     <>
-      {(isFetchLoading || isStoreLoading) && !isError && <h2>Loading...</h2>}
+      <ThemeProvider theme={theme}>
+        {(isFetchLoading || isStoreLoading) && !isError && <h2>Loading...</h2>}
 
-      {isError && <h2>An error occurred while loading. Trying again...</h2>}
+        {isError && <h2>An error occurred while loading. Trying again...</h2>}
 
-      {!isFetchLoading && !isStoreLoading && !isError && (
-        <>
-          <div className="back-btn-section-wrapper flex flex-row justify-center">
-            <div className="back-btn-section-container w-[80%] my-[2ren]">
+        {!isFetchLoading && !isStoreLoading && !isError && (
+          <>
+            <Box className="container">
               <Button
                 variant="outlined"
                 size="large"
-                onClick={() => router.back()}
+                onClick={() => router.push("/")}
                 startIcon={<ArrowBackIos></ArrowBackIos>}
               >
                 Back
               </Button>
-            </div>
-          </div>
-          <StoreDetailSection store={StoreInfo}></StoreDetailSection>
-          {ProductListByCategoryFromSelectedStoreId.map((category) => (
-            <ProductByCategorySection
-              key={category.id}
-              category={category}
-              viewMore={false}
-              handleViewProductDetail={handleProductModalOpen}
-              store={undefined}
-            ></ProductByCategorySection>
-          ))}
-          <ProductDetailModal
-            open={productModalOpen}
-            handleClose={handleProductModalClose}
-            product={productDetail}
-          ></ProductDetailModal>
-        </>
-      )}
+              <StoreDetailSection store={StoreInfo}></StoreDetailSection>
+              {ProductListByCategoryFromSelectedStoreId.map((category) => (
+                <ProductByCategorySection
+                  key={category.id}
+                  category={category}
+                  viewMore={false}
+                  handleViewProductDetail={handleProductModalOpen}
+                  store={undefined}
+                ></ProductByCategorySection>
+              ))}
+              <ProductDetailModal
+                open={productModalOpen}
+                handleClose={handleProductModalClose}
+                product={productDetail}
+              ></ProductDetailModal>
+            </Box>
+          </>
+        )}
+      </ThemeProvider>
     </>
   );
 }

@@ -23,7 +23,7 @@ import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
 import axios from "axios";
 import "./checkoutPage.scss";
-import theme from "../theme";
+import theme from "../../theme";
 
 function CheckoutPage() {
   const router = useRouter();
@@ -364,7 +364,7 @@ function CheckoutPage() {
                   Order Information
                 </Typography>
                 <div>
-                  <Typography variant="subtitle1"> You've to pay</Typography>
+                  <Typography variant="subtitle1">You have to pay</Typography>
                   <Typography variant="h2">
                     {(
                       cartTotalAmount +

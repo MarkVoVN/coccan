@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddToCartBtn from "./AddToCartBtn";
 import "../style/SearchResultSection.scss";
 import { useRouter } from "next/navigation";
@@ -42,19 +42,22 @@ function SearchResultSection({
                 src={store.image}
                 className="search-result-logo"
                 alt={store.name + " logo"}
+                width={360}
+                height={360}
               />
             </div>
             <div className="search-result-info">
               <div className="search-result-name">
-                <Typography
-                  variant="h4"
-                  fontWeight="500"
-                  onClick={() => router.push(`/store/${store.id}`)}
-                >
-                  {store.name}
-                </Typography>
+                <Button onClick={() => router.push(`/store/${store.id}`)}>
+                  <Typography variant="h4" fontWeight="500">
+                    {store.name}
+                  </Typography>
+                </Button>
               </div>
-              <div className="search-result-list-container">
+              <Box
+                className="search-result-list-container"
+                sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              >
                 {store.product.map((menudetail) => (
                   <div key={menudetail.id} className="search-product-container">
                     <div
@@ -65,14 +68,23 @@ function SearchResultSection({
                         gap: "32px",
                       }}
                     >
-                      <div className="product-img-container">
+                      <Box
+                        className="product-img-container"
+                        sx={{
+                          width: "96px",
+                          height: "96px",
+                          overflow: "hidden",
+                          borderRadius: "8px",
+                        }}
+                      >
                         <img
                           src={menudetail.product.image}
                           className="product-img"
                           alt={menudetail.product.name + " img"}
-                          height="96px"
+                          height={96}
+                          width={96}
                         />
-                      </div>
+                      </Box>
                       <div className="product-info">
                         <Typography variant="h5" className="product-name">
                           {menudetail.product.name}
@@ -98,7 +110,7 @@ function SearchResultSection({
                     ></AddToCartBtn>
                   </div>
                 ))}
-              </div>
+              </Box>
             </div>
           </div>
         ))}
