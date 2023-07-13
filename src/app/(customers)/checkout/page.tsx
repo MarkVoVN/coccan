@@ -23,7 +23,14 @@ import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
 import axios from "axios";
 import "./checkoutPage.scss";
+
 import theme from "../../theme";
+
+type Location = {
+  id: string;
+  name: string;
+  address: string;
+};
 
 function CheckoutPage() {
   const router = useRouter();
@@ -31,19 +38,14 @@ function CheckoutPage() {
 
   const orderInfo = useAppSelector((state) => state.order);
   const cartInfo = useAppSelector((state) => state.cart);
-  const location = orderInfo.locationList.find(
-    (location) => location.id == orderInfo.value.locationId
-  );
+  // const location = orderInfo.locationList.find(
+  //   (location) => location.id == orderInfo.value.locationId
+  // );
+  const [location, setLocation] = useState<Location>();
   const timeslot = orderInfo.timeslotList.find(
     (timeslot) => timeslot.id == orderInfo.value.timeslotId
   );
   const userInfo = useAppSelector((state) => state.user.value);
-
-  async function fetchApi(url: string) {
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
-  }
 
   const [pickupspotList, setPickupspotList] = useState<
     {
@@ -101,21 +103,45 @@ function CheckoutPage() {
   const [isOrderCreating, setIsOrderCreating] = useState(false);
 
   React.useEffect(() => {
+    if (!orderInfo) return;
+    if (location) return;
+    axios
+      .get(
+        `http://coccan-api.somee.com/api/locations/${orderInfo.value.locationId}`
+      )
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Request error: " + response.status);
+        }
+        return response;
+      })
+      .then((response) => {
+        setLocation(response.data);
+      })
+      .catch((error) => console.log(error.message));
+  }, [orderInfo]);
+
+  React.useEffect(() => {
+    console.log(pickupspotList.length);
+    console.log(location?.id);
     if (pickupspotList.length <= 0 && location) {
-      axios("http://coccan-api.somee.com/api/pickupspots").then((response) => {
-        var pickupspotList = response.data.filter(
-          (item: {
-            id: string;
-            fullname: string;
-            address: string;
-            locationId: string;
-            status: number;
-          }) => item.locationId == location.id
-        );
-        // if (pickupspotList.length > 0)
-        //   setSelectedPickupspotId(pickupspotList[0].id);
-        setPickupspotList(pickupspotList);
-      });
+      console.log("fetching pickup spot");
+      axios
+        .get("http://coccan-api.somee.com/api/pickupspots")
+        .then((response) => {
+          var pickupspotList = response.data.filter(
+            (item: {
+              id: string;
+              fullname: string;
+              address: string;
+              locationId: string;
+              status: number;
+            }) => item.locationId == location.id
+          );
+          // if (pickupspotList.length > 0)
+          //   setSelectedPickupspotId(pickupspotList[0].id);
+          setPickupspotList(pickupspotList);
+        });
     }
     var total = 0;
     const uniqueStore = new Set();
@@ -139,7 +165,7 @@ function CheckoutPage() {
     setDeliveryFee(delivery);
     setServiceFee(service);
     setCartTotalAmount(total);
-  }, []);
+  }, [location]);
 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
@@ -160,10 +186,13 @@ function CheckoutPage() {
         orderTime: date.toISOString(),
         serviceFee: serviceFee,
         totalPrice: cartTotalAmount + deliveryFee + serviceFee,
+        deliveryFee: deliveryFee,
+        cartTotalAmount: cartTotalAmount,
+        note: deliveryNote,
+        phone: phoneNumber,
         customerId: userInfo.customerId,
         sessionId: orderInfo.value.sessionId,
         pickUpSpotId: selectedPickupspotId,
-        status: 1,
       })
       .then((response) => {
         if (response.status !== 200) {
@@ -173,7 +202,8 @@ function CheckoutPage() {
       })
       .then((responseData) => {
         // Handle successful response
-        const orderId = responseData.data.id;
+        console.log(responseData);
+        const orderId = responseData.id;
         createOrderDetails(orderId);
       })
       .catch((error) => {
