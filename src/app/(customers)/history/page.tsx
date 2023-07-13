@@ -14,9 +14,10 @@ import {
   Box,
   Typography,
   Button,
+  ThemeProvider,
 } from "@mui/material";
 import "./orderHistory.scss";
-
+import theme from "../../theme";
 import { useRouter } from "next/navigation";
 
 type Order = {
@@ -91,6 +92,7 @@ function HistoryPage() {
         return response;
       })
       .then((response) => {
+        setOrderHistory(response.data);
         var list: Order[] = [];
         response.data.map((item: any) => {
           if (item.orderDetailCount != 0) list.push(item);
@@ -122,70 +124,80 @@ function HistoryPage() {
   };
 
   return (
-    <Box className="order-history-wrapper">
-      <Box className="order-history-container">
-        <Box className="title">
-          <Typography variant="h2">Order History</Typography>
-        </Box>
-        {isFetchLoading && !isError && <h2> Loading...</h2>}
+    <ThemeProvider theme={theme}>
+      <Box className="order-history-wrapper">
+        <Box className="container">
+          <Box className="title">
+            <Typography variant="h2">Order History</Typography>
+          </Box>
+          {isFetchLoading && !isError && <h2> Loading...</h2>}
 
-        {isError && <h2>An error occured. {errorMessage}</h2>}
+          {isError && <h2>An error occured. {errorMessage}</h2>}
 
-        {!isFetchLoading &&
-          !isError &&
-          (!orderHistory || orderHistory.length == 0) && (
-            <h2>Your order history is empty</h2>
-          )}
+          {!isFetchLoading &&
+            !isError &&
+            (!orderHistory || orderHistory.length == 0) && (
+              <h2>Your order history is empty</h2>
+            )}
 
-        {!isFetchLoading &&
-          !isError &&
-          orderHistory &&
-          orderHistory.length > 0 && (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {/* <TableCell>ID</TableCell> */}
-                    <TableCell>Order Time</TableCell>
+          {!isFetchLoading &&
+            !isError &&
+            orderHistory &&
+            orderHistory.length > 0 && (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      {/* <TableCell>ID</TableCell> */}
+                      <TableCell>Order Time</TableCell>
 
-                    <TableCell>Timeslot</TableCell>
-                    <TableCell>Location</TableCell>
-                    <TableCell>Pickup Spot</TableCell>
-                    <TableCell align="center">Item Count</TableCell>
-                    <TableCell align="center">Total Price</TableCell>
-                    <TableCell>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {orderHistory?.map((order) => (
-                    <TableRow
-                      key={order.id}
-                      onClick={() => router.push(`order/${order.id}`)}
-                    >
-                      {/* <TableCell>{order.id}</TableCell> */}
-                      <TableCell>{formatDate(order.orderTime)}</TableCell>
-
-                      <TableCell>{`${order.timeSlotStart}-${order.timeSlotEnd}`}</TableCell>
-                      <TableCell>{order.locationName}</TableCell>
-                      <TableCell>{order.pickUpSpotFullName}</TableCell>
-                      <TableCell align="center">
-                        {order.orderDetailCount}
-                      </TableCell>
-                      <TableCell align="center">
-                        {order.totalPrice.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </TableCell>
-                      <TableCell>{displayStatus(order.orderStatus)}</TableCell>
+                      <TableCell>Time slot</TableCell>
+                      <TableCell>Location</TableCell>
+                      <TableCell>Pickup Spot</TableCell>
+                      <TableCell align="center">Item Count</TableCell>
+                      <TableCell align="center">Total Price</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
+                  </TableHead>
+                  <TableBody>
+                    {orderHistory?.map((order) => (
+                      <TableRow key={order.id}>
+                        {/* <TableCell>{order.id}</TableCell> */}
+                        <TableCell>{formatDate(order.orderTime)}</TableCell>
+
+                        <TableCell>{`${order.timeSlotStart}-${order.timeSlotEnd}`}</TableCell>
+                        <TableCell>{order.locationName}</TableCell>
+                        <TableCell>{order.pickUpSpotFullName}</TableCell>
+                        <TableCell align="center">
+                          {order.orderDetailCount}
+                        </TableCell>
+                        <TableCell align="center">
+                          {order.totalPrice.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          {displayStatus(order.orderStatus)}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            onClick={() => router.push(`order/${order.id}`)}
+                          >
+                            View detail
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
 
