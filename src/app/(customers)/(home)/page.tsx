@@ -86,11 +86,6 @@ export default function Home() {
     }[]
   >([]);
 
-  async function fetchApi(url: string) {
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
-  }
   const orderInfo = useAppSelector((state) => state.order.value);
   const isOrderInfoUpdating = useAppSelector(
     (state) => state.order.value.isUpdating
@@ -234,6 +229,7 @@ export default function Home() {
                     image: string;
                     name: string;
                   }) => setSelectedStore(store)}
+                  SelectedStore={SelectedStore}
                 ></CategorySeletorSection>
 
                 {ProductListByCategoryFromSelectedStoreId.map((category) => (

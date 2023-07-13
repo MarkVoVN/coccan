@@ -1,21 +1,15 @@
 "use client";
 
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  ThemeProvider,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ThemeProvider, Typography } from "@mui/material";
 import { Carousel } from "@trendyol-js/react-carousel";
-import "../style/CategorySelectorSection.scss";
 import theme from "../app/theme";
+import "../style/CategorySelectorSection.scss";
 
 function CategorySeletorSection({
   storeList,
   handleSelectStore,
+  SelectedStore,
 }: {
   storeList: { id: string; image: string; name: string }[];
   handleSelectStore: (store: {
@@ -23,6 +17,13 @@ function CategorySeletorSection({
     image: string;
     name: string;
   }) => void;
+  SelectedStore:
+    | {
+        id: string;
+        image: string;
+        name: string;
+      }
+    | undefined;
 }) {
   return (
     <ThemeProvider theme={theme}>
@@ -44,6 +45,13 @@ function CategorySeletorSection({
               alignItems: "center",
             }}
             key={store.id}
+            className={
+              SelectedStore
+                ? store.id == SelectedStore.id
+                  ? "selected"
+                  : ""
+                : ""
+            }
           >
             <Button
               variant="outlined"
