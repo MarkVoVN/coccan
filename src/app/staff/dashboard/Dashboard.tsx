@@ -30,6 +30,13 @@ import { Route } from "react-router-dom";
 import { MyLayout } from "./dashboardLayout";
 import { ReceiptLongOutlined } from "@mui/icons-material";
 import { CustomerEdit } from "../(components)/Customer/CustomerEdit";
+import { OrderShow } from "../(components)/Order/OrderShow";
+import { OrderEdit } from "../(components)/Order/OrderEdit";
+import { OrderCreate } from "../(components)/Order/OrderCreate";
+import { OrderDetails } from "../(components)/Order/OrderDetailsList";
+import { PickupspotList } from "../(components)/PickuUpSpot/pickupspotList";
+import { PickupspotEdit } from "../(components)/PickuUpSpot/pickupspotEdit";
+import ViewPendingOrdersByStore from "../(pages)/viewPendingOrdersByStore";
 
 const App = () => {
   return (
@@ -47,18 +54,37 @@ const App = () => {
               <Resource
                 name="orders"
                 list={OrderList}
+                show={OrderShow}
+                edit={OrderEdit}
+                create={OrderCreate}
                 icon={ReceiptLongOutlined}
                 recordRepresentation={(record) => record.id}
-              ></Resource>
+              >
+                <Route path=":id/details" element={<OrderDetails />} />
+                <Route path="byStore" element={<ViewPendingOrdersByStore />} />
+              </Resource>
               <Resource
                 name="orderdetails"
                 list={OrderdetailList}
+                edit={EditGuesser}
+                show={ShowGuesser}
+                create={EditGuesser}
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
               {/* Session configuration */}
               <Resource name="sessions" list={SessionList}></Resource>
-              <Resource name="locations" list={LocationList}></Resource>
-              <Resource name="timeslots" list={TimeslotList}></Resource>
+              <Resource
+                name="locations"
+                list={LocationList}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="timeslots"
+                list={TimeslotList}
+                recordRepresentation={(record) => {
+                  return `${record.startTime}-${record.endTime}`;
+                }}
+              ></Resource>
               {/* Menu */}
               <Resource
                 name="menus"
@@ -80,6 +106,19 @@ const App = () => {
                 name="customers"
                 list={CustomerList}
                 edit={CustomerEdit}
+                recordRepresentation={(record) => record.fullname}
+              ></Resource>
+              {/* <Resource
+                name="staffs"
+                list={ListGuesser}
+                edit={EditGuesser}
+                create={EditGuesser}
+                recordRepresentation={(record) => record.fullname}
+              ></Resource> */}
+              <Resource
+                name="pickupspots"
+                list={PickupspotList}
+                edit={PickupspotEdit}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
               {/* Miscellanious */}
@@ -107,12 +146,16 @@ const App = () => {
               <Resource name="timeslots" list={TimeslotList}></Resource>
             </>
           ) : null}
-          <CustomRoutes>
+          {/* <CustomRoutes>
             <Route
               path="/settings"
               element={<SettingsPage></SettingsPage>}
             ></Route>
-          </CustomRoutes>
+            <Route
+              path="/viewPendingOrdersByStore"
+              element={<ViewPendingOrdersByStore></ViewPendingOrdersByStore>}
+            ></Route>
+          </CustomRoutes> */}
         </>
       )}
     </Admin>
