@@ -1,3 +1,6 @@
+
+import { Label } from "@mui/icons-material";
+
 import { Divider } from "@mui/material";
 import React from "react";
 import { Menu } from "react-admin";
@@ -23,10 +26,11 @@ function DashboardMenu() {
       <Divider></Divider>
 
       <Menu.ResourceItem name="customers" />
-      {/* References to pages
-       <Menu.Item
-        to="/custom-route"
-        primaryText="Miscellaneous"
+      <Menu.ResourceItem name="staffs" />
+      <Menu.ResourceItem name="pickupspots" />
+      {/* <Menu.Item
+        to="/viewPendingOrdersByStore"
+        primaryText="Orders By Store"
         leftIcon={<Label />}
       /> */}
     </Menu>
