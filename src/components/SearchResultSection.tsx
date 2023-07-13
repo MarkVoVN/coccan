@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
 import AddToCartBtn from "./AddToCartBtn";
 import "../style/SearchResultSection.scss";
 import { useRouter } from "next/navigation";
@@ -48,11 +48,13 @@ function SearchResultSection({
             </div>
             <div className="search-result-info">
               <div className="search-result-name">
-                <Button onClick={() => router.push(`/store/${store.id}`)}>
-                  <Typography variant="h4" fontWeight="500">
-                    {store.name}
-                  </Typography>
-                </Button>
+                <Tooltip title="View store" arrow>
+                  <Button onClick={() => router.push(`/store/${store.id}`)}>
+                    <Typography variant="h4" fontWeight="500">
+                      {store.name}
+                    </Typography>
+                  </Button>
+                </Tooltip>
               </div>
               <Box
                 className="search-result-list-container"

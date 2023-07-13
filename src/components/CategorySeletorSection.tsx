@@ -45,23 +45,29 @@ function CategorySeletorSection({
               alignItems: "center",
             }}
             key={store.id}
-            className={
-              SelectedStore
-                ? store.id == SelectedStore.id
-                  ? "selected"
-                  : ""
-                : ""
-            }
+            // className={
+            //   SelectedStore
+            //     ? store.id == SelectedStore.id
+            //       ? "selected"
+            //       : ""
+            //     : ""
+            // }
           >
             <Button
-              variant="outlined"
+              variant={
+                SelectedStore
+                  ? store.id == SelectedStore.id
+                    ? "contained"
+                    : "outlined"
+                  : "text"
+              }
               onClick={(e) => {
                 handleSelectStore(store);
               }}
             >
               <img
                 src={store.image}
-                alt={"Store image"}
+                alt={store.name + "logo"}
                 className="store-image"
                 width={100}
                 height={100}
