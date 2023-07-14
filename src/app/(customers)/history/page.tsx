@@ -92,7 +92,6 @@ function HistoryPage() {
         return response;
       })
       .then((response) => {
-        setOrderHistory(response.data);
         var list: Order[] = [];
         response.data.map((item: any) => {
           if (item.orderDetailCount != 0) list.push(item);
@@ -150,7 +149,6 @@ function HistoryPage() {
                     <TableRow>
                       {/* <TableCell>ID</TableCell> */}
                       <TableCell>Order Time</TableCell>
-
                       <TableCell>Time slot</TableCell>
                       <TableCell>Location</TableCell>
                       <TableCell>Pickup Spot</TableCell>

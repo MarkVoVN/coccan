@@ -20,6 +20,8 @@ function LoginPage() {
   const dispatch = useDispatch();
   const { getItem, setItem, removeItem } = useStorage();
   const [isLoginProcesssing, setIsLoginProcesssing] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   async function fetchApi(url: string) {
     const response = await fetch(url);
     const json = await response.json();
@@ -28,6 +30,7 @@ function LoginPage() {
 
   const login = () => {
     setIsLoginProcesssing(true);
+    setIsError(false);
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
 
@@ -37,6 +40,12 @@ function LoginPage() {
         const user = result.user;
         var customerId = "";
         var phoneNumber = "";
+        if (!user.email?.endsWith("@fpt.edu.vn")) {
+          setIsLoginProcesssing(false);
+          setIsError(true);
+          setErrorMessage("Only @fpt.edu.vn emails are allowed");
+          return;
+        }
         fetchApi("http://coccan-api.somee.com/api/customers").then(
           (
             response: {
@@ -119,6 +128,8 @@ function LoginPage() {
         );
       })
       .catch((error) => {
+        setIsError(true);
+        setErrorMessage(error.message);
         console.log(error);
       });
   };
@@ -176,6 +187,7 @@ function LoginPage() {
                   Sign in with FPT mail
                 </Typography>
               </LoadingButton>
+              {isError && <Typography variant="h5">{errorMessage}</Typography>}
             </div>
           </div>
         </div>
