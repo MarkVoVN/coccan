@@ -1,9 +1,11 @@
 "use client";
 import {
   Datagrid,
+  EditButton,
   ImageField,
   List,
   SelectArrayInput,
+  ShowButton,
   TextField,
 } from "react-admin";
 import { TextInput } from "react-admin";
@@ -27,6 +29,8 @@ export const StoreList = () => (
       <TextField source="name" />
       <TextField source="address" />
       <ImageField source="image" title="image" />
+      <ShowButton></ShowButton>
+      <EditButton></EditButton>
     </Datagrid>
   </List>
 );

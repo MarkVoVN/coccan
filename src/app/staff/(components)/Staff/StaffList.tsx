@@ -1,4 +1,11 @@
-import { Datagrid, EmailField, List, TextField } from "react-admin";
+import {
+  Datagrid,
+  EditButton,
+  EmailField,
+  List,
+  ShowButton,
+  TextField,
+} from "react-admin";
 
 export const StaffList = () => (
   <List>
@@ -10,6 +17,8 @@ export const StaffList = () => (
       <TextField source="image" />
       <TextField source="phone" />
       <TextField source="role" />
+      <ShowButton></ShowButton>
+      <EditButton></EditButton>
     </Datagrid>
   </List>
 );
