@@ -255,7 +255,7 @@ function CheckoutPage() {
     } else delivery = 4000 + (numberOfStore - 2) * 4000;
 
     //service fee = platform + product value
-    var service = 2000 + total * 0.15;
+    var service = 2000 + total * 0.005;
 
     setDeliveryFee(delivery);
     setServiceFee(service);
