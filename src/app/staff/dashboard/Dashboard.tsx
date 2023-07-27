@@ -52,6 +52,9 @@ import { CategoryEdit } from "../(components)/Category/CategoryEdit";
 import { CategoryShow } from "../(components)/Category/CategoryShow";
 import { CategoryCreate } from "../(components)/Category/CategoryCreate";
 import { Chart } from "./DashboardChart";
+import { MenudetailEdit } from "../(components)/MenuDetail/MenuDetailEdit";
+import { MenudetailShow } from "../(components)/MenuDetail/MenuDetailShow";
+import { MenudetailCreate } from "../(components)/MenuDetail/MenuDetailCreate";
 
 const App = () => {
   return (
@@ -120,7 +123,16 @@ const App = () => {
                 edit={EditGuesser}
                 recordRepresentation={(record) => record.name}
               ></Resource>
-              <Resource name="menudetails" list={MenudetailList}></Resource>
+              <Resource
+                name="menudetails"
+                list={MenudetailList}
+                show={MenudetailShow}
+                edit={MenudetailEdit}
+                create={MenudetailCreate}
+                recordRepresentation={(record) =>
+                  `${record.product.name} ${record.price}`
+                }
+              ></Resource>
               {/* Products */}
               <Resource
                 name="stores"
@@ -144,6 +156,7 @@ const App = () => {
                 show={ProductShow}
                 edit={ProductEdit}
                 create={ProductCreate}
+                recordRepresentation={(record) => record.name}
               ></Resource>
               {/* Accounts */}
               <Resource

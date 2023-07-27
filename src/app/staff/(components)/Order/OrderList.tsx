@@ -13,8 +13,8 @@ import {
 } from "react-admin";
 
 export const OrderList = () => (
-  <List>
-    <Datagrid rowClick="show">
+  <List sort={{ field: "orderTime", order: "DESC" }} perPage={25}>
+    <Datagrid rowClick="show" bulkActionButtons={false}>
       {/* <TextField source="id" /> */}
       <DateField source="orderTime" showTime={true} />
       {/* <NumberField source="serviceFee" /> */}
@@ -57,6 +57,7 @@ export const OrderList = () => (
               return <Chip color="error" label={"Not documented"}></Chip>;
           }
         }}
+        sortBy="orderStatus"
       ></FunctionField>
       <EditButton></EditButton>
     </Datagrid>
