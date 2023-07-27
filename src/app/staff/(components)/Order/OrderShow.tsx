@@ -68,11 +68,10 @@ export const OrderShow = () => {
             </Grid>
             <Grid item xs={6}>
               <SimpleShowLayout>
-                <NumberField source="totalPrice" />
-                <NumberField source="serviceFee" />
-
-                <NumberField source="deliveryFee"></NumberField>
                 <NumberField source="cartTotalAmount"></NumberField>
+                <NumberField source="serviceFee" />
+                <NumberField source="deliveryFee"></NumberField>
+                <NumberField source="totalPrice" />
                 <FunctionField
                   label="Status"
                   render={(record: any) => {
