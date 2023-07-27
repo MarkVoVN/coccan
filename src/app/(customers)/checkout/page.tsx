@@ -1,8 +1,14 @@
 "use client";
 
-import { useAppSelector } from "@/app/GlobalRedux/Features/userSlice";
+import {
+  useAppSelector,
+  updatePreferedPhoneNumber,
+} from "@/app/GlobalRedux/Features/userSlice";
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
+  AlertColor,
+  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -13,6 +19,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
   ThemeProvider,
   Typography,
@@ -24,6 +31,7 @@ import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
 import axios from "axios";
 import "./checkoutPage.scss";
 import theme from "../../theme";
+import useStorage from "@/hooks/useStorage";
 
 type Location = {
   id: string;
@@ -31,9 +39,16 @@ type Location = {
   address: string;
 };
 
+type PopupNotification = {
+  severity: AlertColor;
+  title: string;
+  message: string;
+};
+
 function CheckoutPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const storage = useStorage();
 
   const orderInfo = useAppSelector((state) => state.order);
   const cartInfo = useAppSelector((state) => state.cart);
@@ -64,6 +79,15 @@ function CheckoutPage() {
     userInfo.phoneNumber == "0123456789" ? "" : userInfo.phoneNumber
   );
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
+
+  const [updatePhoneNumberDialogOpen, setUpdatePhoneNumberDialogOpen] =
+    useState(false);
+  // const [isUpdatingPhoneNumberError, setIsUpdatingPhoneNumberError] =
+  //   useState(false);
+  const [isUpdatePhoneNumberLoading, setIsUpdatePhoneNumberLoading] =
+    useState(false);
+  // const [isUpdatePhoneNumberDone, setIsUpdatePhoneNumberDone] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +111,76 @@ function CheckoutPage() {
     setErrorMessage("");
   };
 
+  const updatePhoneNumber = () => {
+    if (!isPhoneNumberValid) return;
+    setIsUpdatePhoneNumberLoading(true);
+    const url = `https://coccan-api.somee.com/api/customers/${userInfo.customerId}`;
+    axios
+      .put(url, {
+        fullname: userInfo.displayName,
+        image: userInfo.photoURL,
+        email: userInfo.email,
+        phone: phoneNumber,
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Network response was not ok.");
+        }
+        return response;
+      })
+      .then((response) => {
+        storage.setItem(
+          "userInfo",
+          JSON.stringify({
+            ...userInfo,
+            phoneNumber: response.data.phoneNumber,
+          })
+        );
+        dispatch(updatePreferedPhoneNumber(response.data.phone));
+        setIsUpdatePhoneNumberLoading(false);
+        //setIsUpdatingPhoneNumberError(false);
+        displayAlert({
+          severity: "success",
+          title: "Success",
+          message: "Your preffered phone number has been updated.",
+        });
+      })
+      .catch((error) => {
+        // Handle error
+        setIsUpdatePhoneNumberLoading(false);
+        //setIsUpdatingPhoneNumberError(true);
+        console.error("Error:", error);
+        displayAlert({
+          severity: "error",
+          title: "An error occured",
+          message:
+            "Update phone number failed. You can try again by going to your profile.",
+        });
+      })
+      .finally(() => {
+        handleUpdatePhoneNumberDialogClose();
+      });
+  };
+
+  const handleUpdatePhoneNumberDialog = () => {
+    //prompt update only if phone number has not bene set
+    if (!isPhoneNumberValid || userInfo.phoneNumber !== "0123456789") {
+      //setIsUpdatePhoneNumberDone(true);
+      handleConfirmDialogOpen();
+      console.log("Phone number dont need update");
+      console.log(isPhoneNumberValid);
+      console.log(userInfo.phoneNumber);
+      return;
+    }
+    setUpdatePhoneNumberDialogOpen(true); //open update phone number dialog
+  };
+
+  const handleUpdatePhoneNumberDialogClose = () => {
+    setUpdatePhoneNumberDialogOpen(false); //close update phone number dialog
+    //setIsUpdatePhoneNumberDone(true);
+    handleConfirmDialogOpen();
+  };
+
   const [deliveryNote, setDeliveryNote] = useState("");
 
   const handleChangeDeliveryNote = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,13 +192,17 @@ function CheckoutPage() {
   const [serviceFee, setServiceFee] = useState(0);
 
   const [isOrderCreating, setIsOrderCreating] = useState(false);
+  // const [isOrderCreatedSuccessfully, setIsOrderCreatedSuccessfully] =
+  //   useState(false);
+  const [isRedirectingToHome, setIsRedirectingToHome] = useState(false);
 
+  //fetch location info from order info
   React.useEffect(() => {
     if (!orderInfo) return;
     if (location) return;
     axios
       .get(
-        `http://coccan-api.somee.com/api/locations/${orderInfo.value.locationId}`
+        `https://coccan-api.somee.com/api/locations/${orderInfo.value.locationId}`
       )
       .then((response) => {
         if (response.status !== 200) {
@@ -118,11 +216,11 @@ function CheckoutPage() {
       .catch((error) => console.log(error.message));
   }, [orderInfo]);
 
+  //fetch pickupspot list based on location and calculate fees
   React.useEffect(() => {
-    console.log(pickupspotList.length);
-    console.log(location?.id);
+    // console.log(pickupspotList.length);
+    // console.log(location?.id);
     if (pickupspotList.length <= 0 && location) {
-      console.log("fetching pickup spot");
       axios
         .get("http://coccan-api.somee.com/api/pickupspots")
         .then((response) => {
@@ -260,15 +358,62 @@ function CheckoutPage() {
     console.log("Done");
     setIsOrderCreating(false);
     setConfirmDialogOpen(false);
+    //handleUpdatePhoneNumberDialog();
     //TODO: pop up thank you for ordering, redirect to homepage or order page
     dispatch(resetCart());
-    router.push("/");
+    //setIsOrderCreatedSuccessfully(true);
+    displayAlert({
+      severity: "success",
+      title: "Order created successfully",
+      message: "Thank you for ordering",
+    });
+    redirectToHome();
   }
+
+  const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
+
+  const handleSnackBarOpen = () => {
+    setIsSnackBarOpen(true);
+  };
+
+  const handleSnackBarClose = () => {
+    setIsSnackBarOpen(false);
+  };
+
+  const [alertContent, setAlertContent] = useState<PopupNotification>();
+
+  const displayAlert = (alert: PopupNotification) => {
+    if (!alert) return;
+    setAlertContent(alert);
+    handleSnackBarOpen();
+  };
+
+  const redirectToHome = () => {
+    setIsRedirectingToHome(true);
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
+  };
 
   return (
     <>
       {!userInfo.isAuth && <h2>You must login to checkout</h2>}
-      {userInfo.isAuth && (
+      {userInfo.isAuth && isRedirectingToHome && (
+        <ThemeProvider theme={theme}>
+          <div className="animation-container">
+            <div className="bounce-loading">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <Typography className="redirect-text" variant="h4">
+              Redirecting to Home...
+            </Typography>
+          </div>
+        </ThemeProvider>
+      )}
+      {userInfo.isAuth && !isRedirectingToHome && (
         <ThemeProvider theme={theme}>
           <div className="container">
             <Box
@@ -371,7 +516,7 @@ function CheckoutPage() {
                   variant="contained"
                   size="large"
                   disabled={phoneNumber.length == 0 || !isPhoneNumberValid}
-                  onClick={handleConfirmDialogOpen}
+                  onClick={handleUpdatePhoneNumberDialog}
                   sx={{ width: "100%" }}
                 >
                   PLACE ORDER
@@ -480,9 +625,62 @@ function CheckoutPage() {
                 </Button>
               </DialogActions>
             </Dialog>
+            <Dialog
+              open={updatePhoneNumberDialogOpen}
+              onClose={handleUpdatePhoneNumberDialogClose}
+            >
+              <DialogContent
+                sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              >
+                <Typography variant="h5" fontWeight="500">
+                  Set prefered phone number?
+                </Typography>
+                <Typography variant="subtitle2" color="gray">
+                  {userInfo.phoneNumber === "0123456789"
+                    ? `You have not set your prefered phone number yet. Do you want to set it to ${phoneNumber}?`
+                    : `Do you want to update your preffered phone number to ${phoneNumber}`}
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <LoadingButton
+                  loading={isUpdatePhoneNumberLoading}
+                  variant="contained"
+                  color="primary"
+                  onClick={updatePhoneNumber}
+                >
+                  Yes
+                </LoadingButton>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleUpdatePhoneNumberDialogClose}
+                >
+                  {userInfo.phoneNumber === "0123456789"
+                    ? `Maybe next time`
+                    : "No"}
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </ThemeProvider>
       )}
+      <Snackbar
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        open={isSnackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackBarClose}
+      >
+        <Alert
+          onClose={handleSnackBarClose}
+          severity={alertContent ? alertContent.severity : "info"}
+          sx={{ width: "100%" }}
+        >
+          <AlertTitle>
+            {alertContent ? alertContent.title : "alert title"}
+          </AlertTitle>
+          {alertContent ? alertContent.message : "alert message"}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
