@@ -1,13 +1,15 @@
 "use client";
 
-import { Datagrid, List, TextField } from "react-admin";
+import { Datagrid, EditButton, List, ShowButton, TextField } from "react-admin";
 
 export const LocationList = () => (
   <List>
-    <Datagrid rowClick="edit">
-      <TextField source="id" />
+    <Datagrid rowClick="show">
+      {/* <TextField source="id" /> */}
       <TextField source="name" />
       <TextField source="address" />
+      <ShowButton></ShowButton>
+      <EditButton></EditButton>
     </Datagrid>
   </List>
 );

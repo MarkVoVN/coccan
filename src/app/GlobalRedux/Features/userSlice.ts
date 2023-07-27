@@ -72,11 +72,14 @@ export const userSlice = createSlice(
         state.value.preferedLocationId = action.payload;
         //TODO: call api to update prefered location on BE
       },
+      updatePreferedPhoneNumber: (state, action: PayloadAction<string>) => {
+        state.value.phoneNumber = action.payload;
+      }
     }
   }
 );
 
-export const {loginUser, logoutUser, updatePreferedLocation} = userSlice.actions;
+export const {loginUser, logoutUser, updatePreferedLocation, updatePreferedPhoneNumber} = userSlice.actions;
 
 export default userSlice.reducer;
 

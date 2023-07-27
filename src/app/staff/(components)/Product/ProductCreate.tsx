@@ -1,12 +1,12 @@
-"use client";
-
 import "firebase/storage";
-import { Create, SimpleForm, TextInput } from "react-admin";
+import { Create, ReferenceInput, SimpleForm, TextInput } from "react-admin";
+
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
 import { storage } from "../../../../firebase";
 import { Button } from "@mui/material";
-export const StoreCreate = () => {
+
+export const ProductCreate = () => {
   const [img, setImg] = useState<File>();
   const [imgUrl, setImgUrl] = useState<string | null>(null);
 
@@ -43,8 +43,9 @@ export const StoreCreate = () => {
   return (
     <Create transform={transform}>
       <SimpleForm>
-        <TextInput source="name" />
-        <TextInput source="address" />
+        <TextInput source="name" isRequired />
+        <ReferenceInput source="storeId" reference="stores" isRequired />
+        <ReferenceInput source="categoryId" reference="categories" isRequired />
         <input
           type="file"
           placeholder="image"

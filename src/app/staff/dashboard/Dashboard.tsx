@@ -42,7 +42,15 @@ import { StaffList } from "../(components)/Staff/StaffList";
 import { StaffEdit } from "../(components)/Staff/StaffEdit";
 import { StaffCreate } from "../(components)/Staff/StaffCreate";
 import { StaffShow } from "../(components)/Staff/StaffShow";
-
+import { ProductShow } from "../(components)/Product/ProductShow";
+import { ProductEdit } from "../(components)/Product/ProductEdit";
+import { ProductCreate } from "../(components)/Product/ProductCreate";
+import { PickupspotCreate } from "../(components)/PickuUpSpot/pickupspotCreate";
+import { SessionEdit } from "../(components)/Session/SessionEdit";
+import { SessionCreate } from "../(components)/Session/SessionCreate";
+import { CategoryEdit } from "../(components)/Category/CategoryEdit";
+import { CategoryShow } from "../(components)/Category/CategoryShow";
+import { CategoryCreate } from "../(components)/Category/CategoryCreate";
 
 const App = () => {
   return (
@@ -60,7 +68,6 @@ const App = () => {
               <Resource
                 name="orders"
                 list={OrderList}
-
                 show={OrderShow}
                 edit={OrderEdit}
                 create={OrderCreate}
@@ -76,20 +83,28 @@ const App = () => {
                 edit={EditGuesser}
                 show={ShowGuesser}
                 create={EditGuesser}
-
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
               {/* Session configuration */}
-              <Resource name="sessions" list={SessionList}></Resource>
-
+              <Resource
+                name="sessions"
+                list={SessionList}
+                show={ShowGuesser}
+                edit={SessionEdit}
+                create={SessionCreate}
+              ></Resource>
               <Resource
                 name="locations"
                 list={LocationList}
+                show={ShowGuesser}
+                edit={EditGuesser}
                 recordRepresentation={(record) => record.name}
               ></Resource>
               <Resource
                 name="timeslots"
                 list={TimeslotList}
+                show={ShowGuesser}
+                edit={EditGuesser}
                 recordRepresentation={(record) => {
                   return `${record.startTime}-${record.endTime}`;
                 }}
@@ -99,6 +114,8 @@ const App = () => {
               <Resource
                 name="menus"
                 list={MenuList}
+                show={ShowGuesser}
+                edit={EditGuesser}
                 recordRepresentation={(record) => record.name}
               ></Resource>
               <Resource name="menudetails" list={MenudetailList}></Resource>
@@ -106,16 +123,31 @@ const App = () => {
               <Resource
                 name="stores"
                 list={StoreList}
+                show={ShowGuesser}
                 edit={StoreEdit}
                 create={StoreCreate}
+                recordRepresentation={(record) => record.name}
               ></Resource>
-              <Resource name="categories" list={CategoryList}></Resource>
-              <Resource name="products" list={ProductList}></Resource>
+              <Resource
+                name="categories"
+                list={CategoryList}
+                show={CategoryShow}
+                edit={CategoryEdit}
+                create={CategoryCreate}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="products"
+                list={ProductList}
+                show={ProductShow}
+                edit={ProductEdit}
+                create={ProductCreate}
+              ></Resource>
               {/* Accounts */}
-
               <Resource
                 name="customers"
                 list={CustomerList}
+                show={ShowGuesser}
                 edit={CustomerEdit}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
@@ -127,15 +159,15 @@ const App = () => {
                 create={StaffCreate}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
-
               <Resource
                 name="pickupspots"
                 list={PickupspotList}
+                show={ShowGuesser}
                 edit={PickupspotEdit}
+                create={PickupspotCreate}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
               {/* Miscellanious */}
-
             </>
           ) : null}
           {permissions == "staff" ? (
@@ -145,7 +177,6 @@ const App = () => {
                 list={OrderList}
                 show={OrderShow}
                 edit={OrderEdit}
-                create={OrderCreate}
                 icon={ReceiptLongOutlined}
                 recordRepresentation={(record) => record.id}
               >
@@ -155,15 +186,14 @@ const App = () => {
               <Resource
                 name="orderdetails"
                 list={OrderdetailList}
-                edit={EditGuesser}
                 show={ShowGuesser}
-                create={EditGuesser}
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
               {/* Accounts */}
               <Resource
                 name="customers"
                 list={CustomerList}
+                show={ShowGuesser}
                 recordRepresentation={(record) => record.fullname}
               ></Resource>
             </>

@@ -1,12 +1,18 @@
-"use client";
-
 import "firebase/storage";
-import { Create, SimpleForm, TextInput } from "react-admin";
+import {
+  Edit,
+  ImageField,
+  ReferenceInput,
+  SimpleForm,
+  TextInput,
+} from "react-admin";
+
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
 import { storage } from "../../../../firebase";
 import { Button } from "@mui/material";
-export const StoreCreate = () => {
+
+export const ProductEdit = () => {
   const [img, setImg] = useState<File>();
   const [imgUrl, setImgUrl] = useState<string | null>(null);
 
@@ -37,23 +43,28 @@ export const StoreCreate = () => {
     setImg(file);
   };
   const transform = (data: any) => ({
-    ...data,
-    image: imgUrl,
+    id: data.id,
+    name: data.name,
+    storeId: data.storeId,
+    image: imgUrl ? imgUrl : data.image,
+    category: data.category,
   });
   return (
-    <Create transform={transform}>
+    <Edit transform={transform}>
       <SimpleForm>
-        <TextInput source="name" />
-        <TextInput source="address" />
-        <input
-          type="file"
-          placeholder="image"
-          onChange={handleChange}
-          required
+        <TextInput source="name" isRequired />
+        <ReferenceInput source="storeId" reference="stores" isRequired />
+        <ReferenceInput
+          source="category.id"
+          reference="categories"
+          isRequired
         />
+        <ImageField source="image"></ImageField>
+        <TextInput source="image"></TextInput>
+        <input type="file" placeholder="image" onChange={handleChange} />
         <Button onClick={handleSubmit}>Upload</Button>
         {imgUrl && <img src={imgUrl} alt="uploaded file" height={200} />}
       </SimpleForm>
-    </Create>
+    </Edit>
   );
 };
