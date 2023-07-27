@@ -51,12 +51,14 @@ import { SessionCreate } from "../(components)/Session/SessionCreate";
 import { CategoryEdit } from "../(components)/Category/CategoryEdit";
 import { CategoryShow } from "../(components)/Category/CategoryShow";
 import { CategoryCreate } from "../(components)/Category/CategoryCreate";
+import { Chart } from "./DashboardChart";
 
 const App = () => {
   return (
     <Admin
       dataProvider={simpleRestProvider("https://coccan-api.somee.com/api")}
       authProvider={authProvider}
+      dashboard={Chart}
       layout={MyLayout}
       requireAuth
     >
