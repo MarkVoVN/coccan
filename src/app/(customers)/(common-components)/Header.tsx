@@ -19,6 +19,7 @@ import {
   Popper,
   MenuList,
   ListItemIcon,
+  Box,
 } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -81,6 +82,7 @@ function Header() {
 
   const handleUserProfileOpen = () => {
     setIdUserProfileOpen(true);
+    setIsUserMenuOpen(false);
   };
 
   const handleUserProfileClose = () => {
@@ -255,30 +257,58 @@ function Header() {
               onClose={handleUserProfileClose}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
-              fullWidth
+              maxWidth={false}
             >
-              <DialogTitle className="text-center" id="alert-dialog-title">
-                <Typography variant="h4">Profile</Typography>
+              <DialogTitle
+                id="alert-dialog-title"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h4" fontWeight={600}>
+                  Profile
+                </Typography>
               </DialogTitle>
-              <DialogContent>
-                <DialogContentText
-                  className="flex flex-row pl-[1rem]"
-                  id="alert-dialog-description"
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "32px",
+                  padding: "16px 32px",
+                }}
+              >
+                <Box
+                  sx={{
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    width: "200px",
+                    height: "200px",
+                  }}
                 >
-                  <div className="w-1/3">
-                    <Typography variant="h6">{"Name: "}</Typography>
-                    <Typography variant="h6">{"Email: "}</Typography>
-                    <Typography variant="h6">{"Balance: "}</Typography>
-                    <Typography variant="h6">Prefered Location:</Typography>
-                  </div>
-                  <div className="w-1/2">
-                    <Typography variant="h6">{user.displayName}</Typography>
-                    <Typography variant="h6">{user.email}</Typography>
-                    <Typography variant="h6">{user.balance}</Typography>
-                    <PreferedLocationSelector></PreferedLocationSelector>
-                  </div>
-                </DialogContentText>
-              </DialogContent>
+                  <img
+                    src={user.photoURL}
+                    alt={user.displayName}
+                    width={200}
+                    height={200}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "16px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography variant="h6">
+                    {"Name: " + user.displayName}
+                  </Typography>
+                  <Typography variant="h6">{"Email: " + user.email}</Typography>
+                  <Typography variant="h6">
+                    {"Phone number: " + user.phoneNumber}
+                  </Typography>
+                </Box>
+              </Box>
               <DialogActions>
                 <Button onClick={handleUserProfileClose} autoFocus>
                   Close

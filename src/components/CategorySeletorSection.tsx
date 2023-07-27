@@ -28,7 +28,7 @@ function CategorySeletorSection({
   return (
     <ThemeProvider theme={theme}>
       <Carousel
-        show={3.5}
+        show={4.5}
         slide={1}
         infinite={true}
         swiping={true}
@@ -40,7 +40,7 @@ function CategorySeletorSection({
         {storeList.map((store) => (
           <Box
             sx={{
-              width: "240px",
+              width: "232px",
               display: "flex",
               alignItems: "center",
             }}
