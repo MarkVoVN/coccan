@@ -51,12 +51,20 @@ import { SessionCreate } from "../(components)/Session/SessionCreate";
 import { CategoryEdit } from "../(components)/Category/CategoryEdit";
 import { CategoryShow } from "../(components)/Category/CategoryShow";
 import { CategoryCreate } from "../(components)/Category/CategoryCreate";
+import OrderComponent from "./DashboardChart";
+import { MenudetailEdit } from "../(components)/MenuDetail/MenuDetailEdit";
+import { MenudetailShow } from "../(components)/MenuDetail/MenuDetailShow";
+import { MenudetailCreate } from "../(components)/MenuDetail/MenuDetailCreate";
+import { SessionRepresentation } from "../(components)/Session/SessionRepresenation";
+import { SessionShow } from "../(components)/Session/SessionShow";
+import { OrderdetailEdit } from "../(components)/OrderDetails/OrderdetailsEdit";
 
 const App = () => {
   return (
     <Admin
       dataProvider={simpleRestProvider("https://coccan-api.somee.com/api")}
       authProvider={authProvider}
+      dashboard={OrderComponent}
       layout={MyLayout}
       requireAuth
     >
@@ -80,7 +88,7 @@ const App = () => {
               <Resource
                 name="orderdetails"
                 list={OrderdetailList}
-                edit={EditGuesser}
+                edit={OrderdetailEdit}
                 show={ShowGuesser}
                 create={EditGuesser}
                 recordRepresentation={(record) => record.menuDetailId}
@@ -89,9 +97,12 @@ const App = () => {
               <Resource
                 name="sessions"
                 list={SessionList}
-                show={ShowGuesser}
+                show={SessionShow}
                 edit={SessionEdit}
                 create={SessionCreate}
+                // recordRepresentation={
+                //   <SessionRepresentation></SessionRepresentation>
+                // }
               ></Resource>
               <Resource
                 name="locations"
@@ -118,7 +129,16 @@ const App = () => {
                 edit={EditGuesser}
                 recordRepresentation={(record) => record.name}
               ></Resource>
-              <Resource name="menudetails" list={MenudetailList}></Resource>
+              <Resource
+                name="menudetails"
+                list={MenudetailList}
+                show={MenudetailShow}
+                edit={MenudetailEdit}
+                create={MenudetailCreate}
+                recordRepresentation={(record) =>
+                  `${record.product.name} ${record.price}`
+                }
+              ></Resource>
               {/* Products */}
               <Resource
                 name="stores"
@@ -142,6 +162,7 @@ const App = () => {
                 show={ProductShow}
                 edit={ProductEdit}
                 create={ProductCreate}
+                recordRepresentation={(record) => record.name}
               ></Resource>
               {/* Accounts */}
               <Resource
@@ -189,12 +210,47 @@ const App = () => {
                 show={ShowGuesser}
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
+              <Resource
+                name="sessions"
+                list={SessionList}
+                show={SessionShow}
+                // recordRepresentation={
+                //   <SessionRepresentation></SessionRepresentation>
+                // }
+              ></Resource>
               {/* Accounts */}
               <Resource
                 name="customers"
                 list={CustomerList}
                 show={ShowGuesser}
                 recordRepresentation={(record) => record.fullname}
+              ></Resource>
+
+              <Resource
+                name="products"
+                list={ProductList}
+                show={ProductShow}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="locations"
+                list={LocationList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="timeslots"
+                list={TimeslotList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => {
+                  return `${record.startTime}-${record.endTime}`;
+                }}
+              ></Resource>
+              <Resource
+                name="menus"
+                list={MenuList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => record.name}
               ></Resource>
             </>
           ) : null}

@@ -1,12 +1,18 @@
 "use client";
 
-import { Datagrid, List, ReferenceField, TextField } from "react-admin";
+import {
+  Datagrid,
+  DateField,
+  List,
+  ReferenceField,
+  TextField,
+} from "react-admin";
 
 export const SessionList = () => (
   <List>
-    <Datagrid rowClick="edit" bulkActionButtons={false}>
+    <Datagrid rowClick="show" bulkActionButtons={false}>
       {/* <TextField source="id" /> */}
-      {/* <TextField source="date" /> */}
+      <DateField source="date" />
       <ReferenceField source="menuId" reference="menus" />
       <ReferenceField source="timeSlotId" reference="timeslots" />
       <ReferenceField source="locationId" reference="locations" />

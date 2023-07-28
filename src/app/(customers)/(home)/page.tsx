@@ -15,6 +15,8 @@ import { Box, Button, Card, CardMedia, Paper } from "@mui/material";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { finishUpdate } from "@/app/GlobalRedux/Features/orderSlice";
+import LoadingAnimation from "@/components/LoadingAnimation";
+import Message from "@/components/Message";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -214,13 +216,13 @@ export default function Home() {
           </Carousel>
           {(isFetchLoading || !isOrderInfoSetByUser) && (
             <>
-              <h2>Loading...</h2>
+              <LoadingAnimation></LoadingAnimation>
             </>
           )}
 
           {!orderInfo.isSessionAvailable && (
             <>
-              <h2>This session is not active</h2>
+              <Message text="This session is not currently active. Please try selecting a different location or timeslot!"></Message>
             </>
           )}
 
