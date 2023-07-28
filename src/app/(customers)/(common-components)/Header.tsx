@@ -104,6 +104,7 @@ function Header() {
     removeItem("userInfo");
     dispatch(logoutUser());
     setIsUserMenuOpen(false);
+    router.refresh();
   };
 
   const cartItemCount = useAppSelector(
