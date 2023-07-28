@@ -16,6 +16,7 @@ export const MenudetailEdit = () => (
         source="product.id"
         reference="products"
         label="Product"
+        perPage={100}
       />
     </SimpleForm>
   </Edit>
