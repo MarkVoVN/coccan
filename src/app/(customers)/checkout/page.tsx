@@ -322,7 +322,11 @@ function CheckoutPage() {
   };
 
   function createOrderDetail(
-    { menudetailId, quantity }: { menudetailId: string; quantity: number },
+    {
+      menudetailId,
+      quantity,
+      price,
+    }: { menudetailId: string; quantity: number; price: number },
     orderId: string
   ) {
     const url = "https://coccan-api.somee.com/api/orderdetails";
@@ -332,6 +336,7 @@ function CheckoutPage() {
         quantity: quantity,
         menuDetailId: menudetailId,
         orderId: orderId,
+        singlePrice: price,
       })
       .then((response) => {
         if (response.status !== 200) {
