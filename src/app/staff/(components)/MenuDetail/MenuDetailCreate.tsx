@@ -10,6 +10,7 @@ export const MenudetailCreate = () => (
         source="product.id"
         reference="products"
         label="Product"
+        perPage={100}
       />
     </SimpleForm>
   </Create>
