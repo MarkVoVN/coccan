@@ -51,7 +51,7 @@ import { SessionCreate } from "../(components)/Session/SessionCreate";
 import { CategoryEdit } from "../(components)/Category/CategoryEdit";
 import { CategoryShow } from "../(components)/Category/CategoryShow";
 import { CategoryCreate } from "../(components)/Category/CategoryCreate";
-import OrderComponent, { Chart } from "./DashboardChart";
+import OrderComponent from "./DashboardChart";
 import { MenudetailEdit } from "../(components)/MenuDetail/MenuDetailEdit";
 import { MenudetailShow } from "../(components)/MenuDetail/MenuDetailShow";
 import { MenudetailCreate } from "../(components)/MenuDetail/MenuDetailCreate";
