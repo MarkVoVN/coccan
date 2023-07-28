@@ -12,7 +12,7 @@ function Footer() {
         <div className="page-container">
           <footer>
             <div className="footer-container">
-              <div className="content">
+              <div className="footer-content">
                 <div className="logo-container">
                   <img
                     className="logo"
