@@ -98,7 +98,7 @@ export const OrderEdit = () => {
                   <Box flex={1} mr={{ xs: 0, sm: "0.5em" }}>
                     <ReferenceInput
                       source="pickUpSpotId"
-                      reference="pickUpSpots"
+                      reference="pickupspots"
                       required
                     />
                   </Box>
@@ -172,7 +172,7 @@ export const OrderEdit = () => {
                   <TextField source="name"></TextField>
                 </ReferenceField>
               </ReferenceField>
-              <ReferenceField source="pickUpSpotId" reference="pickUpSpots">
+              <ReferenceField source="pickUpSpotId" reference="pickupspots">
                 <TextField source="fullname"></TextField>
               </ReferenceField>
               <NumberField source="deliveryFee"></NumberField>

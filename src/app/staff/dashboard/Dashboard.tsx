@@ -55,6 +55,7 @@ import OrderComponent from "./DashboardChart";
 import { MenudetailEdit } from "../(components)/MenuDetail/MenuDetailEdit";
 import { MenudetailShow } from "../(components)/MenuDetail/MenuDetailShow";
 import { MenudetailCreate } from "../(components)/MenuDetail/MenuDetailCreate";
+import { SessionRepresentation } from "../(components)/Session/SessionRepresenation";
 
 const App = () => {
   return (
@@ -97,6 +98,9 @@ const App = () => {
                 show={ShowGuesser}
                 edit={SessionEdit}
                 create={SessionCreate}
+                // recordRepresentation={
+                //   <SessionRepresentation></SessionRepresentation>
+                // }
               ></Resource>
               <Resource
                 name="locations"

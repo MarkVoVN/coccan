@@ -112,15 +112,20 @@ function HistoryPage() {
   const displayStatus = (status: number) => {
     switch (status) {
       case 0:
-        return <Chip color="primary" label={"Pending"}></Chip>;
+        // return <Chip color="#2196f3" label={"Pending"}></Chip>;
+        return "Pending";
       case 1:
-        return <Chip color="secondary" label={"Delivered"}></Chip>;
+        //return <Chip color="secondary" label={"Delivered"}></Chip>;
+        return "Delivered";
       case 2:
-        return <Chip color="success" label={"Completed"}></Chip>;
+        //return <Chip color="success" label={"Completed"}></Chip>;
+        return "Completed";
       case 3:
-        return <Chip color="warning" label={"Canceled"}></Chip>;
+        //return <Chip color="warning" label={"Canceled"}></Chip>;
+        return "Canceled";
       default:
-        return <Chip color="error" label={"Not documented"}></Chip>;
+        //return <Chip color="error" label={"Not documented"}></Chip>;
+        return "Not documented";
     }
   };
 
