@@ -56,6 +56,7 @@ import { MenudetailEdit } from "../(components)/MenuDetail/MenuDetailEdit";
 import { MenudetailShow } from "../(components)/MenuDetail/MenuDetailShow";
 import { MenudetailCreate } from "../(components)/MenuDetail/MenuDetailCreate";
 import { SessionRepresentation } from "../(components)/Session/SessionRepresenation";
+import { SessionShow } from "../(components)/Session/SessionShow";
 
 const App = () => {
   return (
@@ -95,7 +96,7 @@ const App = () => {
               <Resource
                 name="sessions"
                 list={SessionList}
-                show={ShowGuesser}
+                show={SessionShow}
                 edit={SessionEdit}
                 create={SessionCreate}
                 // recordRepresentation={
