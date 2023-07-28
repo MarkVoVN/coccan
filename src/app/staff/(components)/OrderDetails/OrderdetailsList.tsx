@@ -10,15 +10,17 @@ import {
 
 export const OrderdetailList = () => (
   <List>
-    <Datagrid rowClick="edit">
+    <Datagrid rowClick="edit" bulkActionButtons={false}>
       {/* <TextField source="id" /> */}
-      <NumberField source="quantity" />
-      <ReferenceField source="menuDetailId" reference="menudetails" />
-      <ReferenceField source="orderId" reference="orders">
+
+      <ReferenceField source="orderId" reference="orders" label="OrderedBy">
         <ReferenceField source="customerId" reference="customers">
           <TextField source="fullname"></TextField>
         </ReferenceField>
       </ReferenceField>
+      <NumberField source="quantity" />
+      <ReferenceField source="menuDetailId" reference="menudetails" />
+      <NumberField source="singlePrice" />
     </Datagrid>
   </List>
 );
