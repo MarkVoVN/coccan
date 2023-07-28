@@ -12,11 +12,11 @@ import {
 
 export const CustomerList = () => (
   <List>
-    <Datagrid rowClick="edit">
+    <Datagrid rowClick="edit" bulkActionButtons={false}>
       {/* <TextField source="id" /> */}
       <TextField source="fullname" />
       {/* <TextField source="image" /> */}
-      <ImageField source="image" title="image" />
+      <ImageField source="image" title="image" emptyText="Not Available" />
       <EmailField source="email" />
       <TextField source="phone" />
       <ShowButton></ShowButton>

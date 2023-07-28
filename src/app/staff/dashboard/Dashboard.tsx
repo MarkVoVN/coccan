@@ -210,12 +210,47 @@ const App = () => {
                 show={ShowGuesser}
                 recordRepresentation={(record) => record.menuDetailId}
               ></Resource>
+              <Resource
+                name="sessions"
+                list={SessionList}
+                show={SessionShow}
+                // recordRepresentation={
+                //   <SessionRepresentation></SessionRepresentation>
+                // }
+              ></Resource>
               {/* Accounts */}
               <Resource
                 name="customers"
                 list={CustomerList}
                 show={ShowGuesser}
                 recordRepresentation={(record) => record.fullname}
+              ></Resource>
+
+              <Resource
+                name="products"
+                list={ProductList}
+                show={ProductShow}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="locations"
+                list={LocationList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => record.name}
+              ></Resource>
+              <Resource
+                name="timeslots"
+                list={TimeslotList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => {
+                  return `${record.startTime}-${record.endTime}`;
+                }}
+              ></Resource>
+              <Resource
+                name="menus"
+                list={MenuList}
+                show={ShowGuesser}
+                recordRepresentation={(record) => record.name}
               ></Resource>
             </>
           ) : null}
