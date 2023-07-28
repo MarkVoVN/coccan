@@ -193,15 +193,22 @@ export default function Home() {
             <Card>
               <CardMedia
                 component="img"
-                image="/homepage/Food-Facebook-Cover-Banner-13.png"
-                height="200"
+                image="/homepage/Food-Facebook-Cover-Banner-18.png"
+                height="300"
               ></CardMedia>
             </Card>
             <Card>
               <CardMedia
                 component="img"
                 image="/homepage/Food-Facebook-Cover-Banner-19.png"
-                height="200"
+                height="300"
+              ></CardMedia>
+            </Card>
+            <Card>
+              <CardMedia
+                component="img"
+                image="/homepage/Food-Facebook-Cover-Banner-13.png"
+                height="300"
               ></CardMedia>
             </Card>
           </Carousel>
