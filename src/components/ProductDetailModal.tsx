@@ -89,7 +89,6 @@ function ProductDetailModal({
               <img
                 src={product.image}
                 alt={"Image of " + product.name}
-                width={256}
                 height={256}
               ></img>
             </Box>
