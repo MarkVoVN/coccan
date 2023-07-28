@@ -23,6 +23,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./orderDetails.scss";
 import theme from "../../../theme";
+import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 
 type Order = {
   id: string;
@@ -73,6 +75,7 @@ type MenuDetail = {
 
 function OrderDetailPage({ params }: { params: { orderId: string } }) {
   const user = useAppSelector((state) => state.user.value);
+  const router = useRouter();
 
   const [Order, setOrder] = useState<Order>();
   const [OrderDetailList, setOrderDetailList] = useState<OrderDetail[]>();
@@ -81,10 +84,34 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isCancellable, setIsCancellable] = useState(true);
+  const [isCancellable, setIsCancellable] = useState(false);
   const [btnMsg, setBtnMsg] = useState("Cancel");
+  const [isCanceling, setIsCanceling] = useState(false);
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    if (!Order) return;
+    setIsCanceling(true);
+    const body = {
+      ...Order,
+      orderStatus: 3,
+    };
+    axios
+      .put(`https://coccan-api.somee.com/api/orders/${Order.id}`, body)
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Request error: " + response.status);
+        }
+        return response;
+      })
+      .then((response) => {
+        setIsCanceling(false);
+        router.refresh();
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsCanceling(false);
+      });
+  };
 
   useEffect(() => {
     if (!user.isAuth) return;
@@ -117,7 +144,7 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
     if (!user.isAuth) return;
     if (!Order) return;
     if (!isAuthorized) return;
-
+    if (Order.orderStatus == 0) setIsCancellable(true);
     const params = {
       filter: JSON.stringify({
         orderid: Order.id,
@@ -186,156 +213,6 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
         OrderDetailList &&
         OrderDetailList.length > 0 && (
           <>
-            {/* <Box
-              className="content-container"
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <Box
-                className="info-container"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "32px",
-                  padding: "32px",
-                }}
-              >
-                <Box
-                  className="contact-info-section"
-                  sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
-                >
-                  <Typography variant="h5" fontWeight="600">
-                    Contact Information
-                  </Typography>
-                  <div>
-                    <Typography variant="h6">{user.displayName}</Typography>
-                  </div>
-                  <div>
-                    <TextField
-                      label="Phone number"
-                      value={Order?.phone}
-                      read-only="true"
-                      sx={{ width: "100%" }}
-                    ></TextField>
-                  </div>
-                </Box>
-                <Box
-                  className="delivery-info-section"
-                  sx={{ display: "flex", flexDirection: "column", gap: "16px" }}
-                >
-                  <Typography variant="h5" fontWeight="600">
-                    Delivery Information
-                  </Typography>
-                  <div>
-                    <Typography variant="subtitle1">Location:</Typography>
-                    <Typography variant="h6">{Order?.locationName}</Typography>
-                  </div>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Box sx={{ width: "100%" }}>
-                      <Typography variant="subtitle1">Time slot:</Typography>
-                      <Typography variant="h6">
-                        {Order?.timeSlotStart + " - " + Order?.timeSlotEnd}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ width: "100%" }}>
-                      <FormControl sx={{ width: "100%" }}>
-                        { <InputLabel>Pickup spot</InputLabel>}
-                        <TextField
-                          label="Pickup spot"
-                          value={Order?.pickUpSpotFullName}
-                          read-only="true"
-                          sx={{ width: "100%" }}
-                        ></TextField>
-                      </FormControl>
-                    </Box>
-                  </Box>
-                  <div>
-                    <TextField
-                      label="Delivery Notes"
-                      value={Order?.note}
-                      sx={{ width: "100%" }}
-                    ></TextField>
-                  </div>
-                </Box>
-              </Box>
-              <Box
-                className="order-information-section"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "32px",
-                  bgcolor: "primary.main",
-                  color: "white",
-                }}
-              >
-                <Typography variant="h5" fontWeight="600">
-                  Order Information
-                </Typography>
-                <div>
-                  <Typography variant="subtitle1">You have paid</Typography>
-                  <Typography variant="h2">
-                    {Order?.totalPrice.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Typography>
-                </div>
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography variant="subtitle1">Total amount:</Typography>
-                  <Typography variant="h5">
-                    {Order?.cartTotalAmount.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography variant="subtitle1">Delivery Fee:</Typography>
-                  <Typography variant="h5">
-                    {Order?.deliveryFee.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography variant="subtitle1"> Service Fee:</Typography>
-                  <Typography variant="h5">
-                    {Order?.serviceFee.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box> */}
             <ThemeProvider theme={theme}>
               <Box className="container">
                 <Breadcrumbs sx={{ marginBottom: "16px" }}>
@@ -425,14 +302,15 @@ function OrderDetailPage({ params }: { params: { orderId: string } }) {
                   }}
                 >
                   <Tooltip title="Cancel order" arrow>
-                    <Button
+                    <LoadingButton
                       variant="contained"
                       onClick={handleCancel}
                       disabled={!isCancellable}
+                      loading={isCanceling}
                       size="large"
                     >
                       {btnMsg}
-                    </Button>
+                    </LoadingButton>
                   </Tooltip>
                 </Box>
               </Box>

@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
   ThemeProvider,
+  Chip,
 } from "@mui/material";
 import "./orderHistory.scss";
 import theme from "../../theme";
@@ -79,6 +80,7 @@ function HistoryPage() {
       filter: JSON.stringify({
         customerid: user.customerId,
       }),
+      sort: JSON.stringify(["orderTime", "DESC"]),
     };
     const queryParams = new URLSearchParams(params);
     const url = `https://coccan-api.somee.com/api/orders`;
@@ -110,15 +112,15 @@ function HistoryPage() {
   const displayStatus = (status: number) => {
     switch (status) {
       case 0:
-        return "Pending";
+        return <Chip color="primary" label={"Pending"}></Chip>;
       case 1:
-        return "Delivered";
+        return <Chip color="secondary" label={"Delivered"}></Chip>;
       case 2:
-        return "Completed";
+        return <Chip color="success" label={"Completed"}></Chip>;
       case 3:
-        return "Cancelled";
+        return <Chip color="warning" label={"Canceled"}></Chip>;
       default:
-        return "Not documented";
+        return <Chip color="error" label={"Not documented"}></Chip>;
     }
   };
 

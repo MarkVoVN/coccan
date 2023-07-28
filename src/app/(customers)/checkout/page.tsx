@@ -24,7 +24,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { resetCart } from "@/app/GlobalRedux/Features/cartSlice";
@@ -69,11 +69,23 @@ function CheckoutPage() {
     }[]
   >([]);
 
-  const [selectedPickupspotId, setSelectedPickupspotId] = useState("");
-
+  const [selectedPickupspotId, setSelectedPickupspotId] = useState<string>("");
+  const [Orderable, setOrderable] = useState(false);
   const handlePickspotSelect = (e: SelectChangeEvent) => {
     setSelectedPickupspotId(e.target.value);
   };
+
+  useEffect(() => {
+    if (selectedPickupspotId == null) {
+      setOrderable(false);
+      return;
+    }
+    if (selectedPickupspotId.length == 0) {
+      setOrderable(false);
+      return;
+    }
+    setOrderable(true);
+  }, [selectedPickupspotId]);
 
   const [phoneNumber, setPhoneNumber] = useState(
     userInfo.phoneNumber == "0123456789" ? "" : userInfo.phoneNumber
@@ -192,8 +204,6 @@ function CheckoutPage() {
   const [serviceFee, setServiceFee] = useState(0);
 
   const [isOrderCreating, setIsOrderCreating] = useState(false);
-  // const [isOrderCreatedSuccessfully, setIsOrderCreatedSuccessfully] =
-  //   useState(false);
   const [isRedirectingToHome, setIsRedirectingToHome] = useState(false);
 
   //fetch location info from order info
@@ -218,8 +228,6 @@ function CheckoutPage() {
 
   //fetch pickupspot list based on location and calculate fees
   React.useEffect(() => {
-    // console.log(pickupspotList.length);
-    // console.log(location?.id);
     if (pickupspotList.length <= 0 && location) {
       axios
         .get("http://coccan-api.somee.com/api/pickupspots")
@@ -233,8 +241,6 @@ function CheckoutPage() {
               status: number;
             }) => item.locationId == location.id
           );
-          // if (pickupspotList.length > 0)
-          //   setSelectedPickupspotId(pickupspotList[0].id);
           setPickupspotList(pickupspotList);
         });
     }
@@ -272,13 +278,21 @@ function CheckoutPage() {
     setConfirmDialogOpen(false);
   };
 
-  const handlePlacingOrder = () => {
+  const getDateTimeToLocalISOstring = () => {
     const date = new Date();
+    const isoString = new Date(date.toLocaleString());
+    const adjustedDate = new Date(
+      isoString.getTime() + 420 * 60000
+    ).toISOString();
+    return adjustedDate;
+  };
+
+  const handlePlacingOrder = () => {
     setIsOrderCreating(true);
 
     axios
       .post("http://coccan-api.somee.com/api/orders", {
-        orderTime: date.toISOString(),
+        orderTime: getDateTimeToLocalISOstring(),
         serviceFee: serviceFee,
         totalPrice: cartTotalAmount + deliveryFee + serviceFee,
         deliveryFee: deliveryFee,
@@ -515,7 +529,9 @@ function CheckoutPage() {
                 <Button
                   variant="contained"
                   size="large"
-                  disabled={phoneNumber.length == 0 || !isPhoneNumberValid}
+                  disabled={
+                    phoneNumber.length == 0 || !isPhoneNumberValid || !Orderable
+                  }
                   onClick={handleUpdatePhoneNumberDialog}
                   sx={{ width: "100%" }}
                 >
