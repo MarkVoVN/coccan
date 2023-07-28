@@ -13,7 +13,6 @@ function CartPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="cart-page">
         <div className="container">
           <div className="title">
             <Typography variant="h2" fontWeight="500">
@@ -27,7 +26,6 @@ function CartPage() {
           )}
           {cart.value.length <= 0 && <h1>CART IS EMPTY</h1>}
         </div>
-      </div>
     </ThemeProvider>
   );
 }

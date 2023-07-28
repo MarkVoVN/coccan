@@ -1,6 +1,9 @@
 $primary: #ea5857;
 
-
+.page-container {
+    position: relative;
+    min-height: 100vh;
+}
 
 .social-icons {
 
@@ -35,6 +38,9 @@ $primary: #ea5857;
 }
 
 footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     margin-top: 32px;
     background-color: $primary;
     padding: 40px 80px;
@@ -61,7 +67,6 @@ footer {
     }
 
     .logo {
-
         color: white;
     }
 
